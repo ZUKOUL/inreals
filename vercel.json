@@ -9,12 +9,16 @@
       "destination": "/landing.html"
     },
     {
+      "source": "/login",
+      "destination": "/login.html"
+    },
+    {
       "source": "/workspace",
-      "destination": "/index.html"
+      "destination": "/workspace.html"
     },
     {
       "source": "/app",
-      "destination": "/index.html"
+      "destination": "/workspace.html"
     }
   ]
 }

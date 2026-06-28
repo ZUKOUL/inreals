@@ -10,7 +10,11 @@ const themeIcon = document.querySelector('[data-theme-icon]');
 const builderPrompt = document.querySelector('[data-builder-prompt]');
 const builderStatus = document.querySelector('[data-builder-status]');
 const promptTemplateLabel = document.querySelector('[data-prompt-template-label]');
+const accountName = document.querySelector('[data-account-name]');
+const accountEmail = document.querySelector('[data-account-email]');
+const logoutButton = document.querySelector('[data-logout]');
 
+const AUTH_SESSION_KEY = 'corya:auth-session:v1';
 const SETTINGS_KEY = 'corya:simulation-settings:v1';
 const THEME_KEY = 'corya:theme:v1';
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -35,6 +39,25 @@ let dashboardState = {
 };
 let series = [];
 let groupedSeries = [];
+
+function loadAuthSession() {
+  try {
+    return JSON.parse(localStorage.getItem(AUTH_SESSION_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function applyAuthSession() {
+  const session = loadAuthSession();
+  if (session?.name && accountName) accountName.textContent = session.name;
+  if (session?.email && accountEmail) accountEmail.textContent = session.email;
+}
+
+function signOut() {
+  localStorage.removeItem(AUTH_SESSION_KEY);
+  window.location.href = '/login.html?next=%2Fworkspace%3Fpage%3Dhome';
+}
 
 function loadTheme() {
   try {
@@ -1286,6 +1309,8 @@ document.querySelector('[data-simulate="reset"]')?.addEventListener('click', () 
   renderDashboard();
 });
 
+logoutButton?.addEventListener('click', signOut);
+
 window.addEventListener('popstate', () => {
   showPage(getPageFromUrl(), { resetScroll: true });
 });
@@ -1295,6 +1320,7 @@ setInterval(() => {
 }, 60 * 1000);
 
 const initialPage = getPageFromUrl();
+applyAuthSession();
 applyTheme(loadTheme());
 renderDashboard();
 showPage(initialPage);

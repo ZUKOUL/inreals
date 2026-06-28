@@ -347,6 +347,15 @@ button use {
   font-size: 11px;
 }
 
+.logout-button {
+  margin-top: 6px;
+  color: var(--muted) !important;
+}
+
+.logout-button:hover {
+  color: var(--text-strong) !important;
+}
+
 .sidebar-simulator {
   display: grid;
   gap: 10px;
