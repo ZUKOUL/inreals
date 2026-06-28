@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "build": "rm -rf dist && mkdir -p dist && cp -R index.html landing.html styles.css landing.css landing-overrides.css app.js public dist/",
     "start": "python3 -m http.server 4173"
   }
 }
