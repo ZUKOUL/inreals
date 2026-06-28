@@ -1,0 +1,34 @@
+<svg width="640" height="460" viewBox="0 0 640 460" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#183A3F" flood-opacity=".10"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#183A3F" flood-opacity=".08"/>
+    </filter>
+    <linearGradient id="bg" x1="0" x2="640" y1="0" y2="460">
+      <stop stop-color="#CFEFF2"/>
+      <stop offset=".5" stop-color="#F4FFFB"/>
+      <stop offset="1" stop-color="#BDE7EE"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="460" rx="18" fill="url(#bg)"/>
+  <rect x="34" y="74" width="520" height="74" rx="14" fill="white" filter="url(#shadow)"/>
+  <text x="58" y="106" fill="#292633" font-family="Geist, Inter, Arial, sans-serif" font-size="21" font-weight="500" letter-spacing="-.55">Publish my app with checkout</text>
+  <text x="58" y="132" fill="#292633" font-family="Geist, Inter, Arial, sans-serif" font-size="21" font-weight="500" letter-spacing="-.55">and customer access</text>
+  <rect x="34" y="176" width="572" height="284" rx="16" fill="white" filter="url(#shadow)"/>
+  <rect x="34" y="176" width="572" height="46" rx="16" fill="#F6FAFA"/>
+  <rect x="58" y="192" width="118" height="14" rx="7" fill="#DCE8EA"/>
+  <rect x="200" y="192" width="96" height="14" rx="7" fill="#E9F0F1"/>
+  <rect x="58" y="244" width="220" height="184" rx="18" fill="#F6F1FF" stroke="#E7DFFF"/>
+  <rect x="80" y="268" width="80" height="80" rx="18" fill="#BC9BFF"/>
+  <path d="M101 311h38M120 292v38" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <rect x="80" y="368" width="132" height="13" rx="6.5" fill="#D7C9FB"/>
+  <rect x="80" y="394" width="90" height="11" rx="5.5" fill="#E4DEF2"/>
+  <rect x="308" y="244" width="260" height="184" rx="18" fill="#FBFCFD" stroke="#E3EAEC"/>
+  <rect x="332" y="272" width="150" height="13" rx="6.5" fill="#DCE8EA"/>
+  <rect x="332" y="303" width="198" height="12" rx="6" fill="#ECF1F2"/>
+  <rect x="332" y="326" width="160" height="12" rx="6" fill="#ECF1F2"/>
+  <rect x="332" y="372" width="146" height="38" rx="12" fill="#292633"/>
+  <text x="365" y="397" fill="white" font-family="Geist, Inter, Arial, sans-serif" font-size="15" font-weight="500">Buy now</text>
+  <circle cx="546" cy="198" r="6" fill="#BC9BFF"/>
+  <path d="M514 74c26 24 42 52 48 84" stroke="white" stroke-opacity=".38" stroke-width="20" stroke-linecap="round"/>
+</svg>

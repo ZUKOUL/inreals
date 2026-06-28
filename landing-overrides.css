@@ -1,0 +1,647 @@
+/* Corya landing final overrides.
+   Kept separate so the latest layout rules always win over older iterations. */
+
+:root {
+  --frame-width: min(1460px, calc(100% - 56px));
+  --rail-width: min(1120px, calc(100% - 220px));
+  --rail-x: max(28px, calc((100% - 1460px) / 2));
+  --hero-atmosphere-height: clamp(940px, 72vw, 1080px);
+  --violet: #bc9bff;
+  --violet-strong: #bc9bff;
+  --peach: #bc9bff;
+  --peach-soft: #f7f2ff;
+}
+
+body {
+  background: #fbfaf9;
+}
+
+.site-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #fbfaf9;
+}
+
+.site-shell::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: auto;
+  left: 0;
+  width: auto;
+  height: var(--hero-atmosphere-height);
+  background:
+    linear-gradient(180deg, rgba(251, 250, 249, 0) 0%, rgba(251, 250, 249, 0) 72%, #fbfaf9 100%),
+    url("public/assets/landing/corya-hero-top-gradient.png") center top / cover no-repeat,
+    #fbfaf9;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.site-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  background:
+    linear-gradient(90deg, transparent 0 calc(var(--rail-x) - 1px), rgba(34, 31, 40, 0.07) calc(var(--rail-x) - 1px) var(--rail-x), transparent var(--rail-x) calc(100% - var(--rail-x)), rgba(34, 31, 40, 0.07) calc(100% - var(--rail-x)) calc(100% - var(--rail-x) + 1px), transparent calc(100% - var(--rail-x) + 1px));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.site-shell > * {
+  position: relative;
+  z-index: 2;
+}
+
+.site-header,
+.hero-panel,
+.hero-bento,
+.intro-statement,
+.advantage-strip,
+.feature-row,
+.feature-row-reverse,
+.process-frame,
+.testimonial-frame,
+.review-grid,
+.faq-list,
+.site-footer {
+  width: var(--rail-width);
+}
+
+.site-header {
+  padding-bottom: 22px;
+}
+
+.hero {
+  min-height: auto;
+  padding: 12px 0 42px;
+}
+
+.hero::before,
+.hero::after {
+  display: none !important;
+}
+
+.hero-panel {
+  position: relative;
+  min-height: 560px;
+  margin: 0 auto;
+  padding: 54px 48px 76px;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+}
+
+.hero-panel::before,
+.hero-panel::after {
+  display: none !important;
+}
+
+.hero-panel > * {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-panel .trust-row {
+  margin-bottom: 28px;
+}
+
+.hero h1,
+.hero-panel h1 {
+  max-width: 880px;
+  font-size: clamp(46px, 5vw, 88px);
+  font-weight: 430;
+  line-height: 1.07;
+  letter-spacing: -0.064em;
+  color: rgba(45, 43, 55, 0.94);
+}
+
+.hero h1 > span:last-child {
+  margin-top: 8px;
+  color: rgba(49, 45, 60, 0.72);
+}
+
+.floating-tile {
+  width: clamp(58px, 5vw, 74px);
+  height: clamp(58px, 5vw, 74px);
+  margin: 0 clamp(12px, 1.6vw, 18px);
+  border-radius: 18px;
+  vertical-align: 10px;
+}
+
+.mini-chart {
+  width: 42px;
+  height: 35px;
+  border-width: 2.5px;
+}
+
+.mini-chart i:nth-child(1) {
+  left: 7px;
+  height: 10px;
+}
+
+.mini-chart i:nth-child(2) {
+  left: 16px;
+  height: 20px;
+}
+
+.mini-chart i:nth-child(3) {
+  left: 25px;
+  height: 14px;
+}
+
+.mini-chart i:nth-child(4) {
+  left: 34px;
+  height: 25px;
+}
+
+.hero-panel .hero-copy {
+  margin-bottom: 26px;
+}
+
+.usecase-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin-top: 82px;
+  text-align: left;
+}
+
+.usecase-card {
+  min-width: 0;
+  overflow: visible;
+}
+
+.usecase-image {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 20px;
+  box-shadow: none;
+  background: transparent;
+  vertical-align: middle;
+}
+
+.usecase-card p {
+  max-width: 94%;
+  margin: 24px 0 0;
+}
+
+@media (max-width: 980px) {
+  .hero-bento.usecase-grid {
+    display: flex;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    gap: 22px;
+    width: var(--rail-width);
+    max-width: none;
+    margin-top: 36px;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0 0 18px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .hero-bento.usecase-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero-bento .usecase-card {
+    flex: 0 0 min(76vw, 560px);
+    max-width: none;
+    margin: 0;
+    scroll-snap-align: start;
+  }
+
+  .hero-bento .usecase-card p {
+    max-width: 96%;
+  }
+
+  .intro-statement {
+    margin-top: 34px;
+    padding-top: 60px;
+  }
+}
+
+.feature-copy h3,
+.feature-copy h3 span,
+.section-heading h2,
+.section-heading h2 span,
+.final-cta h2,
+.final-cta h2 span {
+  color: #201b20;
+}
+
+.section-pill,
+.advantage-strip span,
+.queue-header {
+  color: rgba(45, 43, 55, 0.52);
+}
+
+.advantage-strip article > span {
+  color: #bc9bff;
+}
+
+.intro-link,
+.intro-link::after {
+  color: #bc9bff;
+}
+
+.button-violet,
+.button-peach {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0) 40%),
+    #bc9bff;
+  border-color: rgba(188, 155, 255, 0.58);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.48),
+    inset 0 -8px 14px rgba(105, 74, 170, 0.1),
+    0 4px 0 #b18df7,
+    0 20px 30px rgba(188, 155, 255, 0.2);
+}
+
+/* Process section cleanup: no decorative screws, no orange accent. */
+.button-peach {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0) 40%),
+    #bc9bff;
+  border-color: rgba(188, 155, 255, 0.58);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.48),
+    inset 0 -8px 14px rgba(105, 74, 170, 0.1),
+    0 4px 0 #b18df7,
+    0 14px 28px rgba(188, 155, 255, 0.2);
+}
+
+.visual-peach,
+.process-peach,
+.intro-card-peach {
+  background: linear-gradient(180deg, #fff 0%, #f7f2ff 100%);
+}
+
+.intro-card-peach {
+  border-color: rgba(188, 155, 255, 0.24);
+}
+
+.intro-card-peach .card-index {
+  background: #bc9bff;
+}
+
+.signal-card {
+  background: #bc9bff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 24px 36px rgba(188, 155, 255, 0.24);
+}
+
+.signal-card::before,
+.signal-card::after {
+  background: rgba(188, 155, 255, 0.24);
+}
+
+.portrait-placeholder {
+  background:
+    linear-gradient(135deg, rgba(188, 155, 255, 0.12), rgba(188, 155, 255, 0.05)),
+    #eee;
+}
+
+.stars {
+  color: #bc9bff;
+}
+
+.screw {
+  display: none !important;
+}
+
+.process-frame {
+  gap: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.process-card,
+.process-card:first-of-type,
+.process-card:last-of-type {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 28px;
+}
+
+.arc-meter {
+  border-color: rgba(188, 155, 255, 0.16);
+}
+
+.arc-meter span:nth-child(2) {
+  border-top-color: rgba(188, 155, 255, 0.42);
+}
+
+.floating-stat strong {
+  color: #8f66f0;
+}
+
+@media (max-width: 1280px) {
+  :root {
+    --frame-width: min(100% - 48px, 1240px);
+    --rail-width: min(100% - 128px, 1040px);
+    --rail-x: max(24px, calc((100% - 1240px) / 2));
+    --hero-atmosphere-height: 990px;
+  }
+}
+
+@media (max-width: 980px) {
+  :root {
+    --frame-width: min(100% - 32px, 840px);
+    --rail-width: min(100% - 72px, 720px);
+    --rail-x: 16px;
+    --hero-atmosphere-height: 760px;
+  }
+
+  .site-shell::before {
+    background:
+      linear-gradient(180deg, rgba(251, 250, 249, 0) 0%, rgba(251, 250, 249, 0) 48%, rgba(251, 250, 249, 0.7) 73%, #fbfaf9 100%),
+      url("public/assets/landing/corya-hero-top-gradient.png") center top / cover no-repeat,
+      #fbfaf9;
+  }
+
+  .hero-panel {
+    min-height: 500px;
+    padding: 42px 28px 66px;
+    border-radius: 0;
+  }
+
+  .process-frame {
+    width: min(100% - 40px, 720px);
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .process-card {
+    width: 100%;
+    min-height: auto;
+    padding: 24px 24px 32px;
+    border-radius: 28px;
+  }
+
+  .process-visual {
+    height: 300px;
+    margin-bottom: 28px;
+  }
+
+  .arc-meter {
+    width: min(330px, 78vw);
+  }
+
+  .floating-stat {
+    min-width: min(300px, 78vw);
+  }
+
+  .deploy-list {
+    width: min(330px, 80vw);
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --frame-width: min(100% - 20px, 560px);
+    --rail-width: min(100% - 36px, 520px);
+    --rail-x: 10px;
+    --hero-atmosphere-height: 650px;
+  }
+
+  .site-shell::before {
+    background:
+      linear-gradient(180deg, rgba(251, 250, 249, 0) 0%, rgba(251, 250, 249, 0) 43%, rgba(251, 250, 249, 0.82) 72%, #fbfaf9 100%),
+      url("public/assets/landing/corya-hero-top-gradient.png") center top / cover no-repeat,
+      #fbfaf9;
+  }
+
+  .site-header {
+    width: min(100% - 28px, 520px);
+    gap: 14px;
+    row-gap: 16px;
+    padding-top: 42px;
+    padding-bottom: 8px;
+  }
+
+  .brand-mark {
+    font-size: 28px;
+  }
+
+  .brand-symbol {
+    width: 28px;
+    height: 42px;
+  }
+
+  .header-login {
+    min-height: 48px;
+    padding: 0 18px;
+    border-radius: 15px;
+    font-size: 16px;
+  }
+
+  .nav-pill {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, auto));
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%;
+    gap: 2px;
+    padding: 6px;
+    overflow: hidden;
+    border-radius: 18px;
+    scrollbar-width: none;
+  }
+
+  .nav-pill::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-pill a {
+    min-width: 0;
+    padding: 8px 6px;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: -0.025em;
+  }
+
+  .hero {
+    padding-top: 0;
+    padding-bottom: 22px;
+  }
+
+  .hero-panel {
+    min-height: 442px;
+    margin-top: 18px;
+    padding: 30px 20px 42px;
+    border-radius: 0;
+  }
+
+  .hero-panel .trust-row {
+    margin-bottom: 22px;
+  }
+
+  .hero-bento.usecase-grid {
+    display: flex;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    gap: 18px;
+    width: calc(100vw - 36px);
+    max-width: none;
+    margin-top: 24px;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0 0 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .hero-bento.usecase-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero-bento .usecase-card {
+    flex: 0 0 min(84vw, 360px);
+    max-width: none;
+    margin: 0;
+    scroll-snap-align: start;
+  }
+
+  .hero-bento .usecase-image {
+    border-radius: 18px;
+  }
+
+  .hero-bento .usecase-card p {
+    max-width: 96%;
+    margin-top: 16px;
+    font-size: 18px;
+    line-height: 1.34;
+    letter-spacing: -0.035em;
+  }
+
+  .intro-statement {
+    margin-top: 24px;
+    padding-top: 48px;
+    padding-bottom: 56px;
+  }
+
+  .process-frame {
+    width: min(100% - 28px, 520px);
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .process-card {
+    width: 100%;
+    min-height: auto;
+    padding: 18px 18px 24px;
+    border-radius: 28px;
+  }
+
+  .process-visual {
+    height: 220px;
+    margin-bottom: 24px;
+    border-radius: 22px;
+  }
+
+  .node-icon {
+    width: 92px;
+    height: 92px;
+    border-radius: 24px;
+  }
+
+  .node-grid {
+    bottom: 34px;
+    gap: 34px;
+  }
+
+  .node-grid i {
+    width: 48px;
+    height: 48px;
+  }
+
+  .arc-meter {
+    bottom: -36px;
+    width: 240px;
+    height: 124px;
+    border-width: 22px;
+  }
+
+  .arc-meter span {
+    inset: -22px;
+    border-width: 22px;
+  }
+
+  .floating-stat {
+    top: 34px;
+    min-width: 220px;
+    padding: 14px 18px;
+    gap: 4px 28px;
+    border-radius: 16px;
+  }
+
+  .floating-stat strong {
+    font-size: 30px;
+    font-weight: 520;
+  }
+
+  .deploy-list {
+    width: min(100%, 260px);
+    gap: 12px;
+  }
+
+  .deploy-list span {
+    height: 52px;
+    border-radius: 16px;
+  }
+
+  .deploy-list strong {
+    height: 58px;
+    border-radius: 16px;
+    font-size: 24px;
+    font-weight: 560;
+  }
+
+  .process-card h3 {
+    margin-bottom: 12px;
+    font-size: 28px;
+    font-weight: 520;
+    letter-spacing: -0.052em;
+  }
+
+  .process-card p {
+    max-width: 100%;
+    font-size: 18px;
+    line-height: 1.38;
+    letter-spacing: -0.035em;
+  }
+}

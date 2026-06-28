@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Corya — dashboard financier pour apps, sites, logiciels et produits digitaux."
+    />
+    <title>Corya — Home</title>
+    <script>
+      (() => {
+        try {
+          const savedTheme = localStorage.getItem('corya:theme:v1');
+          document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
+        } catch {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23BC9BFF'/%3E%3Cpath d='M42.8 24.4c-2-2.2-5.1-3.6-9.2-3.6-7.7 0-13.1 5-13.1 11.8 0 6.9 5.4 11.7 13.2 11.7 4.1 0 7.4-1.4 9.5-3.8l-3.6-3.1c-1.4 1.4-3.2 2.2-5.5 2.2-4.4 0-7.2-2.8-7.2-7s2.8-7.1 7.2-7.1c2.3 0 4 .7 5.4 2.1l3.3-3.2Z' fill='%23242A3A'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <svg class="icon-sprite" aria-hidden="true" focusable="false">
+      <symbol id="icon-home" viewBox="0 0 24 24">
+        <path d="M8 17h8M11.018 2.764 4.235 8.039c-.453.353-.68.53-.843.75a2 2 0 0 0-.318.65C3 9.704 3 9.991 3 10.565V17.8c0 1.12 0 1.68.218 2.108a2 2 0 0 0 .874.874C4.52 21 5.08 21 6.2 21h11.6c1.12 0 1.68 0 2.108-.218a2 2 0 0 0 .874-.874C21 19.48 21 18.92 21 17.8v-7.235c0-.574 0-.861-.074-1.126a2.002 2.002 0 0 0-.318-.65c-.163-.22-.39-.397-.843-.75l-6.783-5.275c-.351-.273-.527-.41-.72-.462a1 1 0 0 0-.523 0c-.194.052-.37.189-.721.462Z" />
+      </symbol>
+      <symbol id="icon-wallet" viewBox="0 0 24 24">
+        <path d="M16 8V4.5c0-.831 0-1.247-.175-1.503a1 1 0 0 0-.657-.42c-.306-.052-.683.122-1.438.47L4.858 7.143c-.673.31-1.01.466-1.257.707a2 2 0 0 0-.486.76C3 8.936 3 9.307 3 10.048V15m13.5-.5h.01M3 11.2v6.6c0 1.12 0 1.68.218 2.108a2 2 0 0 0 .874.874C4.52 21 5.08 21 6.2 21h11.6c1.12 0 1.68 0 2.108-.218a2 2 0 0 0 .874-.874C21 19.48 21 18.92 21 17.8v-6.6c0-1.12 0-1.68-.218-2.108a2 2 0 0 0-.874-.874C19.48 8 18.92 8 17.8 8H6.2c-1.12 0-1.68 0-2.108.218a2 2 0 0 0-.874.874C3 9.52 3 10.08 3 11.2Zm14 3.3a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
+      </symbol>
+      <symbol id="icon-repeat" viewBox="0 0 24 24">
+        <path d="M12 20.5a8.5 8.5 0 0 0 5-15.375M13 22.4l-2-2 2-2M12 3.5a8.5 8.5 0 0 0-5 15.375M11 5.6l2-2-2-2" />
+      </symbol>
+      <symbol id="icon-users" viewBox="0 0 24 24">
+        <path d="M18 15.837c1.456.731 2.704 1.905 3.615 3.373.18.29.27.436.302.637.063.409-.216.912-.597 1.073-.188.08-.398.08-.82.08M16 11.532a4.5 4.5 0 0 0 0-8.064M14 7.5a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM2.56 18.938C4.153 16.545 6.67 15 9.5 15s5.346 1.545 6.94 3.938c.35.525.525.787.505 1.122-.016.26-.187.58-.396.738-.267.202-.635.202-1.371.202H3.822c-.736 0-1.104 0-1.372-.202a1.109 1.109 0 0 1-.395-.738c-.02-.335.155-.597.504-1.122Z" />
+      </symbol>
+      <symbol id="icon-cube" viewBox="0 0 24 24">
+        <path d="M20.5 7.278 12 12m0 0L3.5 7.278M12 12v9.5m9-5.441V7.942c0-.343 0-.514-.05-.667a1 1 0 0 0-.215-.364c-.109-.119-.258-.202-.558-.368l-7.4-4.111c-.284-.158-.425-.237-.575-.267a1 1 0 0 0-.403 0c-.15.03-.292.11-.576.267l-7.4 4.11c-.3.167-.45.25-.558.369a1 1 0 0 0-.215.364C3 7.428 3 7.599 3 7.942v8.117c0 .342 0 .514.05.666a1 1 0 0 0 .215.364c.109.119.258.202.558.368l7.4 4.111c.284.158.425.237.576.268.133.027.27.027.402 0 .15-.031.292-.11.576-.268l7.4-4.11c.3-.167.45-.25.558-.369a.999.999 0 0 0 .215-.364c.05-.152.05-.324.05-.666Z" />
+      </symbol>
+      <symbol id="icon-code-browser" viewBox="0 0 24 24">
+        <path d="M22 9H2m12 8.5 2.5-2.5-2.5-2.5m-4 0L7.5 15l2.5 2.5M2 7.8v8.4c0 1.68 0 2.52.327 3.162a3 3 0 0 0 1.311 1.311C4.28 21 5.12 21 6.8 21h10.4c1.68 0 2.52 0 3.162-.327a3 3 0 0 0 1.311-1.311C22 18.72 22 17.88 22 16.2V7.8c0-1.68 0-2.52-.327-3.162a3 3 0 0 0-1.311-1.311C19.72 3 18.88 3 17.2 3H6.8c-1.68 0-2.52 0-3.162.327a3 3 0 0 0-1.311 1.311C2 5.28 2 6.12 2 7.8Z" />
+      </symbol>
+      <symbol id="icon-layout" viewBox="0 0 24 24">
+        <path d="M3 9h18M9 9v12M7.8 3h8.4c1.68 0 2.52 0 3.162.327a3 3 0 0 1 1.311 1.311C21 5.28 21 6.12 21 7.8v8.4c0 1.68 0 2.52-.327 3.162a3 3 0 0 1-1.311 1.311C18.72 21 17.88 21 16.2 21H7.8c-1.68 0-2.52 0-3.162-.327a3 3 0 0 1-1.311-1.311C3 18.72 3 17.88 3 16.2V7.8c0-1.68 0-2.52.327-3.162a3 3 0 0 1 1.311-1.311C5.28 3 6.12 3 7.8 3Z" />
+      </symbol>
+      <symbol id="icon-link-external" viewBox="0 0 24 24">
+        <path d="M21 9V3m0 0h-6m6 0-8 8m-3-6H7.8c-1.68 0-2.52 0-3.162.327a3 3 0 0 0-1.311 1.311C3 7.28 3 8.12 3 9.8v6.4c0 1.68 0 2.52.327 3.162a3 3 0 0 0 1.311 1.311C5.28 21 6.12 21 7.8 21h6.4c1.68 0 2.52 0 3.162-.327a3 3 0 0 0 1.311-1.311C19 18.72 19 17.88 19 16.2V14" />
+      </symbol>
+      <symbol id="icon-credit-card" viewBox="0 0 24 24">
+        <path d="M22 10H2m0-1.8v7.6c0 1.12 0 1.68.218 2.108a2 2 0 0 0 .874.874C3.52 19 4.08 19 5.2 19h13.6c1.12 0 1.68 0 2.108-.218a2 2 0 0 0 .874-.874C22 17.48 22 16.92 22 15.8V8.2c0-1.12 0-1.68-.218-2.108a2 2 0 0 0-.874-.874C20.48 5 19.92 5 18.8 5H5.2c-1.12 0-1.68 0-2.108.218a2 2 0 0 0-.874.874C2 6.52 2 7.08 2 8.2Z" />
+      </symbol>
+      <symbol id="icon-receipt" viewBox="0 0 24 24">
+        <path d="M4 7.8c0-1.68 0-2.52.327-3.162a3 3 0 0 1 1.311-1.311C6.28 3 7.12 3 8.8 3h6.4c1.68 0 2.52 0 3.162.327a3 3 0 0 1 1.311 1.311C20 5.28 20 6.12 20 7.8V21l-2.75-2-2.5 2L12 19l-2.75 2-2.5-2L4 21V7.8Z" />
+      </symbol>
+      <symbol id="icon-bar-chart" viewBox="0 0 24 24">
+        <path d="M3 11v10m12-10v10M9 3v18M21 3v18" />
+      </symbol>
+      <symbol id="icon-code" viewBox="0 0 24 24">
+        <path d="m16 18 6-6-6-6M8 6l-6 6 6 6" />
+      </symbol>
+      <symbol id="icon-settings" viewBox="0 0 24 24">
+        <path d="M15.05 9H5.5a2.5 2.5 0 0 1 0-5h9.55m-6.1 16h9.55a2.5 2.5 0 0 0 0-5H8.95M3 17.5a3.5 3.5 0 1 0 7 0 3.5 3.5 0 0 0-7 0Zm18-11a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" />
+      </symbol>
+      <symbol id="icon-help" viewBox="0 0 24 24">
+        <path d="M8.464 8.464 4.93 4.93m0 14.142 3.535-3.536m7.072 0 3.535 3.536m0-14.142-3.536 3.535M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Zm-5 0a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z" />
+      </symbol>
+      <symbol id="icon-bell" viewBox="0 0 24 24">
+        <path d="M9.354 21c.705.622 1.632 1 2.646 1s1.94-.378 2.646-1M18 8A6 6 0 1 0 6 8c0 3.09-.78 5.206-1.65 6.605-.735 1.18-1.102 1.771-1.089 1.936.015.182.054.252.2.36.133.099.732.099 1.928.099H18.61c1.196 0 1.795 0 1.927-.098.147-.11.186-.179.2-.361.014-.165-.353-.755-1.088-1.936C18.78 13.206 18 11.09 18 8Z" />
+      </symbol>
+      <symbol id="icon-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14m-7-7h14" />
+      </symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24">
+        <path d="m21 21-3.5-3.5m2.5-6a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0Z" />
+      </symbol>
+      <symbol id="icon-chevron-down" viewBox="0 0 24 24">
+        <path d="m6 9 6 6 6-6" />
+      </symbol>
+      <symbol id="icon-moon" viewBox="0 0 24 24">
+        <path d="M21.5 14.078A8.557 8.557 0 0 1 14.078 21.5c-4.735 0-8.578-3.843-8.578-8.578A8.557 8.557 0 0 1 12.922 4.5c-.464.804-.73 1.737-.73 2.733 0 3.03 2.455 5.485 5.485 5.485.996 0 1.929-.266 2.733-.73Z" />
+      </symbol>
+      <symbol id="icon-sun" viewBox="0 0 24 24">
+        <path d="M12 3V1m0 22v-2m9-9h2M1 12h2m15.364-6.364 1.414-1.414M4.222 19.778l1.414-1.414m0-12.728L4.222 4.222m15.556 15.556-1.414-1.414M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" />
+      </symbol>
+    </svg>
+    <main class="app-shell">
+      <aside class="sidebar" aria-label="Navigation Corya">
+        <div class="sidebar-top">
+          <button class="brand" type="button" data-page="home" aria-label="Corya Home">
+            <span class="brand-icon">C</span>
+            <span>corya</span>
+          </button>
+          <button class="mobile-menu" type="button" aria-expanded="false" aria-controls="side-nav">
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+
+        <nav class="side-nav" id="side-nav">
+          <button class="active" type="button" data-page="home" aria-current="page">
+            <span class="nav-icon"><svg><use href="#icon-home"></use></svg></span>
+            Home
+          </button>
+          <button type="button" data-page="dashboard">
+            <span class="nav-icon"><svg><use href="#icon-bar-chart"></use></svg></span>
+            Dashboard
+          </button>
+          <button type="button" data-page="templates">
+            <span class="nav-icon"><svg><use href="#icon-layout"></use></svg></span>
+            Templates
+          </button>
+          <button type="button" data-page="storefront">
+            <span class="nav-icon"><svg><use href="#icon-link-external"></use></svg></span>
+            Storefront
+          </button>
+          <button type="button" data-page="balances">
+            <span class="nav-icon"><svg><use href="#icon-wallet"></use></svg></span>
+            Balances
+          </button>
+          <button type="button" data-page="transactions">
+            <span class="nav-icon"><svg><use href="#icon-repeat"></use></svg></span>
+            Transactions
+          </button>
+          <button type="button" data-page="customers">
+            <span class="nav-icon"><svg><use href="#icon-users"></use></svg></span>
+            Customers
+          </button>
+          <button type="button" data-page="catalog">
+            <span class="nav-icon"><svg><use href="#icon-cube"></use></svg></span>
+            Product catalog
+          </button>
+        </nav>
+
+        <div class="sidebar-section">
+          <p>Build</p>
+          <button type="button" data-page="apps">
+            <span class="nav-icon"><svg><use href="#icon-code-browser"></use></svg></span>
+            Apps
+            <small>later</small>
+          </button>
+          <button type="button" data-page="catalog">
+            <span class="nav-icon"><svg><use href="#icon-cube"></use></svg></span>
+            All products
+            <small>soon</small>
+          </button>
+        </div>
+
+        <div class="sidebar-section">
+          <p>Products</p>
+          <button type="button" data-page="payments">
+            <span class="nav-icon"><svg><use href="#icon-credit-card"></use></svg></span>
+            Payments
+            <small>soon</small>
+          </button>
+          <button type="button" data-page="billing">
+            <span class="nav-icon"><svg><use href="#icon-receipt"></use></svg></span>
+            Billing
+            <small>soon</small>
+          </button>
+          <button type="button" data-page="reporting">
+            <span class="nav-icon"><svg><use href="#icon-bar-chart"></use></svg></span>
+            Reporting
+            <small>soon</small>
+          </button>
+        </div>
+
+        <div class="sidebar-bottom">
+          <div class="sidebar-simulator">
+            <div>
+              <span>Simulation</span>
+              <small data-sidebar-simulation>€405/day · 15 sales</small>
+            </div>
+            <button type="button" data-page="settings">Edit</button>
+          </div>
+          <button type="button" data-page="developers">
+            <span class="nav-icon"><svg><use href="#icon-code"></use></svg></span>
+            Developers
+          </button>
+          <button type="button" data-page="settings">
+            <span class="nav-icon"><svg><use href="#icon-settings"></use></svg></span>
+            Settings
+          </button>
+          <div class="account-card">
+            <span class="account-avatar">n</span>
+            <div>
+              <span>digital service</span>
+              <small>Free workspace</small>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="dashboard" aria-label="Corya application">
+        <header class="topbar">
+          <label class="search">
+            <span><svg><use href="#icon-search"></use></svg></span>
+            <input type="search" placeholder="Search" />
+          </label>
+
+          <div class="topbar-actions">
+            <button class="icon-button" type="button" aria-label="Help"><svg><use href="#icon-help"></use></svg></button>
+            <button class="icon-button" type="button" aria-label="Notifications"><svg><use href="#icon-bell"></use></svg></button>
+            <button class="icon-button" type="button" aria-label="Settings"><svg><use href="#icon-settings"></use></svg></button>
+            <button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+              <svg><use data-theme-icon href="#icon-moon"></use></svg>
+            </button>
+            <button class="create-button" type="button" aria-label="Create"><svg><use href="#icon-plus"></use></svg></button>
+          </div>
+        </header>
+
+        <section class="page active home-page" data-page="home" aria-label="Corya Home">
+          <div class="home-hero">
+            <div class="home-hero-bg" aria-hidden="true">
+              <span class="cloud cloud-one"></span>
+              <span class="cloud cloud-two"></span>
+              <span class="hill hill-one"></span>
+              <span class="hill hill-two"></span>
+            </div>
+
+            <div class="trust-pill">
+              <span class="trust-icon-row" aria-hidden="true">
+                <span class="trust-icon"><svg><use href="#icon-layout"></use></svg></span>
+                <span class="trust-icon"><svg><use href="#icon-cube"></use></svg></span>
+                <span class="trust-icon"><svg><use href="#icon-bar-chart"></use></svg></span>
+              </span>
+              <span>One workspace for product, shop and sales</span>
+            </div>
+
+            <div class="home-copy">
+              <h1>What are you building today?</h1>
+              <p>Start from a website, mobile app, storefront or software idea. Corya keeps the product, shop and dashboard in one clean workspace.</p>
+            </div>
+
+            <section class="builder-composer" aria-label="Start a new Corya build">
+              <textarea data-builder-prompt placeholder="Build a landing page for my ecommerce skincare brand that drives sales"></textarea>
+              <div class="composer-actions">
+                <button class="round-action" type="button" aria-label="Add context">+</button>
+                <button class="enhance-button" type="button">Enhance prompt</button>
+                <span data-prompt-template-label>Website template selected</span>
+                <div class="composer-tools">
+                  <button class="round-action" type="button" aria-label="Choose visual style"><svg><use href="#icon-layout"></use></svg></button>
+                  <button class="round-action" type="button" aria-label="Attach product context"><svg><use href="#icon-cube"></use></svg></button>
+                  <button class="submit-build" type="button" data-launch-build aria-label="Start build"><svg><use href="#icon-plus"></use></svg></button>
+                </div>
+              </div>
+            </section>
+
+            <div class="template-tray" aria-label="Choose what to build">
+              <button class="template-card active" type="button" data-template-card="Website" data-template-prompt="Build a conversion-focused landing page for a premium digital product">
+                <span class="template-preview website-preview"></span>
+                <span>Website</span>
+              </button>
+              <button class="template-card" type="button" data-template-card="Mobile app" data-template-prompt="Build a mobile app for tracking customers, payments and product access">
+                <span class="template-preview mobile-preview"></span>
+                <span>Mobile app</span>
+              </button>
+              <button class="template-card" type="button" data-template-card="Storefront" data-template-prompt="Build a digital storefront for selling templates, files and software access">
+                <span class="template-preview shop-preview"></span>
+                <span>Storefront</span>
+              </button>
+              <button class="template-card" type="button" data-template-card="SaaS app" data-template-prompt="Build a SaaS dashboard with login, billing, analytics and customer management">
+                <span class="template-preview app-preview"></span>
+                <span>SaaS app</span>
+              </button>
+            </div>
+
+            <div class="home-footer-actions">
+              <button type="button" data-page="templates">View all templates</button>
+              <small data-builder-status>Choose a template, write your idea, then start a build.</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-page="dashboard" aria-label="Financial dashboard">
+          <div class="today-section">
+            <h1>Today</h1>
+
+            <div class="today-grid">
+              <div class="today-main">
+                <div class="metrics-row">
+                  <article>
+                    <button type="button" data-metric-trigger="gross">Gross volume <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span></button>
+                    <strong data-today-gross>€0.00</strong>
+                    <small data-today-time>7:46 PM</small>
+                  </article>
+                  <article class="top-period-control" data-top-period-card>
+                    <button type="button" data-top-period-button aria-expanded="false">
+                      <span data-top-period-label>Yesterday</span>
+                      <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
+                    </button>
+                    <span class="metric-value" data-top-period-value>€0.00</span>
+                    <small data-top-period-meta>Previous day</small>
+                    <div class="top-period-menu" data-top-period-menu role="menu">
+                      <button type="button" data-top-period="yesterday">Yesterday</button>
+                      <button type="button" data-top-period="last7">Last 7 days</button>
+                      <button type="button" data-top-period="last30">Last 30 days</button>
+                      <button type="button" data-top-period="month">This month</button>
+                    </div>
+                  </article>
+                </div>
+
+                <div class="timeline-chart intraday-chart" data-chart="intraday" tabindex="0" aria-label="Gross volume by hour today">
+                  <svg viewBox="0 0 860 180" preserveAspectRatio="none" aria-hidden="true">
+                    <line x1="0" y1="44" x2="860" y2="44" class="chart-grid-line" />
+                    <line x1="0" y1="92" x2="860" y2="92" class="chart-grid-line" />
+                    <line x1="0" y1="140" x2="860" y2="140" class="chart-grid-line" />
+                    <path class="intraday-projected-line" data-intraday-projected d="" />
+                    <path class="intraday-line" data-intraday-line d="" />
+                    <line class="chart-hover-line" data-intraday-hover-line x1="0" x2="0" y1="22" y2="152" />
+                    <circle class="chart-hover-dot" data-intraday-hover-dot cx="0" cy="0" r="4.5" />
+                  </svg>
+                  <div class="chart-tooltip compact-tooltip" data-intraday-tooltip>
+                    <span data-intraday-tooltip-value>€0.00</span>
+                    <small data-intraday-tooltip-date>Today</small>
+                  </div>
+                  <div class="chart-times">
+                    <span>12:00 AM</span>
+                    <span data-intraday-active-time>Now</span>
+                    <span data-current-time-label>12:00 AM</span>
+                  </div>
+                </div>
+              </div>
+
+              <aside class="today-side">
+                <article>
+                  <div>
+                    <span>EUR balance</span>
+                    <button type="button" data-page="balances">View</button>
+                  </div>
+                  <span class="metric-value" data-balance>€0.00</span>
+                </article>
+                <article>
+                  <div>
+                    <span>Payouts</span>
+                    <button type="button" data-page="payments">View</button>
+                  </div>
+                  <span class="metric-value" data-payouts>€0.00</span>
+                  <small data-payout-date>Next payout estimate</small>
+                </article>
+              </aside>
+            </div>
+          </div>
+
+          <div class="overview-section">
+            <div class="section-heading">
+              <h2>Your overview</h2>
+              <div class="section-actions">
+                <button type="button">+ Add</button>
+                <button type="button">Edit</button>
+              </div>
+            </div>
+
+            <div class="filters">
+              <div class="filter-control">
+                <button class="filter-button" type="button" data-filter-button="range" aria-expanded="false">
+                  Date range <span data-range-label>Last 7 days</span> <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
+                </button>
+                <div class="filter-menu" data-filter-menu="range" role="menu">
+                  <button type="button" data-range="7">Last 7 days</button>
+                  <button type="button" data-range="30">Last 30 days</button>
+                  <button type="button" data-range="month">This month</button>
+                </div>
+              </div>
+
+              <div class="filter-control">
+                <button class="filter-button" type="button" data-filter-button="interval" aria-expanded="false">
+                  <span data-interval-label>Daily</span> <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
+                </button>
+                <div class="filter-menu" data-filter-menu="interval" role="menu">
+                  <button type="button" data-interval="day">Daily</button>
+                  <button type="button" data-interval="week">Weekly</button>
+                  <button type="button" data-interval="month">Monthly</button>
+                </div>
+              </div>
+
+              <div class="filter-control">
+                <button class="filter-button" type="button" data-filter-button="compare" aria-expanded="false">
+                  Compare <span data-compare-label>Previous period</span> <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
+                </button>
+                <div class="filter-menu" data-filter-menu="compare" role="menu">
+                  <button type="button" data-compare="previous">Previous period</button>
+                  <button type="button" data-compare="none">No compare</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="finance-grid">
+              <article class="finance-card payments-card">
+                <div class="card-head">
+                  <h3>Payments</h3>
+                  <button type="button" aria-label="Open payments"><svg><use href="#icon-link-external"></use></svg></button>
+                </div>
+                <div class="chart-summary">
+                  <span data-payments-total>€0.00</span>
+                  <small data-payments-meta>0 sales · selected range</small>
+                </div>
+                <div class="interactive-chart" data-chart="payments" tabindex="0" aria-label="Payments over selected period">
+                  <svg viewBox="0 0 640 240" preserveAspectRatio="none" aria-hidden="true">
+                    <line x1="24" y1="44" x2="616" y2="44" class="chart-grid-line" />
+                    <line x1="24" y1="94" x2="616" y2="94" class="chart-grid-line" />
+                    <line x1="24" y1="144" x2="616" y2="144" class="chart-grid-line" />
+                    <line x1="24" y1="194" x2="616" y2="194" class="chart-grid-line" />
+                    <path class="chart-area-line" data-chart-line d="" />
+                    <line class="chart-hover-line" data-chart-hover-line x1="0" x2="0" y1="28" y2="212" />
+                    <circle class="chart-hover-dot" data-chart-hover-dot cx="0" cy="0" r="5" />
+                  </svg>
+                  <div class="chart-tooltip" data-chart-tooltip>
+                    <span data-tooltip-value>€0.00</span>
+                    <small data-tooltip-date>Today</small>
+                  </div>
+                  <div class="chart-axis">
+                    <span data-axis-start>Day 1</span>
+                    <span data-axis-active>Today</span>
+                    <span data-axis-end>Day 7</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="finance-card metric-card" data-summary-card="gross">
+                <div class="card-head">
+                  <h3>Gross volume</h3>
+                  <button type="button" aria-label="Export gross volume"><svg><use href="#icon-link-external"></use></svg></button>
+                </div>
+                <span class="card-value" data-gross-total>€0.00</span>
+                <p data-gross-previous>€0.00 previous period</p>
+                <div class="mini-chart" aria-hidden="true">
+                  <svg viewBox="0 0 260 90" preserveAspectRatio="none">
+                    <line x1="0" y1="70" x2="260" y2="70" class="mini-grid" />
+                    <path data-mini-line="gross" d="" />
+                  </svg>
+                </div>
+                <small data-gross-delta>0.0% vs previous</small>
+              </article>
+
+              <article class="finance-card metric-card" data-summary-card="net">
+                <div class="card-head">
+                  <h3>Net volume</h3>
+                  <button type="button" aria-label="Export net volume"><svg><use href="#icon-link-external"></use></svg></button>
+                </div>
+                <span class="card-value" data-net-total>€0.00</span>
+                <p data-net-previous>€0.00 previous period</p>
+                <div class="mini-chart" aria-hidden="true">
+                  <svg viewBox="0 0 260 90" preserveAspectRatio="none">
+                    <line x1="0" y1="70" x2="260" y2="70" class="mini-grid" />
+                    <path data-mini-line="net" d="" />
+                  </svg>
+                </div>
+                <small data-net-delta>0.0% vs previous</small>
+              </article>
+            </div>
+
+            <div class="signal-grid" aria-label="Business signals">
+              <article>
+                <span>Sales</span>
+                <p data-sales-total>0</p>
+                <small data-sales-meta>0/day average</small>
+              </article>
+              <article>
+                <span>Average order</span>
+                <p data-average-order>€0.00</p>
+                <small>From simulated product price</small>
+              </article>
+              <article>
+                <span>Revenue/day</span>
+                <p data-daily-average>€0.00</p>
+                <small>Current range average</small>
+              </article>
+              <article>
+                <span>Projected month</span>
+                <p data-projected-month>€0.00</p>
+                <small>Based on current pace</small>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="page placeholder-page" data-page="balances" aria-label="Balances">
+          <h1>Balances</h1>
+          <p>This page will be added later. Home stays focused on the financial dashboard for now.</p>
+        </section>
+
+        <section class="page placeholder-page" data-page="transactions" aria-label="Transactions">
+          <h1>Transactions</h1>
+          <p>This page will be added later. It will list sales, refunds, fees and payouts.</p>
+        </section>
+
+        <section class="page placeholder-page" data-page="customers" aria-label="Customers">
+          <h1>Customers</h1>
+          <p>This page will be added later. It will contain buyers and product access.</p>
+        </section>
+
+        <section class="page placeholder-page" data-page="catalog" aria-label="Product catalog">
+          <h1>Product catalog</h1>
+          <p>This page will be added later. It will contain apps, templates and digital products.</p>
+        </section>
+
+        <section class="page placeholder-page" data-page="apps" aria-label="Apps">
+          <h1>Apps</h1>
+          <p>This page will be added later. It will become the core builder area.</p>
+        </section>
+
+        <section class="page placeholder-page" data-page="templates" aria-label="Templates">
+          <h1>Templates</h1>
+          <p>This page will be added later. It will contain the premium template library.</p>
+        </section>
+
+        <section class="page placeholder-page" data-page="storefront" aria-label="Storefront">
+          <h1>Storefront</h1>
+          <p>This page will be added later. It will manage the simple digital shop.</p>
+        </section>
+
+        <section class="page placeholder-page" data-page="payments" aria-label="Payments">
+          <h1>Payments</h1>
+          <p>This page will be added later. It will connect checkout, payouts and invoices.</p>
+        </section>
+
+        <section class="page placeholder-page" data-page="billing" aria-label="Billing">
+          <h1>Billing</h1>
+          <p>This page will be added later. It will manage subscriptions and plans.</p>
+        </section>
+
+        <section class="page placeholder-page" data-page="reporting" aria-label="Reporting">
+          <h1>Reporting</h1>
+          <p>This page will be added later. It will group revenue, costs and conversion reports.</p>
+        </section>
+
+        <section class="page placeholder-page" data-page="developers" aria-label="Developers">
+          <h1>Developers</h1>
+          <p>This page will be added later. It will contain API keys and app logs.</p>
+        </section>
+
+        <section class="page settings-page" data-page="settings" aria-label="Settings">
+          <h1>Settings</h1>
+          <div class="settings-layout">
+            <article class="settings-card simulator-card">
+              <div class="settings-card-heading">
+                <h2>Revenue simulator</h2>
+                <p>Use this to make the dashboard behave like a real business while the backend is not connected yet.</p>
+              </div>
+
+              <form class="simulator-form" id="simulator-form">
+                <label>
+                  <span>Currency</span>
+                  <select name="currency" data-setting="currency">
+                    <option value="EUR">EUR</option>
+                    <option value="USD">USD</option>
+                  </select>
+                </label>
+
+                <label>
+                  <span>Total amount to spread</span>
+                  <input name="totalRevenue" data-setting="totalRevenue" type="number" min="0" step="1" placeholder="9200" />
+                  <small>Optional. Use “Distribute total” to spread it across the last 30 days.</small>
+                </label>
+
+                <label>
+                  <span>Average revenue/day</span>
+                  <input name="averageDailyRevenue" data-setting="averageDailyRevenue" type="number" min="0" step="1" />
+                </label>
+
+                <label>
+                  <span>Average product price</span>
+                  <input name="productPrice" data-setting="productPrice" type="number" min="1" step="0.01" />
+                </label>
+
+                <label>
+                  <span>Average sales/day</span>
+                  <input name="averageSales" data-setting="averageSales" type="number" min="0" step="1" />
+                </label>
+
+                <label>
+                  <span>Day-to-day variation</span>
+                  <input name="variability" data-setting="variability" type="number" min="0" max="80" step="1" />
+                </label>
+
+                <div class="simulator-actions">
+                  <button type="submit" data-simulate="daily">Apply simulation</button>
+                  <button type="submit" data-simulate="spread">Distribute total</button>
+                  <button type="button" data-simulate="reset">Reset sample</button>
+                </div>
+              </form>
+            </article>
+
+            <aside class="settings-card simulation-preview">
+              <h2>Current model</h2>
+              <dl>
+                <div>
+                  <dt>Daily pace</dt>
+                  <dd data-preview-daily>€405/day</dd>
+                </div>
+                <div>
+                  <dt>Product</dt>
+                  <dd data-preview-product>€27 · 15 sales/day</dd>
+                </div>
+                <div>
+                  <dt>30-day gross</dt>
+                  <dd data-preview-thirty>€0.00</dd>
+                </div>
+                <div>
+                  <dt>Mode</dt>
+                  <dd data-preview-mode>Daily average</dd>
+                </div>
+              </dl>
+            </aside>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js?v=20260626-top-period"></script>
+  </body>
+</html>
