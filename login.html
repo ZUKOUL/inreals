@@ -15,67 +15,114 @@
     <link rel="stylesheet" href="auth.css" />
   </head>
   <body>
-    <main class="auth-shell">
-      <header class="auth-header">
-        <a class="brand-mark" href="/" aria-label="Corya">
-          <span class="brand-symbol" aria-hidden="true"><span></span></span>
-          <span>corya</span>
-        </a>
-        <a class="ghost-link" href="/">Back to landing</a>
-      </header>
+    <main class="auth-page">
+      <section class="auth-panel" aria-label="Connexion Corya">
+        <header class="auth-topbar">
+          <a class="auth-brand" href="/" aria-label="Corya">
+            <span>corya</span>
+          </a>
+          <button class="top-mode" type="button" data-auth-mode="signup">Sign up</button>
+        </header>
 
-      <section class="auth-main" aria-label="Connexion Corya">
-        <div class="auth-copy">
-          <span class="eyebrow">Private workspace access</span>
-          <h1>One account for the product, shop and dashboard.</h1>
-          <p>
-            Connecte-toi pour retrouver ton builder, tes produits, tes clients et tes chiffres au
-            même endroit.
-          </p>
-        </div>
+        <div class="auth-form-wrap">
+          <h1 data-auth-title>Welcome back</h1>
+          <p class="sr-only" data-auth-subtitle>Sign in to continue to your Corya workspace.</p>
 
-        <section class="auth-card">
-          <div class="auth-tabs" role="tablist" aria-label="Mode de connexion">
-            <button type="button" class="active" data-auth-mode="login">Log in</button>
-            <button type="button" data-auth-mode="signup">Sign up</button>
+          <div class="provider-stack" aria-label="Connexion rapide">
+            <button class="provider-button" type="button" data-provider="google">
+              <span class="google-mark" aria-hidden="true">G</span>
+              <span>Sign in with Google</span>
+            </button>
+            <button class="provider-button" type="button" data-provider="twitter">
+              <span class="x-mark" aria-hidden="true">𝕏</span>
+              <span>Sign in with X</span>
+            </button>
           </div>
 
-          <div class="auth-title">
-            <h2 data-auth-title>Welcome back</h2>
-            <p data-auth-subtitle>Sign in to continue to your Corya workspace.</p>
+          <div class="auth-divider" aria-hidden="true">
+            <span></span>
+            <em>or</em>
+            <span></span>
           </div>
 
           <form class="auth-form" data-auth-form>
             <label class="field" data-name-field hidden>
-              <span>Name</span>
-              <input name="name" type="text" autocomplete="name" placeholder="Nathan" />
+              <span class="sr-only">Name</span>
+              <input name="name" type="text" autocomplete="name" placeholder="Name" />
             </label>
+
             <label class="field">
-              <span>Email</span>
-              <input name="email" type="email" autocomplete="email" placeholder="you@company.com" required />
+              <span class="sr-only">Email</span>
+              <input name="email" type="email" autocomplete="email" placeholder="Email" required />
             </label>
-            <label class="field">
-              <span>Password</span>
+
+            <label class="field password-field">
+              <span class="sr-only">Password</span>
               <input
                 name="password"
                 type="password"
                 autocomplete="current-password"
-                placeholder="••••••••"
+                placeholder="Password"
                 minlength="6"
                 required
               />
+              <button class="password-toggle" type="button" aria-label="Show password">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M2.5 12s3.4-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.4 5.5-9.5 5.5S2.5 12 2.5 12Z"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="2.8"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  />
+                </svg>
+              </button>
             </label>
-            <button class="auth-submit" type="submit" data-auth-submit>Continue</button>
+
+            <div class="auth-options">
+              <label class="remember">
+                <input type="checkbox" name="remember" />
+                <span>Remember me</span>
+              </label>
+              <button class="plain-button" type="button">Forgot password?</button>
+            </div>
+
+            <button class="auth-submit" type="submit" data-auth-submit>
+              <span>Sign in</span>
+              <span aria-hidden="true">→</span>
+            </button>
+
             <p class="auth-error" data-auth-error aria-live="polite"></p>
             <p class="auth-note" data-auth-note></p>
           </form>
 
-          <p class="supabase-note">
-            Structure prête pour Supabase Auth. Pour passer du mode démo au vrai login, il faudra
-            ajouter l’URL Supabase et la clé anon publique.
+          <p class="mode-copy" data-mode-copy>
+            New to corya?
+            <button type="button" data-auth-mode="signup">Create an account</button>
           </p>
-        </section>
+        </div>
+
+        <footer class="auth-footer">
+          <span>© 2026 corya</span>
+          <nav aria-label="Legal links">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+          </nav>
+        </footer>
       </section>
+
+      <aside class="auth-visual" aria-hidden="true">
+        <img src="public/assets/auth/login-cherry-tree.png" alt="" />
+      </aside>
     </main>
 
     <script src="auth-config.js"></script>
