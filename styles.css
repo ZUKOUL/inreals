@@ -1499,6 +1499,10 @@ h1 {
   align-items: start;
 }
 
+.revenue-hero > div {
+  min-width: 0;
+}
+
 .revenue-eyebrow {
   color: var(--text-strong);
   font-size: 15px;
@@ -1523,15 +1527,15 @@ h1 {
 .revenue-hero strong {
   display: block;
   margin-top: 4px;
-  color: #143a7d;
-  font-size: clamp(46px, 7vw, 72px);
-  font-weight: 560;
-  letter-spacing: -0.055em;
-  line-height: 0.96;
+  color: var(--accent);
+  font-size: clamp(42px, 5.8vw, 64px);
+  font-weight: 540;
+  letter-spacing: -0.05em;
+  line-height: 1;
 }
 
 :root[data-theme="dark"] .revenue-hero strong {
-  color: #8ab1ff;
+  color: var(--accent);
 }
 
 .revenue-controls {
@@ -1564,8 +1568,8 @@ h1 {
 }
 
 .revenue-grain button.active {
-  color: #143a7d;
-  background: #eaf1ff;
+  color: var(--text-strong);
+  background: var(--accent-soft);
 }
 
 .revenue-blur-toggle {
@@ -1635,12 +1639,12 @@ h1 {
 }
 
 .revenue-chart-area {
-  fill: url("#revenue-blue-fill");
+  fill: url("#revenue-violet-fill");
 }
 
 .revenue-chart-line {
   fill: none;
-  stroke: #1f5fd5;
+  stroke: var(--accent);
   stroke-width: 4;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -1657,7 +1661,7 @@ h1 {
 }
 
 .revenue-tooltip::before {
-  background: #1f5fd5;
+  background: var(--accent);
 }
 
 .revenue-axis {
@@ -1702,9 +1706,10 @@ h1 {
 .orders-heading button {
   height: 32px;
   padding: 0 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line));
   border-radius: 999px;
-  color: #143a7d;
-  background: #edf4ff;
+  color: var(--text-strong);
+  background: var(--accent-soft);
   font-size: 12px;
   font-weight: 470;
 }
@@ -1751,6 +1756,8 @@ h1 {
   font-size: 13px;
   text-align: left;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .orders-table th {
@@ -1759,8 +1766,14 @@ h1 {
 }
 
 .orders-table td:nth-child(5) {
-  color: #143a7d;
+  color: var(--accent);
   font-weight: 500;
+}
+
+.orders-table td:nth-child(2),
+.orders-table td:nth-child(3),
+.orders-table td:nth-child(4) {
+  max-width: 190px;
 }
 
 .payment-cell {

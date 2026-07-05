@@ -1021,6 +1021,7 @@ function renderRevenueDashboard() {
   revenueSeries = built.rows;
   revenueOrders = built.orders;
 
+  normalizeRevenueCustomRange();
   const rows = getRevenueRowsInRange();
   const grouped = groupRevenueRows(rows, revenueState.grain);
   const total = sumRows(rows, 'gross');
@@ -1037,8 +1038,8 @@ function renderRevenueDashboard() {
   });
   const startField = document.querySelector('[data-revenue-start]');
   const endField = document.querySelector('[data-revenue-end]');
-  if (startField && !startField.value) startField.value = revenueState.customStart || isoDay(addDays(startOfDay(new Date()), -29));
-  if (endField && !endField.value) endField.value = revenueState.customEnd || lastDate;
+  if (startField) startField.value = revenueState.customStart || isoDay(addDays(startOfDay(new Date()), -29));
+  if (endField) endField.value = revenueState.customEnd || lastDate;
   const blurToggle = document.querySelector('[data-revenue-blur]');
   if (blurToggle) blurToggle.checked = revenueSettings.blur;
   document.querySelector('[data-dashboard-panel="revenue"]')?.classList.toggle('is-blurred', revenueSettings.blur);
@@ -1056,20 +1057,36 @@ function renderRevenueDashboard() {
 }
 
 function getRevenueRangeLabel() {
-  if (revenueState.range === 'custom') return 'Custom';
-  if (revenueState.range === 'month') return 'This month';
-  return `Last ${revenueState.range} days`;
+  if (revenueState.range === 'custom') return 'Personnalisé';
+  if (revenueState.range === 'month') return 'Ce mois';
+  if (revenueState.range === '7') return '7 jours';
+  if (revenueState.range === '30') return '30 jours';
+  return '365 jours';
 }
 
 function renderRevenueChart(data) {
   const chart = document.querySelector('[data-revenue-chart]');
   const line = chart?.querySelector('[data-revenue-line]');
   const area = chart?.querySelector('[data-revenue-area]');
-  if (!chart || !line || !area || !data.length) return;
+  if (!chart || !line || !area) return;
+
+  if (!data.length) {
+    line.setAttribute('d', '');
+    area.setAttribute('d', '');
+    chart.__points = [];
+    chart.classList.remove('is-active');
+    chart.__activeIndex = undefined;
+    setText('[data-revenue-axis-start]', '');
+    setText('[data-revenue-axis-active]', 'Aucune donnée');
+    setText('[data-revenue-axis-end]', '');
+    return;
+  }
 
   const points = getChartPoints(data, 'gross', 960, 300, 34, 36, 254);
-  const path = buildSmoothPath(points, data.length > 90 ? 0.08 : 0.18);
-  const areaPath = `${path} L ${formatPathNumber(points[points.length - 1].x)} 268 L ${formatPathNumber(points[0].x)} 268 Z`;
+  const path = buildRevenuePath(points, data.length);
+  const firstX = data.length === 1 ? Math.max(34, points[0].x - 42) : points[0].x;
+  const lastX = data.length === 1 ? Math.min(926, points[0].x + 42) : points[points.length - 1].x;
+  const areaPath = `${path} L ${formatPathNumber(lastX)} 268 L ${formatPathNumber(firstX)} 268 Z`;
 
   line.setAttribute('d', path);
   area.setAttribute('d', areaPath);
@@ -1080,6 +1097,32 @@ function renderRevenueChart(data) {
   setText('[data-revenue-axis-start]', data[0]?.label || '');
   setText('[data-revenue-axis-active]', `${formatNumber(sumRows(data, 'sales'))} sales`);
   setText('[data-revenue-axis-end]', data[data.length - 1]?.label || '');
+}
+
+function buildRevenuePath(points, length) {
+  if (length !== 1) return buildSmoothPath(points, length > 90 ? 0.08 : 0.18);
+  const point = points[0];
+  const startX = Math.max(34, point.x - 42);
+  const endX = Math.min(926, point.x + 42);
+  return `M ${formatPathNumber(startX)} ${formatPathNumber(point.y)} L ${formatPathNumber(endX)} ${formatPathNumber(point.y)}`;
+}
+
+function normalizeRevenueCustomRange() {
+  if (revenueState.range !== 'custom') return;
+
+  const today = startOfDay(new Date());
+  const firstDate = revenueSeries[0]?.iso || isoDay(addDays(today, -364));
+  const lastDate = revenueSeries[revenueSeries.length - 1]?.iso || isoDay(today);
+  revenueState.customStart = revenueState.customStart || isoDay(addDays(today, -29));
+  revenueState.customEnd = revenueState.customEnd || lastDate;
+
+  if (revenueState.customStart < firstDate) revenueState.customStart = firstDate;
+  if (revenueState.customEnd > lastDate) revenueState.customEnd = lastDate;
+  if (revenueState.customStart > revenueState.customEnd) {
+    const previousStart = revenueState.customStart;
+    revenueState.customStart = revenueState.customEnd;
+    revenueState.customEnd = previousStart;
+  }
 }
 
 function renderRevenueOrders(orders) {
@@ -1562,6 +1605,16 @@ document.querySelectorAll('[data-dashboard-tab]').forEach((button) => {
 document.querySelectorAll('[data-revenue-range]').forEach((button) => {
   button.addEventListener('click', () => {
     revenueState.range = button.dataset.revenueRange;
+    if (revenueState.range === '365') {
+      revenueState.grain = 'month';
+    } else {
+      revenueState.grain = 'day';
+    }
+    if (revenueState.range === 'custom') {
+      const today = startOfDay(new Date());
+      revenueState.customStart = revenueState.customStart || document.querySelector('[data-revenue-start]')?.value || isoDay(addDays(today, -29));
+      revenueState.customEnd = revenueState.customEnd || document.querySelector('[data-revenue-end]')?.value || isoDay(today);
+    }
     closeFilterMenus();
     renderRevenueDashboard();
   });

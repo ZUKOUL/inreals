@@ -497,43 +497,43 @@
           <section class="dashboard-panel revenue-dashboard" data-dashboard-panel="revenue" aria-label="Revenue dashboard">
             <div class="revenue-hero">
               <div>
-                <p class="revenue-eyebrow">My Income</p>
+                <p class="revenue-eyebrow">Income</p>
                 <h2>Revenu</h2>
-                <span>Total Revenue</span>
+                <span>Revenu total</span>
                 <strong data-revenue-total>€0.00</strong>
               </div>
               <div class="revenue-controls">
                 <div class="filter-control">
                   <button class="filter-button" type="button" data-filter-button="revenue-range" aria-expanded="false">
-                    Period <span data-revenue-range-label>Last 365 days</span> <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
+                    Période <span data-revenue-range-label>365 jours</span> <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
                   </button>
                   <div class="filter-menu" data-filter-menu="revenue-range" role="menu">
-                    <button type="button" data-revenue-range="7">Last 7 days</button>
-                    <button type="button" data-revenue-range="30">Last 30 days</button>
-                    <button type="button" data-revenue-range="365">Last 365 days</button>
-                    <button type="button" data-revenue-range="month">This month</button>
-                    <button type="button" data-revenue-range="custom">Custom</button>
+                    <button type="button" data-revenue-range="7">7 jours</button>
+                    <button type="button" data-revenue-range="30">30 jours</button>
+                    <button type="button" data-revenue-range="365">365 jours</button>
+                    <button type="button" data-revenue-range="month">Ce mois</button>
+                    <button type="button" data-revenue-range="custom">Personnalisé</button>
                   </div>
                 </div>
                 <div class="revenue-grain" aria-label="Revenue interval">
-                  <button class="active" type="button" data-revenue-grain="day">Day</button>
-                  <button type="button" data-revenue-grain="week">Week</button>
-                  <button type="button" data-revenue-grain="month">Month</button>
+                  <button class="active" type="button" data-revenue-grain="day">Jour</button>
+                  <button type="button" data-revenue-grain="week">Semaine</button>
+                  <button type="button" data-revenue-grain="month">Mois</button>
                 </div>
                 <label class="revenue-blur-toggle">
                   <input type="checkbox" data-revenue-blur />
-                  <span>Blur details</span>
+                  <span>Flouter</span>
                 </label>
               </div>
             </div>
 
             <div class="revenue-custom-range" data-revenue-custom hidden>
               <label>
-                <span>Start</span>
+                <span>Début</span>
                 <input type="date" data-revenue-start />
               </label>
               <label>
-                <span>End</span>
+                <span>Fin</span>
                 <input type="date" data-revenue-end />
               </label>
             </div>
@@ -542,9 +542,9 @@
               <div class="revenue-chart" data-revenue-chart tabindex="0" aria-label="Revenue over selected period">
                 <svg viewBox="0 0 960 300" preserveAspectRatio="none" aria-hidden="true">
                   <defs>
-                    <linearGradient id="revenue-blue-fill" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="0%" stop-color="#1f5fd5" stop-opacity="0.18" />
-                      <stop offset="100%" stop-color="#1f5fd5" stop-opacity="0" />
+                    <linearGradient id="revenue-violet-fill" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stop-color="#BC9BFF" stop-opacity="0.22" />
+                      <stop offset="100%" stop-color="#BC9BFF" stop-opacity="0" />
                     </linearGradient>
                   </defs>
                   <line x1="34" y1="58" x2="928" y2="58" class="chart-grid-line" />
@@ -558,12 +558,12 @@
                 </svg>
                 <div class="chart-tooltip revenue-tooltip" data-revenue-tooltip>
                   <span data-revenue-tooltip-value>€0.00</span>
-                  <small data-revenue-tooltip-date>Today</small>
+                  <small data-revenue-tooltip-date>Aujourd’hui</small>
                 </div>
                 <div class="revenue-axis">
                   <span data-revenue-axis-start>Feb 01</span>
-                  <span data-revenue-axis-active>Selected period</span>
-                  <span data-revenue-axis-end>Today</span>
+                  <span data-revenue-axis-active>Période</span>
+                  <span data-revenue-axis-end>Aujourd’hui</span>
                 </div>
               </div>
             </article>
@@ -571,15 +571,15 @@
             <section class="orders-section">
               <div class="orders-heading">
                 <h3>Latest Orders</h3>
-                <button type="button" data-revenue-regenerate>Regenerate data</button>
+                <button type="button" data-revenue-regenerate>Actualiser</button>
               </div>
               <div class="order-chips" aria-label="Order columns">
-                <span>+ Date & Time</span>
+                <span>+ Date</span>
                 <span>+ Email</span>
-                <span>+ Product</span>
-                <span>+ Amount</span>
-                <span>+ Discount Code</span>
-                <span>+ Payment</span>
+                <span>+ Produit</span>
+                <span>+ Montant</span>
+                <span>+ Code</span>
+                <span>+ Paiement</span>
               </div>
               <div class="orders-table-wrap">
                 <table class="orders-table">
@@ -588,10 +588,10 @@
                       <th>Date</th>
                       <th>Email</th>
                       <th>Client</th>
-                      <th>Product</th>
-                      <th>Amount</th>
-                      <th>Discount Code</th>
-                      <th>Payment</th>
+                      <th>Produit</th>
+                      <th>Montant</th>
+                      <th>Code</th>
+                      <th>Paiement</th>
                     </tr>
                   </thead>
                   <tbody data-revenue-orders></tbody>
@@ -601,8 +601,8 @@
 
             <section class="revenue-settings-card">
               <div>
-                <h3>Revenue setup</h3>
-                <p>Paramètre le prix, les ventes et les détails affichés dans ce dashboard de démonstration.</p>
+                <h3>Réglages revenu</h3>
+                <p>Prix, ventes et détails clients affichés dans le dashboard.</p>
               </div>
               <form class="revenue-settings-form" id="revenue-settings-form">
                 <label>
@@ -630,8 +630,8 @@
                   <textarea name="products" data-revenue-setting="products" rows="3"></textarea>
                 </label>
                 <div class="simulator-actions">
-                  <button type="submit">Save settings</button>
-                  <button type="button" data-revenue-reset>Reset</button>
+                  <button type="submit">Enregistrer</button>
+                  <button type="button" data-revenue-reset>Réinitialiser</button>
                 </div>
               </form>
             </section>
