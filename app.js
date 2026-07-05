@@ -5,6 +5,7 @@ const pages = document.querySelectorAll('.page');
 const pageButtons = document.querySelectorAll('button[data-page]');
 const navButtons = document.querySelectorAll('.side-nav button, .sidebar-section button, .sidebar-bottom button');
 const simulatorForm = document.querySelector('#simulator-form');
+const revenueSettingsForm = document.querySelector('#revenue-settings-form');
 const themeToggle = document.querySelector('[data-theme-toggle]');
 const themeIcon = document.querySelector('[data-theme-icon]');
 const builderPrompt = document.querySelector('[data-builder-prompt]');
@@ -16,6 +17,7 @@ const logoutButton = document.querySelector('[data-logout]');
 
 const AUTH_SESSION_KEY = 'corya:auth-session:v1';
 const SETTINGS_KEY = 'corya:simulation-settings:v1';
+const REVENUE_SETTINGS_KEY = 'corya:revenue-settings:v1';
 const THEME_KEY = 'corya:theme:v1';
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -30,15 +32,35 @@ const defaultSettings = {
   seed: 'corya-sample'
 };
 
+const defaultRevenueSettings = {
+  productPrice: 39,
+  minSales: 5,
+  maxSales: 6,
+  emailDomain: 'corya.fr',
+  clientNames: 'Lina Moreau\nNadia Ferrand\nJules Martin\nSofia Benali\nHugo Laurent\nCamille Roy\nNoah Petit\nMaya Cohen\nAdam Lefevre\nEva Bernard',
+  products: 'Digital Download\nTemplate Shop Access\nCorya Starter\nCreator Pack\nPrivate Setup\nRevenue Report',
+  blur: false,
+  seed: 'corya-income'
+};
+
 let settings = loadSettings();
+let revenueSettings = loadRevenueSettings();
 let dashboardState = {
   range: '7',
   interval: 'day',
   compare: 'previous',
   topPeriod: 'yesterday'
 };
+let revenueState = {
+  range: '365',
+  grain: 'day',
+  customStart: '',
+  customEnd: ''
+};
 let series = [];
 let groupedSeries = [];
+let revenueSeries = [];
+let revenueOrders = [];
 
 function loadAuthSession() {
   try {
@@ -151,6 +173,19 @@ function saveSettings() {
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 }
 
+function loadRevenueSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(REVENUE_SETTINGS_KEY));
+    return sanitizeRevenueSettings({ ...defaultRevenueSettings, ...saved });
+  } catch {
+    return { ...defaultRevenueSettings };
+  }
+}
+
+function saveRevenueSettings() {
+  localStorage.setItem(REVENUE_SETTINGS_KEY, JSON.stringify(revenueSettings));
+}
+
 function sanitizeSettings(input) {
   const productPrice = clamp(toNumber(input.productPrice, defaultSettings.productPrice), 1, 100000);
   const averageSales = clamp(toNumber(input.averageSales, defaultSettings.averageSales), 0, 100000);
@@ -165,6 +200,23 @@ function sanitizeSettings(input) {
     variability: clamp(toNumber(input.variability, defaultSettings.variability), 0, 80),
     mode: input.mode === 'spread' ? 'spread' : 'daily',
     seed: String(input.seed || Date.now())
+  };
+}
+
+function sanitizeRevenueSettings(input) {
+  const productPrice = clamp(toNumber(input.productPrice, defaultRevenueSettings.productPrice), 1, 100000);
+  const minSales = Math.round(clamp(toNumber(input.minSales, defaultRevenueSettings.minSales), 1, 100));
+  const maxSales = Math.round(clamp(toNumber(input.maxSales, defaultRevenueSettings.maxSales), minSales, 100));
+
+  return {
+    productPrice,
+    minSales,
+    maxSales,
+    emailDomain: String(input.emailDomain || defaultRevenueSettings.emailDomain).replace(/^@/, '').trim() || defaultRevenueSettings.emailDomain,
+    clientNames: String(input.clientNames || defaultRevenueSettings.clientNames),
+    products: String(input.products || defaultRevenueSettings.products),
+    blur: Boolean(input.blur),
+    seed: String(input.seed || defaultRevenueSettings.seed)
   };
 }
 
@@ -230,12 +282,12 @@ function getMinuteOfDay(date = new Date()) {
 function buildSeries() {
   const rows = [];
   const today = startOfDay(new Date());
-  const start = addDays(today, -89);
+  const start = addDays(today, -364);
   const baseDaily = settings.averageDailyRevenue || settings.productPrice * settings.averageSales;
   const expectedSales = settings.productPrice > 0 ? baseDaily / settings.productPrice : settings.averageSales;
   const variability = settings.variability / 100;
 
-  for (let index = 0; index < 90; index += 1) {
+  for (let index = 0; index < 365; index += 1) {
     const date = addDays(start, index);
     const iso = isoDay(date);
     const weekday = date.getDay();
@@ -504,6 +556,7 @@ function renderDashboard() {
 
   renderToday();
   renderOverview(currentRows, previousRows);
+  renderRevenueDashboard();
   renderFilters();
   populateSettingsForm();
   renderSimulationPreview();
@@ -792,6 +845,327 @@ function getIntervalLabel() {
   return 'Daily';
 }
 
+function getListFromTextarea(value, fallback) {
+  const items = String(value || '')
+    .split('\n')
+    .map((item) => item.trim())
+    .filter(Boolean);
+  return items.length ? items : fallback.split('\n').map((item) => item.trim()).filter(Boolean);
+}
+
+function buildRevenueData() {
+  const rows = [];
+  const orders = [];
+  const today = startOfDay(new Date());
+  const start = addDays(today, -364);
+  const clients = getListFromTextarea(revenueSettings.clientNames, defaultRevenueSettings.clientNames);
+  const products = getListFromTextarea(revenueSettings.products, defaultRevenueSettings.products);
+  const salesRange = Math.max(0, revenueSettings.maxSales - revenueSettings.minSales);
+
+  for (let dayIndex = 0; dayIndex < 365; dayIndex += 1) {
+    const date = addDays(start, dayIndex);
+    const iso = isoDay(date);
+    const salesCount = revenueSettings.minSales + Math.round(randomFromKey(`${revenueSettings.seed}:${iso}:count`) * salesRange);
+    const spikeRoll = randomFromKey(`${revenueSettings.seed}:${iso}:spike`);
+    const isSpike = spikeRoll > 0.965;
+    const dayOrders = [];
+    let gross = 0;
+
+    for (let saleIndex = 0; saleIndex < salesCount; saleIndex += 1) {
+      const minute = getRevenueSaleMinute(iso, saleIndex);
+      const client = clients[Math.floor(randomFromKey(`${revenueSettings.seed}:${iso}:client:${saleIndex}`) * clients.length) % clients.length];
+      const product = products[Math.floor(randomFromKey(`${revenueSettings.seed}:${iso}:product:${saleIndex}`) * products.length) % products.length];
+      const emailName = client.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z]+/g, '.').replace(/^\.+|\.+$/g, '');
+      const amountVariation = 0.84 + randomFromKey(`${revenueSettings.seed}:${iso}:amount:${saleIndex}`) * 0.34;
+      const spikeBoost = isSpike && saleIndex < 2 ? 8.4 + randomFromKey(`${revenueSettings.seed}:${iso}:boost:${saleIndex}`) * 4.2 : 1;
+      const amount = roundMoney(revenueSettings.productPrice * amountVariation * spikeBoost);
+      const dateTime = new Date(date);
+      dateTime.setHours(Math.floor(minute / 60), minute % 60, 0, 0);
+      const discountCode = randomFromKey(`${revenueSettings.seed}:${iso}:discount:${saleIndex}`) > 0.74
+        ? ['WELCOME10', 'CREATOR20', 'LAUNCH', 'VIP'][Math.floor(randomFromKey(`${iso}:code:${saleIndex}`) * 4) % 4]
+        : '—';
+
+      const order = {
+        id: `${iso}-${saleIndex}`,
+        iso,
+        date,
+        dateTime,
+        minute,
+        email: `${emailName || 'client'}${Math.floor(randomFromKey(`${iso}:mail:${saleIndex}`) * 87) + 10}@${revenueSettings.emailDomain}`,
+        client,
+        product,
+        amount,
+        discountCode,
+        payment: randomFromKey(`${iso}:payment:${saleIndex}`) > 0.12 ? 'Stripe' : 'Referral Bonus'
+      };
+
+      gross += amount;
+      dayOrders.push(order);
+      orders.push(order);
+    }
+
+    rows.push({
+      iso,
+      date,
+      gross: roundMoney(gross),
+      net: roundMoney(gross * 0.952),
+      sales: salesCount,
+      orders: dayOrders,
+      isSpike
+    });
+  }
+
+  return {
+    rows,
+    orders: orders.sort((a, b) => b.dateTime - a.dateTime)
+  };
+}
+
+function getRevenueSaleMinute(iso, saleIndex) {
+  const windows = [390, 520, 675, 815, 1010, 1220];
+  const base = windows[saleIndex % windows.length] || 720;
+  const jitter = Math.floor((randomFromKey(`${revenueSettings.seed}:${iso}:minute:${saleIndex}`) - 0.5) * 92);
+  return clamp(base + jitter, 6 * 60, 23 * 60);
+}
+
+function getRevenueRowsInRange() {
+  const today = startOfDay(new Date());
+  let start;
+  let end = today;
+
+  if (revenueState.range === 'custom') {
+    start = revenueState.customStart ? parseIsoDay(revenueState.customStart) : addDays(today, -29);
+    end = revenueState.customEnd ? parseIsoDay(revenueState.customEnd) : today;
+  } else if (revenueState.range === 'month') {
+    start = new Date(today.getFullYear(), today.getMonth(), 1);
+  } else {
+    start = addDays(today, -Number(revenueState.range) + 1);
+  }
+
+  if (start > end) [start, end] = [end, start];
+  return revenueSeries.filter((row) => row.date >= start && row.date <= end);
+}
+
+function groupRevenueRows(rows, grain) {
+  if (grain === 'day') {
+    return rows.map((row) => ({
+      ...row,
+      start: row.date,
+      end: row.date,
+      label: formatDateShort(row.date),
+      tooltipLabel: formatDateLong(row.date)
+    }));
+  }
+
+  if (grain === 'month') {
+    const buckets = new Map();
+    rows.forEach((row) => {
+      const key = `${row.date.getFullYear()}-${row.date.getMonth()}`;
+      if (!buckets.has(key)) {
+        buckets.set(key, { start: row.date, end: row.date, gross: 0, net: 0, sales: 0, orders: [] });
+      }
+      const bucket = buckets.get(key);
+      bucket.end = row.date;
+      bucket.gross += row.gross;
+      bucket.net += row.net;
+      bucket.sales += row.sales;
+      bucket.orders.push(...row.orders);
+    });
+    return [...buckets.values()].map((bucket) => normalizeRevenueBucket(bucket, grain));
+  }
+
+  const grouped = [];
+  for (let index = 0; index < rows.length; index += 7) {
+    const chunk = rows.slice(index, index + 7);
+    grouped.push(normalizeRevenueBucket({
+      start: chunk[0].date,
+      end: chunk[chunk.length - 1].date,
+      gross: chunk.reduce((sum, row) => sum + row.gross, 0),
+      net: chunk.reduce((sum, row) => sum + row.net, 0),
+      sales: chunk.reduce((sum, row) => sum + row.sales, 0),
+      orders: chunk.flatMap((row) => row.orders)
+    }, grain));
+  }
+  return grouped;
+}
+
+function normalizeRevenueBucket(bucket, grain) {
+  const sameDay = isoDay(bucket.start) === isoDay(bucket.end);
+  const sameMonth = bucket.start.getMonth() === bucket.end.getMonth() && bucket.start.getFullYear() === bucket.end.getFullYear();
+  let label;
+
+  if (grain === 'month') {
+    label = bucket.start.toLocaleDateString('en-US', { month: 'short' });
+  } else if (sameDay) {
+    label = formatDateShort(bucket.start);
+  } else if (sameMonth) {
+    label = `${bucket.start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}–${bucket.end.getDate()}`;
+  } else {
+    label = `${formatDateShort(bucket.start)}–${formatDateShort(bucket.end)}`;
+  }
+
+  return {
+    start: bucket.start,
+    end: bucket.end,
+    label,
+    tooltipLabel: sameDay ? formatDateLong(bucket.start) : `${formatDateShort(bucket.start)} – ${formatDateShort(bucket.end)}`,
+    gross: roundMoney(bucket.gross),
+    net: roundMoney(bucket.net),
+    sales: bucket.sales,
+    orders: bucket.orders || []
+  };
+}
+
+function renderRevenueDashboard() {
+  const built = buildRevenueData();
+  revenueSeries = built.rows;
+  revenueOrders = built.orders;
+
+  const rows = getRevenueRowsInRange();
+  const grouped = groupRevenueRows(rows, revenueState.grain);
+  const total = sumRows(rows, 'gross');
+  const ordersInRange = rows.flatMap((row) => row.orders).sort((a, b) => b.dateTime - a.dateTime);
+
+  setText('[data-revenue-total]', formatCurrency(total));
+  setText('[data-revenue-range-label]', getRevenueRangeLabel());
+  document.querySelector('[data-revenue-custom]')?.toggleAttribute('hidden', revenueState.range !== 'custom');
+  const firstDate = revenueSeries[0]?.iso || '';
+  const lastDate = revenueSeries[revenueSeries.length - 1]?.iso || '';
+  document.querySelectorAll('[data-revenue-start], [data-revenue-end]').forEach((field) => {
+    field.min = firstDate;
+    field.max = lastDate;
+  });
+  const startField = document.querySelector('[data-revenue-start]');
+  const endField = document.querySelector('[data-revenue-end]');
+  if (startField && !startField.value) startField.value = revenueState.customStart || isoDay(addDays(startOfDay(new Date()), -29));
+  if (endField && !endField.value) endField.value = revenueState.customEnd || lastDate;
+  const blurToggle = document.querySelector('[data-revenue-blur]');
+  if (blurToggle) blurToggle.checked = revenueSettings.blur;
+  document.querySelector('[data-dashboard-panel="revenue"]')?.classList.toggle('is-blurred', revenueSettings.blur);
+
+  document.querySelectorAll('[data-revenue-range]').forEach((button) => {
+    button.classList.toggle('active', button.dataset.revenueRange === revenueState.range);
+  });
+  document.querySelectorAll('[data-revenue-grain]').forEach((button) => {
+    button.classList.toggle('active', button.dataset.revenueGrain === revenueState.grain);
+  });
+
+  populateRevenueSettingsForm();
+  renderRevenueChart(grouped);
+  renderRevenueOrders(ordersInRange.slice(0, 28));
+}
+
+function getRevenueRangeLabel() {
+  if (revenueState.range === 'custom') return 'Custom';
+  if (revenueState.range === 'month') return 'This month';
+  return `Last ${revenueState.range} days`;
+}
+
+function renderRevenueChart(data) {
+  const chart = document.querySelector('[data-revenue-chart]');
+  const line = chart?.querySelector('[data-revenue-line]');
+  const area = chart?.querySelector('[data-revenue-area]');
+  if (!chart || !line || !area || !data.length) return;
+
+  const points = getChartPoints(data, 'gross', 960, 300, 34, 36, 254);
+  const path = buildSmoothPath(points, data.length > 90 ? 0.08 : 0.18);
+  const areaPath = `${path} L ${formatPathNumber(points[points.length - 1].x)} 268 L ${formatPathNumber(points[0].x)} 268 Z`;
+
+  line.setAttribute('d', path);
+  area.setAttribute('d', areaPath);
+  chart.__points = points;
+  chart.classList.remove('is-active');
+  chart.__activeIndex = undefined;
+
+  setText('[data-revenue-axis-start]', data[0]?.label || '');
+  setText('[data-revenue-axis-active]', `${formatNumber(sumRows(data, 'sales'))} sales`);
+  setText('[data-revenue-axis-end]', data[data.length - 1]?.label || '');
+}
+
+function renderRevenueOrders(orders) {
+  const tbody = document.querySelector('[data-revenue-orders]');
+  if (!tbody) return;
+
+  tbody.innerHTML = orders.map((order) => `
+    <tr>
+      <td>${formatOrderDateTime(order.dateTime)}</td>
+      <td data-blur-field>${escapeHtml(order.email)}</td>
+      <td data-blur-field>${escapeHtml(order.client)}</td>
+      <td>${escapeHtml(order.product)}</td>
+      <td>${formatCurrency(order.amount)}</td>
+      <td>${escapeHtml(order.discountCode)}</td>
+      <td class="payment-cell">via ${escapeHtml(order.payment)}</td>
+    </tr>
+  `).join('');
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function formatOrderDateTime(date) {
+  return `${formatDateShort(date)}, ${date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
+}
+
+function setRevenueHover(chart, index) {
+  const points = chart.__points || [];
+  const point = points[clamp(index, 0, points.length - 1)];
+  if (!point) return;
+
+  const line = chart.querySelector('[data-revenue-hover-line]');
+  const dot = chart.querySelector('[data-revenue-hover-dot]');
+  const tooltip = chart.querySelector('[data-revenue-tooltip]');
+  const svg = chart.querySelector('svg');
+  const svgRect = svg.getBoundingClientRect();
+  const chartRect = chart.getBoundingClientRect();
+  const scaledX = (point.x / point.chartWidth) * svgRect.width;
+  const scaledY = (point.y / point.chartHeight) * svgRect.height;
+  const tooltipX = clamp(scaledX, 78, Math.max(78, svgRect.width - 78));
+  const tooltipTop = clamp(scaledY + svgRect.top - chartRect.top - 8, 56, Math.max(56, svgRect.height - 4));
+
+  line?.setAttribute('x1', point.x);
+  line?.setAttribute('x2', point.x);
+  dot?.setAttribute('cx', point.x);
+  dot?.setAttribute('cy', point.y);
+
+  if (tooltip) {
+    tooltip.style.left = `${tooltipX + svgRect.left - chartRect.left}px`;
+    tooltip.style.top = `${tooltipTop}px`;
+    tooltip.querySelector('[data-revenue-tooltip-value]').textContent = formatCurrency(point.value);
+    tooltip.querySelector('[data-revenue-tooltip-date]').textContent = `${point.tooltipLabel} · ${formatNumber(point.sales)} sales`;
+  }
+
+  setText('[data-revenue-axis-active]', point.label);
+  chart.classList.add('is-active');
+  chart.__activeIndex = index;
+}
+
+function populateRevenueSettingsForm() {
+  if (!revenueSettingsForm) return;
+  Object.entries(revenueSettings).forEach(([key, value]) => {
+    const field = revenueSettingsForm.querySelector(`[data-revenue-setting="${key}"]`);
+    if (field) field.value = value;
+  });
+}
+
+function readRevenueSettingsForm() {
+  const formData = new FormData(revenueSettingsForm);
+  return sanitizeRevenueSettings({
+    ...revenueSettings,
+    productPrice: formData.get('productPrice'),
+    minSales: formData.get('minSales'),
+    maxSales: formData.get('maxSales'),
+    emailDomain: formData.get('emailDomain'),
+    clientNames: formData.get('clientNames'),
+    products: formData.get('products')
+  });
+}
+
 function renderMainChart(data) {
   const chart = document.querySelector('[data-chart="payments"]');
   const line = chart?.querySelector('[data-chart-line]');
@@ -1033,7 +1407,7 @@ function isDashboardLocalSurface(target) {
   if (target.closest('[data-page]')) return false;
 
   return !!target.closest(
-    '.today-section, .overview-section, .finance-card, .interactive-chart, .mini-chart, .metrics-row, .today-side'
+    '.today-section, .overview-section, .revenue-dashboard, .dashboard-tabs, .finance-card, .interactive-chart, .mini-chart, .metrics-row, .today-side'
   );
 }
 
@@ -1166,6 +1540,55 @@ document.querySelectorAll('[data-compare]').forEach((button) => {
   });
 });
 
+document.querySelectorAll('[data-dashboard-tab]').forEach((button) => {
+  button.addEventListener('click', (event) => {
+    event.preventDefault();
+    const tab = button.dataset.dashboardTab;
+
+    document.querySelectorAll('[data-dashboard-tab]').forEach((tabButton) => {
+      const isActive = tabButton.dataset.dashboardTab === tab;
+      tabButton.classList.toggle('active', isActive);
+      tabButton.setAttribute('aria-selected', String(isActive));
+    });
+
+    document.querySelectorAll('[data-dashboard-panel]').forEach((panel) => {
+      panel.classList.toggle('active', panel.dataset.dashboardPanel === tab);
+    });
+
+    renderRevenueDashboard();
+  });
+});
+
+document.querySelectorAll('[data-revenue-range]').forEach((button) => {
+  button.addEventListener('click', () => {
+    revenueState.range = button.dataset.revenueRange;
+    closeFilterMenus();
+    renderRevenueDashboard();
+  });
+});
+
+document.querySelectorAll('[data-revenue-grain]').forEach((button) => {
+  button.addEventListener('click', () => {
+    revenueState.grain = button.dataset.revenueGrain;
+    renderRevenueDashboard();
+  });
+});
+
+document.querySelectorAll('[data-revenue-start], [data-revenue-end]').forEach((field) => {
+  field.addEventListener('change', () => {
+    revenueState.customStart = document.querySelector('[data-revenue-start]')?.value || '';
+    revenueState.customEnd = document.querySelector('[data-revenue-end]')?.value || '';
+    revenueState.range = 'custom';
+    renderRevenueDashboard();
+  });
+});
+
+document.querySelector('[data-revenue-blur]')?.addEventListener('change', (event) => {
+  revenueSettings = sanitizeRevenueSettings({ ...revenueSettings, blur: event.currentTarget.checked });
+  saveRevenueSettings();
+  renderRevenueDashboard();
+});
+
 themeToggle?.addEventListener('click', (event) => {
   event.stopPropagation();
   const currentTheme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
@@ -1253,6 +1676,36 @@ mainChart?.addEventListener('blur', () => {
   hideChartHover(mainChart);
 });
 
+const revenueChart = document.querySelector('[data-revenue-chart]');
+revenueChart?.addEventListener('pointermove', (event) => {
+  const points = revenueChart.__points || [];
+  if (!points.length) return;
+  const svg = revenueChart.querySelector('svg');
+  if (!svg) return;
+  setRevenueHover(revenueChart, getNearestPointIndexByClientX(points, svg, event.clientX));
+});
+
+revenueChart?.addEventListener('pointerleave', () => {
+  hideChartHover(revenueChart);
+  setText('[data-revenue-axis-active]', `${formatNumber(sumRows(getRevenueRowsInRange(), 'sales'))} sales`);
+});
+
+revenueChart?.addEventListener('mouseleave', () => {
+  hideChartHover(revenueChart);
+});
+
+revenueChart?.addEventListener('keydown', (event) => {
+  if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+  event.preventDefault();
+  const points = revenueChart.__points || [];
+  const direction = event.key === 'ArrowRight' ? 1 : -1;
+  setRevenueHover(revenueChart, clamp((revenueChart.__activeIndex || 0) + direction, 0, points.length - 1));
+});
+
+revenueChart?.addEventListener('blur', () => {
+  hideChartHover(revenueChart);
+});
+
 const intradayChart = document.querySelector('[data-chart="intraday"]');
 intradayChart?.addEventListener('pointermove', (event) => {
   const points = intradayChart.__points || [];
@@ -1293,6 +1746,10 @@ document.addEventListener('pointermove', (event) => {
     hideChartHover(intradayChart);
     resetIntradayLabel();
   }
+
+  if (revenueChart?.classList.contains('is-active') && !revenueChart.contains(event.target)) {
+    hideChartHover(revenueChart);
+  }
 });
 
 simulatorForm?.addEventListener('submit', (event) => {
@@ -1301,6 +1758,26 @@ simulatorForm?.addEventListener('submit', (event) => {
   settings = readSettingsForm(action === 'spread' ? 'spread' : 'daily');
   saveSettings();
   renderDashboard();
+});
+
+revenueSettingsForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  revenueSettings = readRevenueSettingsForm();
+  saveRevenueSettings();
+  renderRevenueDashboard();
+});
+
+document.querySelector('[data-revenue-reset]')?.addEventListener('click', () => {
+  revenueSettings = sanitizeRevenueSettings({ ...defaultRevenueSettings, seed: `${Date.now()}-revenue-reset` });
+  saveRevenueSettings();
+  renderRevenueDashboard();
+});
+
+document.querySelector('[data-revenue-regenerate]')?.addEventListener('click', (event) => {
+  event.preventDefault();
+  revenueSettings = sanitizeRevenueSettings({ ...revenueSettings, seed: `${Date.now()}-revenue` });
+  saveRevenueSettings();
+  renderRevenueDashboard();
 });
 
 document.querySelector('[data-simulate="reset"]')?.addEventListener('click', () => {

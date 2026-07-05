@@ -823,6 +823,56 @@ button use {
   max-width: 1240px;
 }
 
+.dashboard-page-heading {
+  display: flex;
+  max-width: 1240px;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.dashboard-page-heading h1 {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.dashboard-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.dashboard-tabs button {
+  height: 30px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  color: var(--muted);
+  background: transparent;
+  box-shadow: none;
+  font-size: 13px;
+  font-weight: 460;
+}
+
+.dashboard-tabs button.active {
+  color: var(--accent-on);
+  background: var(--accent);
+}
+
+.dashboard-panel {
+  display: none;
+}
+
+.dashboard-panel.active {
+  display: block;
+}
+
 .page {
   display: none;
 }
@@ -1437,6 +1487,346 @@ h1 {
   font-size: 12px;
 }
 
+.revenue-dashboard {
+  max-width: 1240px;
+  margin-top: 28px;
+}
+
+.revenue-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: start;
+}
+
+.revenue-eyebrow {
+  color: var(--text-strong);
+  font-size: 15px;
+  font-weight: 470;
+}
+
+.revenue-hero h2 {
+  margin-top: 8px;
+  color: var(--text-strong);
+  font-size: 28px;
+  font-weight: 540;
+  line-height: 1.1;
+}
+
+.revenue-hero span {
+  display: block;
+  margin-top: 30px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.revenue-hero strong {
+  display: block;
+  margin-top: 4px;
+  color: #143a7d;
+  font-size: clamp(46px, 7vw, 72px);
+  font-weight: 560;
+  letter-spacing: -0.055em;
+  line-height: 0.96;
+}
+
+:root[data-theme="dark"] .revenue-hero strong {
+  color: #8ab1ff;
+}
+
+.revenue-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.revenue-grain {
+  display: inline-flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.revenue-grain button {
+  height: 26px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  color: var(--muted);
+  background: transparent;
+  box-shadow: none;
+  font-size: 12px;
+  font-weight: 460;
+}
+
+.revenue-grain button.active {
+  color: #143a7d;
+  background: #eaf1ff;
+}
+
+.revenue-blur-toggle {
+  display: inline-flex;
+  height: 32px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  background: var(--surface);
+  font-size: 12px;
+}
+
+.revenue-blur-toggle input {
+  width: 13px;
+  height: 13px;
+  accent-color: var(--accent);
+}
+
+.revenue-custom-range {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.revenue-custom-range[hidden] {
+  display: none;
+}
+
+.revenue-custom-range label {
+  display: grid;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.revenue-custom-range input {
+  height: 34px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0 10px;
+  color: var(--text);
+  background: var(--control);
+}
+
+.revenue-chart-card {
+  margin-top: 24px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.revenue-chart {
+  position: relative;
+  min-height: 344px;
+  padding: 20px 22px 34px;
+  outline: none;
+}
+
+.revenue-chart svg {
+  width: 100%;
+  height: 300px;
+  overflow: visible;
+}
+
+.revenue-chart-area {
+  fill: url("#revenue-blue-fill");
+}
+
+.revenue-chart-line {
+  fill: none;
+  stroke: #1f5fd5;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.revenue-chart.is-active .chart-hover-line,
+.revenue-chart.is-active .chart-hover-dot {
+  opacity: 1;
+}
+
+.revenue-chart.is-active .chart-tooltip {
+  opacity: 1;
+  transform: translate(-50%, calc(-100% - 14px));
+}
+
+.revenue-tooltip::before {
+  background: #1f5fd5;
+}
+
+.revenue-axis {
+  position: absolute;
+  right: 22px;
+  bottom: 14px;
+  left: 22px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--faint);
+  font-size: 12px;
+}
+
+.revenue-axis span:nth-child(2) {
+  color: var(--text-strong);
+}
+
+.orders-section,
+.revenue-settings-card {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.orders-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.orders-heading h3,
+.revenue-settings-card h3 {
+  color: var(--text-strong);
+  font-size: 18px;
+  font-weight: 520;
+}
+
+.orders-heading button {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  color: #143a7d;
+  background: #edf4ff;
+  font-size: 12px;
+  font-weight: 470;
+}
+
+.order-chips {
+  display: flex;
+  gap: 8px;
+  overflow: auto;
+  margin-top: 14px;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.order-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.order-chips span {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text-strong);
+  background: var(--surface);
+  font-size: 12px;
+}
+
+.orders-table-wrap {
+  overflow: auto;
+  margin-top: 12px;
+}
+
+.orders-table {
+  width: 100%;
+  min-width: 820px;
+  border-collapse: collapse;
+}
+
+.orders-table th,
+.orders-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--text);
+  font-size: 13px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.orders-table th {
+  color: var(--muted);
+  font-weight: 470;
+}
+
+.orders-table td:nth-child(5) {
+  color: #143a7d;
+  font-weight: 500;
+}
+
+.payment-cell {
+  color: var(--muted) !important;
+}
+
+.revenue-dashboard.is-blurred [data-blur-field] {
+  filter: blur(6px);
+  user-select: none;
+}
+
+.revenue-settings-card {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 24px;
+}
+
+.revenue-settings-card p {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.revenue-settings-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.revenue-settings-form label {
+  display: grid;
+  gap: 7px;
+}
+
+.revenue-settings-form label span {
+  color: var(--text-strong);
+  font-size: 12px;
+  font-weight: 470;
+}
+
+.revenue-settings-form input,
+.revenue-settings-form textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  outline: none;
+  padding: 10px 11px;
+  color: var(--text);
+  background: var(--control);
+  resize: vertical;
+}
+
+.revenue-settings-form input {
+  height: 38px;
+}
+
+.revenue-settings-form input:focus,
+.revenue-settings-form textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.wide-field {
+  grid-column: 1 / -1;
+}
+
 .placeholder-page {
   max-width: 860px;
 }
@@ -1596,8 +1986,14 @@ h1 {
   }
 
   .signal-grid,
-  .settings-layout {
+  .settings-layout,
+  .revenue-hero,
+  .revenue-settings-card {
     grid-template-columns: 1fr;
+  }
+
+  .revenue-controls {
+    justify-content: flex-start;
   }
 
   .today-main {
@@ -1680,6 +2076,19 @@ h1 {
     font-size: 28px;
   }
 
+  .dashboard-page-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .dashboard-tabs {
+    width: 100%;
+  }
+
+  .dashboard-tabs button {
+    flex: 1;
+  }
+
   .metrics-row {
     grid-template-columns: 1fr;
     gap: 22px;
@@ -1699,8 +2108,36 @@ h1 {
   }
 
   .signal-grid,
-  .simulator-form {
+  .simulator-form,
+  .revenue-settings-form {
     grid-template-columns: 1fr;
+  }
+
+  .revenue-dashboard {
+    margin-top: 22px;
+  }
+
+  .revenue-hero strong {
+    font-size: 44px;
+  }
+
+  .revenue-chart {
+    min-height: 286px;
+    padding: 16px 14px 34px;
+  }
+
+  .revenue-chart svg {
+    height: 238px;
+  }
+
+  .revenue-axis {
+    right: 14px;
+    left: 14px;
+  }
+
+  .orders-section,
+  .revenue-settings-card {
+    padding: 16px;
   }
 
 }

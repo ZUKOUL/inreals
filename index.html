@@ -281,8 +281,18 @@
         </section>
 
         <section class="page" data-page="dashboard" aria-label="Financial dashboard">
+          <div class="dashboard-page-heading">
+            <div>
+              <h1>Today</h1>
+            </div>
+            <div class="dashboard-tabs" role="tablist" aria-label="Dashboard sections">
+              <button class="active" type="button" data-dashboard-tab="overview" aria-selected="true">Overview</button>
+              <button type="button" data-dashboard-tab="revenue" aria-selected="false">Revenu</button>
+            </div>
+          </div>
+
+          <div class="dashboard-panel active" data-dashboard-panel="overview">
           <div class="today-section">
-            <h1>Today</h1>
 
             <div class="today-grid">
               <div class="today-main">
@@ -367,6 +377,7 @@
                 <div class="filter-menu" data-filter-menu="range" role="menu">
                   <button type="button" data-range="7">Last 7 days</button>
                   <button type="button" data-range="30">Last 30 days</button>
+                  <button type="button" data-range="365">Last 365 days</button>
                   <button type="button" data-range="month">This month</button>
                 </div>
               </div>
@@ -481,6 +492,150 @@
               </article>
             </div>
           </div>
+          </div>
+
+          <section class="dashboard-panel revenue-dashboard" data-dashboard-panel="revenue" aria-label="Revenue dashboard">
+            <div class="revenue-hero">
+              <div>
+                <p class="revenue-eyebrow">My Income</p>
+                <h2>Revenu</h2>
+                <span>Total Revenue</span>
+                <strong data-revenue-total>€0.00</strong>
+              </div>
+              <div class="revenue-controls">
+                <div class="filter-control">
+                  <button class="filter-button" type="button" data-filter-button="revenue-range" aria-expanded="false">
+                    Period <span data-revenue-range-label>Last 365 days</span> <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
+                  </button>
+                  <div class="filter-menu" data-filter-menu="revenue-range" role="menu">
+                    <button type="button" data-revenue-range="7">Last 7 days</button>
+                    <button type="button" data-revenue-range="30">Last 30 days</button>
+                    <button type="button" data-revenue-range="365">Last 365 days</button>
+                    <button type="button" data-revenue-range="month">This month</button>
+                    <button type="button" data-revenue-range="custom">Custom</button>
+                  </div>
+                </div>
+                <div class="revenue-grain" aria-label="Revenue interval">
+                  <button class="active" type="button" data-revenue-grain="day">Day</button>
+                  <button type="button" data-revenue-grain="week">Week</button>
+                  <button type="button" data-revenue-grain="month">Month</button>
+                </div>
+                <label class="revenue-blur-toggle">
+                  <input type="checkbox" data-revenue-blur />
+                  <span>Blur details</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="revenue-custom-range" data-revenue-custom hidden>
+              <label>
+                <span>Start</span>
+                <input type="date" data-revenue-start />
+              </label>
+              <label>
+                <span>End</span>
+                <input type="date" data-revenue-end />
+              </label>
+            </div>
+
+            <article class="revenue-chart-card">
+              <div class="revenue-chart" data-revenue-chart tabindex="0" aria-label="Revenue over selected period">
+                <svg viewBox="0 0 960 300" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="revenue-blue-fill" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stop-color="#1f5fd5" stop-opacity="0.18" />
+                      <stop offset="100%" stop-color="#1f5fd5" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <line x1="34" y1="58" x2="928" y2="58" class="chart-grid-line" />
+                  <line x1="34" y1="116" x2="928" y2="116" class="chart-grid-line" />
+                  <line x1="34" y1="174" x2="928" y2="174" class="chart-grid-line" />
+                  <line x1="34" y1="232" x2="928" y2="232" class="chart-grid-line" />
+                  <path class="revenue-chart-area" data-revenue-area d="" />
+                  <path class="revenue-chart-line" data-revenue-line d="" />
+                  <line class="chart-hover-line" data-revenue-hover-line x1="0" x2="0" y1="34" y2="254" />
+                  <circle class="chart-hover-dot" data-revenue-hover-dot cx="0" cy="0" r="5.5" />
+                </svg>
+                <div class="chart-tooltip revenue-tooltip" data-revenue-tooltip>
+                  <span data-revenue-tooltip-value>€0.00</span>
+                  <small data-revenue-tooltip-date>Today</small>
+                </div>
+                <div class="revenue-axis">
+                  <span data-revenue-axis-start>Feb 01</span>
+                  <span data-revenue-axis-active>Selected period</span>
+                  <span data-revenue-axis-end>Today</span>
+                </div>
+              </div>
+            </article>
+
+            <section class="orders-section">
+              <div class="orders-heading">
+                <h3>Latest Orders</h3>
+                <button type="button" data-revenue-regenerate>Regenerate data</button>
+              </div>
+              <div class="order-chips" aria-label="Order columns">
+                <span>+ Date & Time</span>
+                <span>+ Email</span>
+                <span>+ Product</span>
+                <span>+ Amount</span>
+                <span>+ Discount Code</span>
+                <span>+ Payment</span>
+              </div>
+              <div class="orders-table-wrap">
+                <table class="orders-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Email</th>
+                      <th>Client</th>
+                      <th>Product</th>
+                      <th>Amount</th>
+                      <th>Discount Code</th>
+                      <th>Payment</th>
+                    </tr>
+                  </thead>
+                  <tbody data-revenue-orders></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="revenue-settings-card">
+              <div>
+                <h3>Revenue setup</h3>
+                <p>Paramètre le prix, les ventes et les détails affichés dans ce dashboard de démonstration.</p>
+              </div>
+              <form class="revenue-settings-form" id="revenue-settings-form">
+                <label>
+                  <span>Prix moyen</span>
+                  <input name="productPrice" data-revenue-setting="productPrice" type="number" min="1" step="0.01" />
+                </label>
+                <label>
+                  <span>Ventes minimum / jour</span>
+                  <input name="minSales" data-revenue-setting="minSales" type="number" min="1" max="100" step="1" />
+                </label>
+                <label>
+                  <span>Ventes maximum / jour</span>
+                  <input name="maxSales" data-revenue-setting="maxSales" type="number" min="1" max="100" step="1" />
+                </label>
+                <label>
+                  <span>Domaine email</span>
+                  <input name="emailDomain" data-revenue-setting="emailDomain" type="text" />
+                </label>
+                <label class="wide-field">
+                  <span>Noms clients</span>
+                  <textarea name="clientNames" data-revenue-setting="clientNames" rows="3"></textarea>
+                </label>
+                <label class="wide-field">
+                  <span>Produits</span>
+                  <textarea name="products" data-revenue-setting="products" rows="3"></textarea>
+                </label>
+                <div class="simulator-actions">
+                  <button type="submit">Save settings</button>
+                  <button type="button" data-revenue-reset>Reset</button>
+                </div>
+              </form>
+            </section>
+          </section>
         </section>
 
         <section class="page placeholder-page" data-page="balances" aria-label="Balances">
