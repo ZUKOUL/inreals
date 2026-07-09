@@ -283,7 +283,7 @@
         <section class="page" data-page="dashboard" aria-label="Financial dashboard">
           <div class="dashboard-page-heading">
             <div>
-              <h1>Today</h1>
+              <h1>Dashboard</h1>
             </div>
             <div class="dashboard-tabs" role="tablist" aria-label="Dashboard sections">
               <button class="active" type="button" data-dashboard-tab="overview" aria-selected="true">Overview</button>
@@ -292,206 +292,132 @@
           </div>
 
           <div class="dashboard-panel active" data-dashboard-panel="overview">
-          <div class="today-section">
+            <section class="neo-dashboard" aria-label="Main Corya dashboard">
+              <div class="neo-toolbar">
+                <div>
+                  <p>Acme Inc.</p>
+                  <h2>Financial dashboard</h2>
+                </div>
 
-            <div class="today-grid">
-              <div class="today-main">
-                <div class="metrics-row">
-                  <article>
-                    <button type="button" data-metric-trigger="gross">Gross volume <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span></button>
-                    <strong data-today-gross>€0.00</strong>
-                    <small data-today-time>7:46 PM</small>
-                  </article>
-                  <article class="top-period-control" data-top-period-card>
-                    <button type="button" data-top-period-button aria-expanded="false">
-                      <span data-top-period-label>Yesterday</span>
-                      <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
+                <div class="filters neo-filters">
+                  <div class="filter-control">
+                    <button class="filter-button" type="button" data-filter-button="range" aria-expanded="false">
+                      Date range <span data-range-label>Last 7 days</span> <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
                     </button>
-                    <span class="metric-value" data-top-period-value>€0.00</span>
-                    <small data-top-period-meta>Previous day</small>
-                    <div class="top-period-menu" data-top-period-menu role="menu">
-                      <button type="button" data-top-period="yesterday">Yesterday</button>
-                      <button type="button" data-top-period="last7">Last 7 days</button>
-                      <button type="button" data-top-period="last30">Last 30 days</button>
-                      <button type="button" data-top-period="month">This month</button>
+                    <div class="filter-menu" data-filter-menu="range" role="menu">
+                      <button type="button" data-range="7">Last 7 days</button>
+                      <button type="button" data-range="30">Last 30 days</button>
+                      <button type="button" data-range="365">Last 365 days</button>
+                      <button type="button" data-range="month">This month</button>
                     </div>
-                  </article>
-                </div>
-
-                <div class="timeline-chart intraday-chart" data-chart="intraday" tabindex="0" aria-label="Gross volume by hour today">
-                  <svg viewBox="0 0 860 180" preserveAspectRatio="none" aria-hidden="true">
-                    <line x1="0" y1="44" x2="860" y2="44" class="chart-grid-line" />
-                    <line x1="0" y1="92" x2="860" y2="92" class="chart-grid-line" />
-                    <line x1="0" y1="140" x2="860" y2="140" class="chart-grid-line" />
-                    <path class="intraday-projected-line" data-intraday-projected d="" />
-                    <path class="intraday-line" data-intraday-line d="" />
-                    <line class="chart-hover-line" data-intraday-hover-line x1="0" x2="0" y1="22" y2="152" />
-                    <circle class="chart-hover-dot" data-intraday-hover-dot cx="0" cy="0" r="4.5" />
-                  </svg>
-                  <div class="chart-tooltip compact-tooltip" data-intraday-tooltip>
-                    <span data-intraday-tooltip-value>€0.00</span>
-                    <small data-intraday-tooltip-date>Today</small>
                   </div>
-                  <div class="chart-times">
-                    <span>12:00 AM</span>
-                    <span data-intraday-active-time>Now</span>
-                    <span data-current-time-label>12:00 AM</span>
+
+                  <div class="filter-control">
+                    <button class="filter-button" type="button" data-filter-button="interval" aria-expanded="false">
+                      <span data-interval-label>Daily</span> <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
+                    </button>
+                    <div class="filter-menu" data-filter-menu="interval" role="menu">
+                      <button type="button" data-interval="day">Daily</button>
+                      <button type="button" data-interval="week">Weekly</button>
+                      <button type="button" data-interval="month">Monthly</button>
+                    </div>
+                  </div>
+
+                  <div class="filter-control">
+                    <button class="filter-button" type="button" data-filter-button="compare" aria-expanded="false">
+                      Compare <span data-compare-label>Previous period</span> <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
+                    </button>
+                    <div class="filter-menu" data-filter-menu="compare" role="menu">
+                      <button type="button" data-compare="previous">Previous period</button>
+                      <button type="button" data-compare="none">No compare</button>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <aside class="today-side">
-                <article>
-                  <div>
-                    <span>EUR balance</span>
-                    <button type="button" data-page="balances">View</button>
-                  </div>
-                  <span class="metric-value" data-balance>€0.00</span>
+              <div class="neo-stat-row" aria-label="Financial summary">
+                <article class="neo-stat-card">
+                  <div class="neo-card-label"><svg><use href="#icon-wallet"></use></svg><span>Total Balance</span></div>
+                  <strong data-neo-balance>€0.00</strong>
+                  <small data-neo-balance-delta>+0.0% vs last month</small>
+                  <div class="neo-meter" data-neo-meter="balance"></div>
                 </article>
-                <article>
-                  <div>
-                    <span>Payouts</span>
-                    <button type="button" data-page="payments">View</button>
-                  </div>
-                  <span class="metric-value" data-payouts>€0.00</span>
-                  <small data-payout-date>Next payout estimate</small>
+                <article class="neo-stat-card">
+                  <div class="neo-card-label"><svg><use href="#icon-bar-chart"></use></svg><span>Income</span></div>
+                  <strong data-neo-income>€0.00</strong>
+                  <small data-neo-income-delta>+0.0% vs last month</small>
+                  <div class="neo-meter" data-neo-meter="income"></div>
                 </article>
-              </aside>
-            </div>
-          </div>
-
-          <div class="overview-section">
-            <div class="section-heading">
-              <h2>Your overview</h2>
-              <div class="section-actions">
-                <button type="button">+ Add</button>
-                <button type="button">Edit</button>
-              </div>
-            </div>
-
-            <div class="filters">
-              <div class="filter-control">
-                <button class="filter-button" type="button" data-filter-button="range" aria-expanded="false">
-                  Date range <span data-range-label>Last 7 days</span> <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
-                </button>
-                <div class="filter-menu" data-filter-menu="range" role="menu">
-                  <button type="button" data-range="7">Last 7 days</button>
-                  <button type="button" data-range="30">Last 30 days</button>
-                  <button type="button" data-range="365">Last 365 days</button>
-                  <button type="button" data-range="month">This month</button>
-                </div>
+                <article class="neo-stat-card">
+                  <div class="neo-card-label"><svg><use href="#icon-credit-card"></use></svg><span>Expense</span></div>
+                  <strong data-neo-expense>€0.00</strong>
+                  <small data-neo-expense-delta>0.0% vs last month</small>
+                  <div class="neo-meter" data-neo-meter="expense"></div>
+                </article>
               </div>
 
-              <div class="filter-control">
-                <button class="filter-button" type="button" data-filter-button="interval" aria-expanded="false">
-                  <span data-interval-label>Daily</span> <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
-                </button>
-                <div class="filter-menu" data-filter-menu="interval" role="menu">
-                  <button type="button" data-interval="day">Daily</button>
-                  <button type="button" data-interval="week">Weekly</button>
-                  <button type="button" data-interval="month">Monthly</button>
-                </div>
-              </div>
-
-              <div class="filter-control">
-                <button class="filter-button" type="button" data-filter-button="compare" aria-expanded="false">
-                  Compare <span data-compare-label>Previous period</span> <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
-                </button>
-                <div class="filter-menu" data-filter-menu="compare" role="menu">
-                  <button type="button" data-compare="previous">Previous period</button>
-                  <button type="button" data-compare="none">No compare</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="finance-grid">
-              <article class="finance-card payments-card">
-                <div class="card-head">
-                  <h3>Payments</h3>
-                  <button type="button" aria-label="Open payments"><svg><use href="#icon-link-external"></use></svg></button>
-                </div>
-                <div class="chart-summary">
-                  <span data-payments-total>€0.00</span>
-                  <small data-payments-meta>0 sales · selected range</small>
-                </div>
-                <div class="interactive-chart" data-chart="payments" tabindex="0" aria-label="Payments over selected period">
-                  <svg viewBox="0 0 640 240" preserveAspectRatio="none" aria-hidden="true">
-                    <line x1="24" y1="44" x2="616" y2="44" class="chart-grid-line" />
-                    <line x1="24" y1="94" x2="616" y2="94" class="chart-grid-line" />
-                    <line x1="24" y1="144" x2="616" y2="144" class="chart-grid-line" />
-                    <line x1="24" y1="194" x2="616" y2="194" class="chart-grid-line" />
-                    <path class="chart-area-line" data-chart-line d="" />
-                    <line class="chart-hover-line" data-chart-hover-line x1="0" x2="0" y1="28" y2="212" />
-                    <circle class="chart-hover-dot" data-chart-hover-dot cx="0" cy="0" r="5" />
-                  </svg>
-                  <div class="chart-tooltip" data-chart-tooltip>
-                    <span data-tooltip-value>€0.00</span>
-                    <small data-tooltip-date>Today</small>
+              <article class="neo-chart-card">
+                <div class="neo-chart-head">
+                  <div>
+                    <div class="neo-card-label"><svg><use href="#icon-bar-chart"></use></svg><span>Usage Category</span></div>
+                    <div class="neo-total"><strong data-neo-usage-total>€0.00</strong><span>total transactions</span></div>
                   </div>
-                  <div class="chart-axis">
-                    <span data-axis-start>Day 1</span>
-                    <span data-axis-active>Today</span>
-                    <span data-axis-end>Day 7</span>
+                  <button type="button" class="neo-date-button" data-neo-month-range>Last 12 months</button>
+                </div>
+                <div class="neo-month-chart" data-neo-month-chart></div>
+              </article>
+
+              <article class="neo-line-card">
+                <div class="neo-chart-head">
+                  <div>
+                    <div class="neo-card-label"><svg><use href="#icon-bar-chart"></use></svg><span>Cash Flow</span></div>
+                    <div class="neo-total"><strong data-neo-cashflow-total>€0.00</strong><span data-neo-cashflow-meta>selected range</span></div>
+                  </div>
+                  <div class="neo-growth-pills">
+                    <span data-neo-growth-one>+0.0%</span>
+                    <span data-neo-growth-two>+0.0%</span>
+                    <span data-neo-growth-three>+0.0%</span>
                   </div>
                 </div>
-              </article>
-
-              <article class="finance-card metric-card" data-summary-card="gross">
-                <div class="card-head">
-                  <h3>Gross volume</h3>
-                  <button type="button" aria-label="Export gross volume"><svg><use href="#icon-link-external"></use></svg></button>
-                </div>
-                <span class="card-value" data-gross-total>€0.00</span>
-                <p data-gross-previous>€0.00 previous period</p>
-                <div class="mini-chart" aria-hidden="true">
-                  <svg viewBox="0 0 260 90" preserveAspectRatio="none">
-                    <line x1="0" y1="70" x2="260" y2="70" class="mini-grid" />
-                    <path data-mini-line="gross" d="" />
+                <div class="neo-line-chart" data-neo-line-chart aria-label="Revenue trend">
+                  <svg viewBox="0 0 980 260" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="neo-blue-area" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0%" stop-color="#15A7FF" stop-opacity="0.20" />
+                        <stop offset="100%" stop-color="#15A7FF" stop-opacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <line x1="24" y1="54" x2="956" y2="54" class="neo-grid-line" />
+                    <line x1="24" y1="112" x2="956" y2="112" class="neo-grid-line" />
+                    <line x1="24" y1="170" x2="956" y2="170" class="neo-grid-line" />
+                    <line x1="24" y1="228" x2="956" y2="228" class="neo-grid-line" />
+                    <path data-neo-area d="" class="neo-line-area"></path>
+                    <path data-neo-line d="" class="neo-line-path"></path>
                   </svg>
                 </div>
-                <small data-gross-delta>0.0% vs previous</small>
               </article>
 
-              <article class="finance-card metric-card" data-summary-card="net">
-                <div class="card-head">
-                  <h3>Net volume</h3>
-                  <button type="button" aria-label="Export net volume"><svg><use href="#icon-link-external"></use></svg></button>
+              <article class="neo-table-card">
+                <div class="neo-chart-head">
+                  <div class="neo-card-label"><svg><use href="#icon-transactions"></use></svg><span>Transaction History</span></div>
+                  <button type="button" class="neo-date-button" data-neo-transactions-label>Latest sales</button>
                 </div>
-                <span class="card-value" data-net-total>€0.00</span>
-                <p data-net-previous>€0.00 previous period</p>
-                <div class="mini-chart" aria-hidden="true">
-                  <svg viewBox="0 0 260 90" preserveAspectRatio="none">
-                    <line x1="0" y1="70" x2="260" y2="70" class="mini-grid" />
-                    <path data-mini-line="net" d="" />
-                  </svg>
+                <div class="neo-table-wrap">
+                  <table class="neo-table">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody data-neo-transactions></tbody>
+                  </table>
                 </div>
-                <small data-net-delta>0.0% vs previous</small>
               </article>
-            </div>
-
-            <div class="signal-grid" aria-label="Business signals">
-              <article>
-                <span>Sales</span>
-                <p data-sales-total>0</p>
-                <small data-sales-meta>0/day average</small>
-              </article>
-              <article>
-                <span>Average order</span>
-                <p data-average-order>€0.00</p>
-                <small>From simulated product price</small>
-              </article>
-              <article>
-                <span>Revenue/day</span>
-                <p data-daily-average>€0.00</p>
-                <small>Current range average</small>
-              </article>
-              <article>
-                <span>Projected month</span>
-                <p data-projected-month>€0.00</p>
-                <small>Based on current pace</small>
-              </article>
-            </div>
-          </div>
+            </section>
           </div>
 
           <section class="dashboard-panel revenue-dashboard" data-dashboard-panel="revenue" aria-label="Revenue dashboard">

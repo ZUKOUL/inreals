@@ -556,6 +556,7 @@ function renderDashboard() {
 
   renderToday();
   renderOverview(currentRows, previousRows);
+  renderNeoDashboard(currentRows, previousRows);
   renderRevenueDashboard();
   renderFilters();
   populateSettingsForm();
@@ -816,6 +817,219 @@ function renderOverview(currentRows, previousRows) {
   renderMainChart(groupedSeries);
   renderMiniChart('gross', groupedSeries);
   renderMiniChart('net', groupedSeries);
+}
+
+function renderNeoDashboard(currentRows, previousRows) {
+  const lastThirty = series.slice(-30);
+  const gross = sumRows(currentRows, 'gross');
+  const net = sumRows(currentRows, 'net');
+  const expense = sumRows(currentRows, 'fees') + sumRows(currentRows, 'refunds');
+  const previousGross = sumRows(previousRows, 'gross');
+  const previousNet = sumRows(previousRows, 'net');
+  const previousExpense = sumRows(previousRows, 'fees') + sumRows(previousRows, 'refunds');
+  const balance = sumRows(lastThirty, 'net');
+
+  setText('[data-neo-balance]', formatCurrency(balance));
+  setText('[data-neo-income]', formatCurrency(gross));
+  setText('[data-neo-expense]', formatCurrency(expense));
+  renderNeoDelta('[data-neo-balance-delta]', net, previousNet);
+  renderNeoDelta('[data-neo-income-delta]', gross, previousGross);
+  renderNeoDelta('[data-neo-expense-delta]', expense, previousExpense, true);
+
+  renderNeoMeter('balance', getRatio(net, Math.max(previousNet, gross * 0.75, 1)));
+  renderNeoMeter('income', getRatio(gross, Math.max(previousGross, gross * 0.72, 1)));
+  renderNeoMeter('expense', getRatio(expense, Math.max(gross * 0.22, previousExpense, 1)));
+
+  renderNeoMonthChart();
+  renderNeoCashflow(currentRows, previousRows);
+  renderNeoTransactions(currentRows);
+
+  const transactionLabel = dashboardState.range === 'month'
+    ? 'This month'
+    : `Last ${dashboardState.range} days`;
+  setText('[data-neo-transactions-label]', transactionLabel);
+}
+
+function getRatio(value, max) {
+  return clamp(value / Math.max(max, 1), 0.08, 1);
+}
+
+function renderNeoDelta(selector, current, previous, reverse = false) {
+  const element = document.querySelector(selector);
+  if (!element) return;
+
+  const delta = previous ? ((current - previous) / previous) * 100 : 0;
+  const good = reverse ? delta <= 0 : delta >= 0;
+  element.classList.toggle('negative', !good);
+  element.innerHTML = `<span>${delta >= 0 ? '+' : ''}${delta.toFixed(1)}%</span> vs last period`;
+}
+
+function renderNeoMeter(name, ratio) {
+  const meter = document.querySelector(`[data-neo-meter="${name}"]`);
+  if (!meter) return;
+
+  const total = 28;
+  const active = Math.max(3, Math.round(total * ratio));
+  meter.innerHTML = Array.from({ length: total }, (_, index) => (
+    `<span class="${index < active ? 'active' : ''}"></span>`
+  )).join('');
+}
+
+function getMonthBuckets() {
+  const today = startOfDay(new Date());
+  const startMonth = new Date(today.getFullYear(), today.getMonth() - 11, 1);
+  const buckets = [];
+
+  for (let index = 0; index < 12; index += 1) {
+    const date = new Date(startMonth.getFullYear(), startMonth.getMonth() + index, 1);
+    const key = `${date.getFullYear()}-${date.getMonth()}`;
+    buckets.push({
+      key,
+      date,
+      label: date.toLocaleDateString('en-US', { month: 'short' }),
+      gross: 0,
+      net: 0,
+      sales: 0
+    });
+  }
+
+  const bucketMap = new Map(buckets.map((bucket) => [bucket.key, bucket]));
+  series.forEach((row) => {
+    const key = `${row.date.getFullYear()}-${row.date.getMonth()}`;
+    const bucket = bucketMap.get(key);
+    if (!bucket) return;
+
+    bucket.gross += row.gross;
+    bucket.net += row.net;
+    bucket.sales += row.sales;
+  });
+
+  return buckets.map((bucket) => ({
+    ...bucket,
+    gross: roundMoney(bucket.gross),
+    net: roundMoney(bucket.net)
+  }));
+}
+
+function renderNeoMonthChart() {
+  const chart = document.querySelector('[data-neo-month-chart]');
+  if (!chart) return;
+
+  const months = getMonthBuckets();
+  const total = sumRows(months, 'gross');
+  const max = Math.max(...months.map((month) => month.gross), 1);
+  const now = new Date();
+  const activeMonthDate = now.getDate() < 12
+    ? new Date(now.getFullYear(), now.getMonth() - 1, 1)
+    : new Date(now.getFullYear(), now.getMonth(), 1);
+  const activeKey = `${activeMonthDate.getFullYear()}-${activeMonthDate.getMonth()}`;
+  const fallbackActiveKey = months.reduce((best, month) => (
+    month.gross > best.gross ? month : best
+  ), months[0]).key;
+
+  const scale = createNeoScale(max);
+  setText('[data-neo-usage-total]', formatCurrency(total));
+  setText('[data-neo-month-range]', `${months[0].label} ${months[0].date.getFullYear()} – Today`);
+
+  const bars = months.map((month) => {
+    const isActive = month.key === activeKey || (!months.some((item) => item.key === activeKey) && month.key === fallbackActiveKey);
+    const height = 18 + (month.gross / max) * 78;
+    return `
+      <div class="neo-month-bar-wrap ${isActive ? 'active' : ''}" style="--bar: ${height}%">
+        <div class="neo-month-tooltip">${formatCurrency(month.gross)}</div>
+        <span class="neo-month-bar"></span>
+        <small>${month.label}</small>
+      </div>
+    `;
+  }).join('');
+
+  chart.innerHTML = `
+    <div class="neo-month-scale" aria-hidden="true">
+      ${scale.map((value) => `<span>${formatNeoAxis(value)}</span>`).join('')}
+    </div>
+    <div class="neo-month-bars">${bars}</div>
+  `;
+}
+
+function createNeoScale(max) {
+  const roughStep = max / 4;
+  const magnitude = 10 ** Math.floor(Math.log10(Math.max(roughStep, 1)));
+  const normalized = roughStep / magnitude;
+  const step = (normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10) * magnitude;
+  return [step * 4, step * 3, step * 2, step, 0];
+}
+
+function formatNeoAxis(value) {
+  if (value >= 1000) return `${Math.round(value / 1000)}k`;
+  return Math.round(value).toString();
+}
+
+function renderNeoCashflow(currentRows, previousRows) {
+  const svg = document.querySelector('.neo-line-chart svg');
+  const line = document.querySelector('[data-neo-line]');
+  const area = document.querySelector('[data-neo-area]');
+  if (!svg || !line || !area) return;
+
+  const source = groupedSeries.length ? groupedSeries : currentRows;
+  const points = getChartPoints(source, 'net', 980, 268, 12, 24, 226);
+  const path = buildSmoothPath(points, source.length > 16 ? 0.12 : 0.2);
+  const baseY = 240;
+
+  line.setAttribute('d', path);
+  area.setAttribute(
+    'd',
+    points.length
+      ? `${path} L ${formatPathNumber(points[points.length - 1].x)} ${baseY} L ${formatPathNumber(points[0].x)} ${baseY} Z`
+      : ''
+  );
+
+  const net = sumRows(currentRows, 'net');
+  const previousNet = sumRows(previousRows, 'net');
+  setText('[data-neo-cashflow-total]', formatCurrency(net));
+  setText('[data-neo-cashflow-meta]', `${formatCurrency(previousNet)} previous period`);
+  setText('[data-neo-growth-one]', formatNeoGrowth(currentRows.slice(-Math.min(currentRows.length, 30)), previousRows.slice(-Math.min(previousRows.length, 30))));
+  setText('[data-neo-growth-two]', formatNeoGrowth(currentRows.slice(-Math.min(currentRows.length, 60)), previousRows.slice(-Math.min(previousRows.length, 60))));
+  setText('[data-neo-growth-three]', formatNeoGrowth(currentRows, previousRows));
+}
+
+function formatNeoGrowth(currentRows, previousRows) {
+  const current = sumRows(currentRows, 'gross');
+  const previous = sumRows(previousRows, 'gross');
+  if (!previous) return '+0.0% ↑';
+  const delta = ((current - previous) / previous) * 100;
+  return `${delta >= 0 ? '+' : ''}${delta.toFixed(1)}% ${delta >= 0 ? '↑' : '↓'}`;
+}
+
+function renderNeoTransactions(currentRows) {
+  const tbody = document.querySelector('[data-neo-transactions]');
+  if (!tbody) return;
+
+  const names = ['Paypal Withdraw', 'Stripe Checkout', 'Template Sale', 'Creator Pack', 'Customer Access', 'Corya Starter', 'Digital Download'];
+  const categories = ['Withdraw', 'Product', 'Template', 'Subscription', 'Access'];
+  const rows = currentRows
+    .slice()
+    .reverse()
+    .flatMap((row) => {
+      const events = (row.events || []).slice(-2).reverse();
+      return events.map((event, eventIndex) => ({
+        name: names[Math.floor(randomFromKey(`${row.iso}:neo:name:${eventIndex}`) * names.length)],
+        date: row.date,
+        category: categories[Math.floor(randomFromKey(`${row.iso}:neo:cat:${eventIndex}`) * categories.length)],
+        amount: event.amount,
+        status: event.amount > settings.productPrice * 1.8 ? 'Completed' : 'Paid'
+      }));
+    })
+    .slice(0, 8);
+
+  tbody.innerHTML = rows.map((row) => `
+    <tr>
+      <td><strong>${row.name}</strong></td>
+      <td>${formatDateLong(row.date)}</td>
+      <td><span class="neo-status">${row.category}</span></td>
+      <td>${formatCurrency(row.amount)}</td>
+      <td>${row.status}</td>
+    </tr>
+  `).join('');
 }
 
 function renderFilters() {
@@ -1450,7 +1664,7 @@ function isDashboardLocalSurface(target) {
   if (target.closest('[data-page]')) return false;
 
   return !!target.closest(
-    '.today-section, .overview-section, .revenue-dashboard, .dashboard-tabs, .finance-card, .interactive-chart, .mini-chart, .metrics-row, .today-side'
+    '.today-section, .overview-section, .revenue-dashboard, .dashboard-tabs, .finance-card, .interactive-chart, .mini-chart, .metrics-row, .today-side, .neo-dashboard, .neo-stat-card, .neo-chart-card, .neo-line-card, .neo-table-card'
   );
 }
 
