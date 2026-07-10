@@ -309,6 +309,7 @@
                       <button type="button" data-range="30">Last 30 days</button>
                       <button type="button" data-range="365">Last 365 days</button>
                       <button type="button" data-range="month">This month</button>
+                      <button type="button" data-range="custom">Custom range</button>
                     </div>
                   </div>
 
@@ -333,6 +334,18 @@
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div class="neo-custom-range" data-neo-custom-range hidden>
+                <label>
+                  <span>Start</span>
+                  <input type="date" data-dashboard-start />
+                </label>
+                <span class="neo-custom-separator">to</span>
+                <label>
+                  <span>End</span>
+                  <input type="date" data-dashboard-end />
+                </label>
               </div>
 
               <div class="neo-stat-row" aria-label="Financial summary">
@@ -362,7 +375,7 @@
                     <div class="neo-card-label"><svg><use href="#icon-bar-chart"></use></svg><span>Usage Category</span></div>
                     <div class="neo-total"><strong data-neo-usage-total>€0.00</strong><span>total transactions</span></div>
                   </div>
-                  <button type="button" class="neo-date-button" data-neo-month-range>Last 12 months</button>
+                  <button type="button" class="neo-date-button" data-neo-month-range>Last 7 days</button>
                 </div>
                 <div class="neo-month-chart" data-neo-month-chart></div>
               </article>

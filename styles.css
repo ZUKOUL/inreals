@@ -1279,6 +1279,41 @@ h1 {
   padding-bottom: 10px;
 }
 
+.neo-custom-range {
+  display: flex;
+  align-items: end;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: -8px;
+}
+
+.neo-custom-range[hidden] {
+  display: none;
+}
+
+.neo-custom-range label {
+  display: grid;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.neo-custom-range input {
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 0 11px;
+  color: var(--text);
+  background: var(--control);
+  color-scheme: light;
+}
+
+.neo-custom-separator {
+  padding-bottom: 10px;
+  color: var(--faint);
+  font-size: 12px;
+}
+
 .neo-stat-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1439,7 +1474,7 @@ h1 {
 .neo-month-chart {
   display: grid;
   grid-template-columns: 48px minmax(0, 1fr);
-  min-height: 342px;
+  min-height: 386px;
   gap: 12px;
   padding: 14px 0 0;
 }
@@ -1447,8 +1482,8 @@ h1 {
 .neo-month-scale {
   display: grid;
   grid-template-rows: repeat(5, 1fr);
-  min-height: 296px;
-  padding: 4px 0 34px;
+  min-height: 340px;
+  padding: 4px 0 38px;
   color: var(--faint);
   font-size: 12px;
 }
@@ -1457,13 +1492,23 @@ h1 {
   align-self: start;
 }
 
+.neo-month-bars-shell {
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-width: 0;
+  border-radius: 18px;
+  scrollbar-color: color-mix(in srgb, var(--neo-blue) 24%, transparent) transparent;
+  scrollbar-width: thin;
+}
+
 .neo-month-bars {
   display: grid;
-  grid-template-columns: repeat(12, minmax(48px, 1fr));
+  grid-template-columns: repeat(var(--bar-count), minmax(var(--bar-width), 1fr));
   align-items: end;
-  min-height: 326px;
+  min-width: var(--bars-min-width);
+  min-height: 370px;
   gap: 16px;
-  padding: 0 8px 4px;
+  padding: 42px 8px 4px;
   border-radius: 18px;
   background-image: radial-gradient(color-mix(in srgb, var(--muted) 18%, transparent) 1px, transparent 1px);
   background-size: 18px 18px;
@@ -1472,26 +1517,49 @@ h1 {
 .neo-month-bar-wrap {
   position: relative;
   display: grid;
-  min-height: 286px;
+  min-width: 0;
+  min-height: 320px;
   align-items: end;
   justify-items: center;
   gap: 12px;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  cursor: crosshair;
 }
 
-.neo-month-bar {
-  width: min(52px, 100%);
-  height: var(--bar, 40%);
-  min-height: 50px;
+.neo-month-track {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  max-width: 62px;
+  height: 274px;
   border: 1px solid color-mix(in srgb, var(--text-strong) 6%, transparent);
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), #e8e8e8);
+  border-radius: 20px;
+  background: linear-gradient(180deg, #f0f0f0, #e5e5e5);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
+.neo-month-bar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  height: var(--bar, 40%);
+  min-height: 8px;
+  border-radius: 18px 18px 16px 16px;
+  background: linear-gradient(180deg, var(--bar-soft), var(--bar-accent));
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--bar-accent) 24%, transparent);
+  transition: height 320ms cubic-bezier(.2,.8,.2,1), filter 160ms ease;
+}
+
+.neo-month-bar-wrap:hover .neo-month-bar,
+.neo-month-bar-wrap:focus-visible .neo-month-bar,
 .neo-month-bar-wrap.active .neo-month-bar {
-  border-color: color-mix(in srgb, var(--neo-blue) 18%, transparent);
-  background: linear-gradient(180deg, #62c5ff, var(--neo-blue));
-  box-shadow: 0 16px 30px rgba(21, 167, 255, 0.24);
+  filter: saturate(1.08) brightness(0.98);
 }
 
 .neo-month-bar-wrap small {
@@ -1503,13 +1571,18 @@ h1 {
   color: var(--text-strong);
 }
 
+.neo-period-label.visually-muted {
+  color: color-mix(in srgb, var(--faint) 48%, transparent);
+}
+
 .neo-month-tooltip {
   position: absolute;
   z-index: 2;
-  bottom: calc(var(--bar, 40%) + 46px);
+  top: 0;
+  bottom: auto;
   left: 50%;
   display: none;
-  min-width: 84px;
+  min-width: 134px;
   transform: translateX(-50%);
   border-radius: 10px;
   padding: 8px 10px;
@@ -1519,6 +1592,23 @@ h1 {
   font-size: 13px;
   text-align: center;
   white-space: nowrap;
+}
+
+.neo-month-tooltip strong,
+.neo-month-tooltip small {
+  display: block;
+  color: inherit;
+}
+
+.neo-month-tooltip strong {
+  font-size: 14px;
+  font-weight: 560;
+}
+
+.neo-month-tooltip small {
+  margin-top: 3px;
+  font-size: 11px;
+  opacity: 0.72;
 }
 
 .neo-month-tooltip::after {
@@ -1534,7 +1624,8 @@ h1 {
 }
 
 .neo-month-bar-wrap.active .neo-month-tooltip,
-.neo-month-bar-wrap:hover .neo-month-tooltip {
+.neo-month-bar-wrap:hover .neo-month-tooltip,
+.neo-month-bar-wrap:focus-visible .neo-month-tooltip {
   display: block;
 }
 
@@ -1652,7 +1743,19 @@ h1 {
 }
 
 :root[data-theme="dark"] .neo-month-bar {
-  background: linear-gradient(180deg, #373737, #2a2a2a);
+  background: linear-gradient(180deg, var(--bar-soft), var(--bar-accent));
+}
+
+:root[data-theme="dark"] .neo-month-track {
+  border-color: #3a3a3a;
+  background: linear-gradient(180deg, #343434, #292929);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+:root[data-theme="dark"] .neo-custom-range input {
+  color-scheme: dark;
+  border-color: #383838;
+  background: #242424;
 }
 
 :root[data-theme="dark"] .neo-table .neo-status {
@@ -2451,14 +2554,9 @@ h1 {
   }
 
   .neo-month-chart {
-    overflow-x: auto;
-    grid-template-columns: 42px 760px;
+    overflow: visible;
+    grid-template-columns: 42px minmax(0, 1fr);
     padding-right: 2px;
-    scrollbar-width: none;
-  }
-
-  .neo-month-bars {
-    grid-template-columns: repeat(12, 58px);
   }
 
   .signal-grid,
@@ -2628,9 +2726,13 @@ h1 {
   }
 
   .neo-filters::-webkit-scrollbar,
-  .neo-month-chart::-webkit-scrollbar,
+  .neo-month-bars-shell::-webkit-scrollbar,
   .neo-table-card::-webkit-scrollbar {
     display: none;
+  }
+
+  .neo-month-bars-shell {
+    scrollbar-width: none;
   }
 
   .neo-stat-row {
@@ -2658,25 +2760,43 @@ h1 {
   }
 
   .neo-month-chart {
-    min-height: 260px;
-    grid-template-columns: 36px 720px;
+    min-height: 300px;
+    grid-template-columns: 34px minmax(0, 1fr);
     padding-top: 0;
   }
 
   .neo-month-scale {
-    min-height: 226px;
-    padding-bottom: 30px;
+    min-height: 266px;
+    padding-bottom: 32px;
     font-size: 11px;
   }
 
   .neo-month-bars {
-    min-height: 252px;
-    gap: 12px;
-    padding-top: 0;
+    min-height: 292px;
+    gap: 8px;
+    padding-top: 36px;
   }
 
   .neo-month-bar-wrap {
-    min-height: 210px;
+    min-height: 252px;
+  }
+
+  .neo-month-track {
+    height: 214px;
+  }
+
+  .neo-custom-range {
+    align-items: stretch;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .neo-custom-range label {
+    flex: 1 1 130px;
+  }
+
+  .neo-custom-range input {
+    width: 100%;
   }
 
   .neo-line-chart,

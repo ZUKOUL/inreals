@@ -49,7 +49,9 @@ let dashboardState = {
   range: '7',
   interval: 'day',
   compare: 'previous',
-  topPeriod: 'yesterday'
+  topPeriod: 'yesterday',
+  customStart: '',
+  customEnd: ''
 };
 let revenueState = {
   range: '365',
@@ -416,14 +418,22 @@ function roundMoney(value) {
 function getCurrentRows() {
   const today = startOfDay(new Date());
   let start;
+  let end = today;
 
-  if (dashboardState.range === 'month') {
+  if (dashboardState.range === 'custom') {
+    start = dashboardState.customStart ? parseIsoDay(dashboardState.customStart) : addDays(today, -29);
+    end = dashboardState.customEnd ? parseIsoDay(dashboardState.customEnd) : today;
+    if (start > end) [start, end] = [end, start];
+    if (end > today) end = today;
+    const firstAvailable = series[0]?.date || addDays(today, -364);
+    if (start < firstAvailable) start = firstAvailable;
+  } else if (dashboardState.range === 'month') {
     start = new Date(today.getFullYear(), today.getMonth(), 1);
   } else {
     start = addDays(today, -Number(dashboardState.range) + 1);
   }
 
-  return series.filter((row) => row.date >= start && row.date <= today);
+  return series.filter((row) => row.date >= start && row.date <= end);
 }
 
 function getPreviousRows(currentRows) {
@@ -915,31 +925,33 @@ function renderNeoMonthChart() {
   const chart = document.querySelector('[data-neo-month-chart]');
   if (!chart) return;
 
-  const months = getMonthBuckets();
-  const total = sumRows(months, 'gross');
-  const max = Math.max(...months.map((month) => month.gross), 1);
-  const now = new Date();
-  const activeMonthDate = now.getDate() < 12
-    ? new Date(now.getFullYear(), now.getMonth() - 1, 1)
-    : new Date(now.getFullYear(), now.getMonth(), 1);
-  const activeKey = `${activeMonthDate.getFullYear()}-${activeMonthDate.getMonth()}`;
-  const fallbackActiveKey = months.reduce((best, month) => (
-    month.gross > best.gross ? month : best
-  ), months[0]).key;
-
+  const periods = groupedSeries.length ? groupedSeries : groupRows(getCurrentRows(), dashboardState.interval);
+  const total = sumRows(periods, 'gross');
+  const max = Math.max(...periods.map((period) => period.gross), 1);
+  const activeIndex = periods.reduce((bestIndex, period, index, rows) => (
+    period.gross > rows[bestIndex].gross ? index : bestIndex
+  ), 0);
   const scale = createNeoScale(max);
+  const count = periods.length;
+  const barWidth = count > 180 ? 10 : count > 60 ? 14 : count > 30 ? 20 : count > 14 ? 28 : 52;
+  const minWidth = Math.max(620, count * (barWidth + 8));
   setText('[data-neo-usage-total]', formatCurrency(total));
-  setText('[data-neo-month-range]', `${months[0].label} ${months[0].date.getFullYear()} – Today`);
+  setText('[data-neo-month-range]', getRangeLabel());
 
-  const bars = months.map((month) => {
-    const isActive = month.key === activeKey || (!months.some((item) => item.key === activeKey) && month.key === fallbackActiveKey);
-    const height = 18 + (month.gross / max) * 78;
+  const bars = periods.map((period, index) => {
+    const height = Math.max(4, (period.gross / max) * 100);
+    const paletteIndex = index % 7;
+    const accent = paletteIndex === 2 || paletteIndex === 5 ? '#a98bff' : paletteIndex === 1 || paletteIndex === 4 ? '#62c5ff' : '#159cf5';
+    const soft = paletteIndex === 2 || paletteIndex === 5 ? '#e0d5ff' : '#c9ecff';
+    const showLabel = count <= 14 || index === 0 || index === count - 1 || index % Math.max(1, Math.ceil(count / 8)) === 0;
     return `
-      <div class="neo-month-bar-wrap ${isActive ? 'active' : ''}" style="--bar: ${height}%">
-        <div class="neo-month-tooltip">${formatCurrency(month.gross)}</div>
-        <span class="neo-month-bar"></span>
-        <small>${month.label}</small>
-      </div>
+      <button class="neo-month-bar-wrap ${index === activeIndex ? 'active' : ''}" type="button"
+        style="--bar: ${height}%; --bar-accent: ${accent}; --bar-soft: ${soft}"
+        aria-label="${period.tooltipLabel}: ${formatCurrency(period.gross)}, ${formatNumber(period.sales)} sales">
+        <span class="neo-month-tooltip"><strong>${formatCurrency(period.gross)}</strong><small>${period.tooltipLabel} · ${formatNumber(period.sales)} sales</small></span>
+        <span class="neo-month-track"><span class="neo-month-bar"></span></span>
+        <small class="neo-period-label ${showLabel ? '' : 'visually-muted'}">${showLabel ? period.label : '·'}</small>
+      </button>
     `;
   }).join('');
 
@@ -947,7 +959,9 @@ function renderNeoMonthChart() {
     <div class="neo-month-scale" aria-hidden="true">
       ${scale.map((value) => `<span>${formatNeoAxis(value)}</span>`).join('')}
     </div>
-    <div class="neo-month-bars">${bars}</div>
+    <div class="neo-month-bars-shell" tabindex="0" aria-label="Scrollable revenue chart">
+      <div class="neo-month-bars" style="--bar-count: ${count}; --bar-width: ${barWidth}px; --bars-min-width: ${minWidth}px">${bars}</div>
+    </div>
   `;
 }
 
@@ -1046,10 +1060,23 @@ function renderFilters() {
   document.querySelectorAll('[data-compare]').forEach((button) => {
     button.classList.toggle('active', button.dataset.compare === dashboardState.compare);
   });
+
+  const customPanel = document.querySelector('[data-neo-custom-range]');
+  customPanel?.toggleAttribute('hidden', dashboardState.range !== 'custom');
+  const today = startOfDay(new Date());
+  const startField = document.querySelector('[data-dashboard-start]');
+  const endField = document.querySelector('[data-dashboard-end]');
+  if (startField) startField.value = dashboardState.customStart || isoDay(addDays(today, -29));
+  if (endField) endField.value = dashboardState.customEnd || isoDay(today);
 }
 
 function getRangeLabel() {
   if (dashboardState.range === 'month') return 'This month';
+  if (dashboardState.range === 'custom') {
+    const start = dashboardState.customStart ? parseIsoDay(dashboardState.customStart) : addDays(startOfDay(new Date()), -29);
+    const end = dashboardState.customEnd ? parseIsoDay(dashboardState.customEnd) : startOfDay(new Date());
+    return `${formatDateShort(start)} – ${formatDateShort(end)}`;
+  }
   return `Last ${dashboardState.range} days`;
 }
 
@@ -1776,7 +1803,21 @@ document.querySelectorAll('[data-top-period]').forEach((button) => {
 document.querySelectorAll('[data-range]').forEach((button) => {
   button.addEventListener('click', () => {
     dashboardState.range = button.dataset.range;
+    if (dashboardState.range === 'custom') {
+      const today = startOfDay(new Date());
+      dashboardState.customStart = dashboardState.customStart || isoDay(addDays(today, -29));
+      dashboardState.customEnd = dashboardState.customEnd || isoDay(today);
+    }
     closeFilterMenus();
+    renderDashboard();
+  });
+});
+
+document.querySelectorAll('[data-dashboard-start], [data-dashboard-end]').forEach((field) => {
+  field.addEventListener('change', () => {
+    dashboardState.customStart = document.querySelector('[data-dashboard-start]')?.value || '';
+    dashboardState.customEnd = document.querySelector('[data-dashboard-end]')?.value || '';
+    dashboardState.range = 'custom';
     renderDashboard();
   });
 });
