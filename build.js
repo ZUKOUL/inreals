@@ -11,9 +11,14 @@ const files = [
   'landing.css',
   'landing-overrides.css',
   'auth.css',
-  'app.js',
+  'workspace.css',
+  'workspace.js',
+  'store.html',
+  'store.css',
+  'store.js',
   'auth.js',
-  'auth-guard.js'
+  'auth-guard.js',
+  'server.mjs'
 ];
 
 fs.rmSync(dist, { recursive: true, force: true });
@@ -35,4 +40,3 @@ fs.writeFileSync(
     anonKey: process.env.SUPABASE_ANON_KEY || ''
   })};\n`
 );
-

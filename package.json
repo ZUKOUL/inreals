@@ -1,9 +1,10 @@
 {
-  "name": "corya-dashboard",
+  "name": "shopway-dashboard",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "node build.js",
-    "start": "python3 -m http.server 4173"
+    "start": "node --no-warnings=ExperimentalWarning server.mjs",
+    "dev": "node --no-warnings=ExperimentalWarning server.mjs"
   }
 }

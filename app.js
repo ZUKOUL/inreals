@@ -36,9 +36,9 @@ const defaultRevenueSettings = {
   productPrice: 39,
   minSales: 5,
   maxSales: 6,
-  emailDomain: 'corya.fr',
+  emailDomain: 'shopway.store',
   clientNames: 'Lina Moreau\nNadia Ferrand\nJules Martin\nSofia Benali\nHugo Laurent\nCamille Roy\nNoah Petit\nMaya Cohen\nAdam Lefevre\nEva Bernard',
-  products: 'Digital Download\nTemplate Shop Access\nCorya Starter\nCreator Pack\nPrivate Setup\nRevenue Report',
+  products: 'Creator Starter Kit\nNotion Business OS\nBrand Workshop\nSocial Media Pack\nPrivate Community\nMini Course',
   blur: false,
   seed: 'corya-income'
 };
@@ -51,7 +51,8 @@ let dashboardState = {
   compare: 'previous',
   topPeriod: 'yesterday',
   customStart: '',
-  customEnd: ''
+  customEnd: '',
+  activeBarIndex: null
 };
 let revenueState = {
   range: '365',
@@ -134,6 +135,7 @@ const writeUrl = (page, replace = false) => {
 
 const showPage = (page, options = {}) => {
   const safePage = pageExists(page) ? page : 'home';
+  document.body.dataset.currentPage = safePage;
 
   pages.forEach((panel) => {
     panel.classList.toggle('active', panel.dataset.page === safePage);
@@ -160,6 +162,103 @@ const showPage = (page, options = {}) => {
     window.scrollTo(0, 0);
     lastStableScroll = { x: 0, y: 0 };
   }
+};
+
+const initCommandDashboard = () => {
+  const root = document.querySelector('[data-command-dashboard]');
+  if (!root || root.dataset.ready === 'true') return;
+  root.dataset.ready = 'true';
+
+  root.querySelectorAll('[data-command-meter]').forEach((meter) => {
+    const filled = Number(meter.dataset.commandMeter || 0);
+    meter.innerHTML = Array.from(
+      { length: 32 },
+      (_, index) => `<i class="${index < filled ? 'is-filled' : ''}"></i>`
+    ).join('');
+  });
+
+  const bars = [...root.querySelectorAll('.acme-bar')];
+  const defaultBar = root.querySelector('.acme-bar.is-active') || bars[5] || bars[0];
+  const selectBar = (selected) => {
+    bars.forEach((bar) => {
+      const isSelected = bar === selected;
+      bar.classList.toggle('is-active', isSelected);
+      bar.setAttribute('aria-pressed', String(isSelected));
+    });
+  };
+
+  bars.forEach((bar, index) => {
+    bar.addEventListener('pointerenter', () => selectBar(bar));
+    bar.addEventListener('pointerleave', () => selectBar(defaultBar));
+    bar.addEventListener('focus', () => selectBar(bar));
+    bar.addEventListener('blur', () => selectBar(defaultBar));
+    bar.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      const offset = event.key === 'ArrowRight' ? 1 : -1;
+      const next = bars[(index + offset + bars.length) % bars.length];
+      selectBar(next);
+      next.focus();
+    });
+  });
+
+  root.querySelectorAll('[data-command-nav-toggle]').forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') !== 'false';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+    });
+  });
+
+  const search = root.querySelector('[data-command-search]');
+  const navGroups = [...root.querySelectorAll('[data-command-nav-group]')];
+  search?.addEventListener('input', () => {
+    const query = search.value.trim().toLowerCase();
+    navGroups.forEach((group) => {
+      const buttons = [...group.querySelectorAll('.acme-nav-list button')];
+      buttons.forEach((button) => {
+        button.hidden = Boolean(query) && !button.textContent.toLowerCase().includes(query);
+      });
+      group.hidden = Boolean(query) && buttons.every((button) => button.hidden);
+      if (query && !group.hidden) {
+        group.querySelector('[data-command-nav-toggle]')?.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'p') {
+      event.preventDefault();
+      search?.focus();
+    }
+  });
+
+  const themeButton = root.querySelector('[data-command-theme-toggle]');
+  const themeIcon = root.querySelector('[data-command-theme-icon]');
+  const syncThemeButton = () => {
+    const isDark = document.documentElement.dataset.theme === 'dark';
+    themeButton?.setAttribute('aria-pressed', String(isDark));
+    themeButton?.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+    themeIcon?.setAttribute('href', isDark ? '#icon-sun' : '#icon-moon');
+  };
+
+  themeButton?.addEventListener('click', () => {
+    const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    saveTheme(nextTheme);
+    applyTheme(nextTheme);
+    syncThemeButton();
+  });
+
+  new MutationObserver(syncThemeButton).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme']
+  });
+  syncThemeButton();
+
+  const selectAll = root.querySelector('thead input[type="checkbox"]');
+  const rowChecks = [...root.querySelectorAll('tbody input[type="checkbox"]')];
+  selectAll?.addEventListener('change', () => {
+    rowChecks.forEach((checkbox) => { checkbox.checked = selectAll.checked; });
+  });
 };
 
 function loadSettings() {
@@ -830,34 +929,195 @@ function renderOverview(currentRows, previousRows) {
 }
 
 function renderNeoDashboard(currentRows, previousRows) {
-  const lastThirty = series.slice(-30);
   const gross = sumRows(currentRows, 'gross');
   const net = sumRows(currentRows, 'net');
-  const expense = sumRows(currentRows, 'fees') + sumRows(currentRows, 'refunds');
+  const sales = sumRows(currentRows, 'sales');
   const previousGross = sumRows(previousRows, 'gross');
   const previousNet = sumRows(previousRows, 'net');
-  const previousExpense = sumRows(previousRows, 'fees') + sumRows(previousRows, 'refunds');
-  const balance = sumRows(lastThirty, 'net');
+  const previousSales = sumRows(previousRows, 'sales');
+  const customers = Math.max(0, Math.round(sales * 0.82));
+  const previousCustomers = Math.max(0, Math.round(previousSales * 0.82));
+  const aov = sales ? gross / sales : 0;
+  const previousAov = previousSales ? previousGross / previousSales : 0;
+  const conversion = sales ? clamp(2.4 + (sales / Math.max(currentRows.length, 1)) * 0.12, 2.8, 8.9) : 0;
+  const previousConversion = previousSales ? clamp(2.4 + (previousSales / Math.max(previousRows.length, 1)) * 0.12, 2.8, 8.9) : 0;
+  const products = Math.max(0, Math.round(sales * 0.74));
+  const previousProducts = Math.max(0, Math.round(previousSales * 0.74));
+  const refunds = gross * 0.024;
+  const previousRefunds = previousGross * 0.024;
 
-  setText('[data-neo-balance]', formatCurrency(balance));
-  setText('[data-neo-income]', formatCurrency(gross));
-  setText('[data-neo-expense]', formatCurrency(expense));
-  renderNeoDelta('[data-neo-balance-delta]', net, previousNet);
-  renderNeoDelta('[data-neo-income-delta]', gross, previousGross);
-  renderNeoDelta('[data-neo-expense-delta]', expense, previousExpense, true);
-
-  renderNeoMeter('balance', getRatio(net, Math.max(previousNet, gross * 0.75, 1)));
-  renderNeoMeter('income', getRatio(gross, Math.max(previousGross, gross * 0.72, 1)));
-  renderNeoMeter('expense', getRatio(expense, Math.max(gross * 0.22, previousExpense, 1)));
+  setText('[data-ops-revenue]', formatCurrency(gross));
+  setText('[data-ops-net]', formatCurrency(net));
+  setText('[data-ops-customers]', formatNumber(customers));
+  setText('[data-ops-aov]', formatCurrency(aov));
+  setText('[data-ops-conversion]', `${conversion.toFixed(1)}%`);
+  setText('[data-ops-orders]', formatNumber(sales));
+  setText('[data-ops-products]', formatNumber(products));
+  setText('[data-ops-refunds]', formatCurrency(refunds));
+  setText('[data-ops-revenue-previous]', `${formatCurrency(previousGross)} last period`);
+  setText('[data-ops-net-previous]', `${formatCurrency(previousNet)} last period`);
+  setText('[data-ops-customers-previous]', `${formatNumber(previousCustomers)} last period`);
+  setText('[data-ops-aov-previous]', `${formatCurrency(previousAov)} last period`);
+  setText('[data-ops-conversion-previous]', `${previousConversion.toFixed(1)}% last period`);
+  renderOpsDelta('[data-ops-revenue-delta]', gross, previousGross);
+  renderOpsDelta('[data-ops-net-delta]', net, previousNet);
+  renderOpsDelta('[data-ops-customers-delta]', customers, previousCustomers);
+  renderOpsDelta('[data-ops-aov-delta]', aov, previousAov);
+  renderOpsDelta('[data-ops-conversion-delta]', conversion, previousConversion);
+  renderOpsDelta('[data-ops-orders-delta]', sales, previousSales);
+  renderOpsDelta('[data-ops-products-delta]', products, previousProducts);
+  renderOpsDelta('[data-ops-refunds-delta]', refunds, previousRefunds);
 
   renderNeoMonthChart();
-  renderNeoCashflow(currentRows, previousRows);
-  renderNeoTransactions(currentRows);
+  renderViralLineChart(currentRows);
+  renderViralHeatmap();
+}
 
-  const transactionLabel = dashboardState.range === 'month'
-    ? 'This month'
-    : `Last ${dashboardState.range} days`;
-  setText('[data-neo-transactions-label]', transactionLabel);
+function renderViralLineChart(currentRows) {
+  const root = document.querySelector('[data-viral-line-chart]');
+  if (!root) return;
+
+  const source = groupedSeries.length ? groupedSeries : groupRows(currentRows, dashboardState.interval);
+  const step = Math.max(1, Math.ceil(source.length / 34));
+  const rows = source.filter((_, index) => index % step === 0 || index === source.length - 1);
+  const width = 760;
+  const height = 300;
+  const left = 46;
+  const right = 18;
+  const top = 24;
+  const bottom = 38;
+  const chartHeight = height - top - bottom;
+  const rates = rows.map((row, index) => clamp(3.1 + row.sales * 0.17 + Math.sin(index * 0.78) * 0.65, 2.8, 10.8));
+  const max = 12;
+  const points = rows.map((row, index) => ({
+    row,
+    rate: rates[index],
+    x: left + (index / Math.max(rows.length - 1, 1)) * (width - left - right),
+    y: top + chartHeight - (rates[index] / max) * chartHeight
+  }));
+  const line = buildViralSmoothPath(points);
+  const area = points.length ? `${line} L ${points[points.length - 1].x.toFixed(2)} ${height - bottom} L ${points[0].x.toFixed(2)} ${height - bottom} Z` : '';
+  const ticks = [12, 9, 6, 3, 0];
+  const labelIndexes = [0, Math.floor((rows.length - 1) / 2), rows.length - 1].filter((value, index, values) => value >= 0 && values.indexOf(value) === index);
+
+  root.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Conversion over the selected period">
+      <defs><linearGradient id="viral-conversion-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#30b89e" stop-opacity=".27"/><stop offset="100%" stop-color="#30b89e" stop-opacity="0"/></linearGradient></defs>
+      ${ticks.map((tick) => { const y = top + chartHeight - (tick / max) * chartHeight; return `<line x1="${left}" x2="${width - right}" y1="${y}" y2="${y}" class="viral-grid-line"/><text x="4" y="${y + 4}" class="viral-axis-label">${tick}%</text>`; }).join('')}
+      <path d="${area}" class="viral-line-area"/>
+      <path d="${line}" class="viral-line-path"/>
+      ${points.map((point, index) => `<g class="viral-svg-point" tabindex="0" data-viral-point="${index}"><circle cx="${point.x}" cy="${point.y}" r="4"/></g>`).join('')}
+      ${labelIndexes.map((index) => `<text x="${points[index].x}" y="${height - 8}" text-anchor="${index === 0 ? 'start' : index === points.length - 1 ? 'end' : 'middle'}" class="viral-axis-label">${points[index].row.label}</text>`).join('')}
+    </svg>
+    <div class="viral-line-tooltip" data-viral-line-tooltip hidden><strong></strong><span></span></div>`;
+
+  const tooltip = root.querySelector('[data-viral-line-tooltip]');
+  const showTooltip = (index) => {
+    const point = points[index];
+    if (!point || !tooltip) return;
+    tooltip.querySelector('strong').textContent = `${point.rate.toFixed(1)}% conversion`;
+    tooltip.querySelector('span').textContent = `${point.row.tooltipLabel} · ${formatNumber(point.row.sales)} orders`;
+    tooltip.hidden = false;
+    const x = (point.x / width) * root.clientWidth;
+    const y = (point.y / height) * Math.min(root.clientHeight, 315);
+    tooltip.style.left = `${clamp(x, 74, root.clientWidth - 74)}px`;
+    tooltip.style.top = `${clamp(y + 10, 58, 275)}px`;
+  };
+  const hideTooltip = () => { if (tooltip) tooltip.hidden = true; };
+
+  root.querySelectorAll('[data-viral-point]').forEach((element) => {
+    const index = Number(element.dataset.viralPoint);
+    element.addEventListener('pointerenter', () => showTooltip(index));
+    element.addEventListener('focus', () => showTooltip(index));
+    element.addEventListener('blur', hideTooltip);
+  });
+  root.onpointerleave = hideTooltip;
+}
+
+function buildViralSmoothPath(points) {
+  if (!points.length) return '';
+  if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
+  return points.reduce((path, point, index) => {
+    if (index === 0) return `M ${point.x.toFixed(2)} ${point.y.toFixed(2)}`;
+    const previous = points[index - 1];
+    const middle = (previous.x + point.x) / 2;
+    return `${path} C ${middle.toFixed(2)} ${previous.y.toFixed(2)}, ${middle.toFixed(2)} ${point.y.toFixed(2)}, ${point.x.toFixed(2)} ${point.y.toFixed(2)}`;
+  }, '');
+}
+
+function renderViralHeatmap() {
+  const root = document.querySelector('[data-viral-heatmap]');
+  if (!root) return;
+  const rows = series.slice(-154);
+  const maxSales = Math.max(...rows.map((row) => row.sales), 1);
+  root.innerHTML = rows.map((row) => {
+    const level = Math.max(0, Math.min(4, Math.ceil((row.sales / maxSales) * 4)));
+    const label = `${formatDateLong(row.date)} — ${formatNumber(row.sales)} orders — ${formatCurrency(row.gross)}`;
+    return `<button type="button" class="viral-heat-cell level-${level}" title="${label}" aria-label="${label}"></button>`;
+  }).join('');
+  const activeDays = rows.filter((row) => row.sales > 0).length;
+  setText('[data-viral-streak]', `You sold on ${activeDays} of the last ${rows.length} days`);
+}
+
+function renderOpsDelta(selector, current, previous) {
+  const element = document.querySelector(selector);
+  if (!element) return;
+  const delta = previous ? ((current - previous) / previous) * 100 : 0;
+  element.classList.toggle('negative', delta < 0);
+  element.textContent = `${delta < 0 ? '↘' : '↗'} ${delta >= 0 ? '+' : ''}${delta.toFixed(1)}%`;
+}
+
+function renderOpsProductPerformance(gross, sales) {
+  const products = getListFromTextarea(revenueSettings.products, defaultRevenueSettings.products).slice(0, 6);
+  const shares = [0.34, 0.22, 0.16, 0.12, 0.09, 0.07];
+  const productRows = products.map((name, index) => ({
+    name,
+    share: shares[index] || 0.06,
+    revenue: gross * (shares[index] || 0.06),
+    sales: Math.max(0, Math.round(sales * (shares[index] || 0.06))),
+    rate: 4.9 - index * 0.1
+  }));
+  const cards = document.querySelector('[data-ops-product-cards]');
+  if (cards) {
+    cards.innerHTML = productRows.slice(0, 3).map((product, index) => `
+      <article class="ops-product-card">
+        <div class="ops-product-card-top">
+          <span class="ops-product-avatar ops-avatar-${index + 1}">${product.name.slice(0, 1)}</span>
+          <div class="ops-product-name"><strong>${product.name}</strong><span>Digital product</span></div>
+        </div>
+        <div class="ops-product-stats">
+          <div class="ops-product-stat"><span>Orders</span><strong>${formatNumber(product.sales)}</strong></div>
+          <div class="ops-product-stat"><span>Revenue</span><strong>${formatCurrency(product.revenue)}</strong></div>
+          <div class="ops-product-stat"><span>Rate</span><strong class="ops-product-stars">★ ${product.rate.toFixed(1)}</strong></div>
+        </div>
+      </article>
+    `).join('');
+  }
+
+  const sources = document.querySelector('[data-ops-sources]');
+  if (sources) {
+    sources.innerHTML = productRows.map((product, index) => `
+      <div class="ops-source-row" style="--source-color: ${['#7962d8', '#50b988', '#c4b6f5', '#eca66b', '#78bfe5', '#d8d8de'][index]}">
+        <i class="ops-source-line"></i>
+        <span>${product.name}</span>
+        <em>(${Math.round(product.share * 100)}%)</em>
+        <strong>${formatCurrency(product.revenue)}</strong>
+      </div>
+    `).join('');
+  }
+
+  const best = productRows[0] || { name: 'Digital product', revenue: 0, share: 0 };
+  setText('[data-ops-insight-value]', `${best.name} made ${formatCurrency(best.revenue)}`);
+  setText('[data-ops-insight-meta]', `${Math.round(best.share * 100)}% of total revenue`);
+  setText('[data-ops-best-product]', best.name);
+  setText('[data-ops-best-earned]', formatCurrency(best.revenue));
+  setText('[data-ops-best-share]', `${Math.round(best.share * 100)}%`);
+  setText('[data-ops-meter-value]', `${Math.round(best.share * 100)}%`);
+  const meter = document.querySelector('[data-ops-segment-meter]');
+  if (meter) {
+    const active = Math.round(best.share * 50);
+    meter.innerHTML = Array.from({ length: 50 }, (_, index) => `<span class="${index < active ? 'filled' : ''}"></span>`).join('');
+  }
 }
 
 function getRatio(value, max) {
@@ -926,43 +1186,54 @@ function renderNeoMonthChart() {
   if (!chart) return;
 
   const periods = groupedSeries.length ? groupedSeries : groupRows(getCurrentRows(), dashboardState.interval);
-  const total = sumRows(periods, 'gross');
   const max = Math.max(...periods.map((period) => period.gross), 1);
-  const activeIndex = periods.reduce((bestIndex, period, index, rows) => (
+  const peakIndex = periods.reduce((bestIndex, period, index, rows) => (
     period.gross > rows[bestIndex].gross ? index : bestIndex
   ), 0);
+  const activeIndex = dashboardState.activeBarIndex == null || dashboardState.activeBarIndex >= periods.length
+    ? peakIndex
+    : dashboardState.activeBarIndex;
   const scale = createNeoScale(max);
   const count = periods.length;
-  const barWidth = count > 180 ? 10 : count > 60 ? 14 : count > 30 ? 20 : count > 14 ? 28 : 52;
-  const minWidth = Math.max(620, count * (barWidth + 8));
-  setText('[data-neo-usage-total]', formatCurrency(total));
-  setText('[data-neo-month-range]', getRangeLabel());
+  const barWidth = count > 180 ? 8 : count > 60 ? 12 : count > 30 ? 16 : count > 14 ? 24 : 68;
+  const minWidth = Math.max(540, count * (barWidth + (count > 60 ? 5 : 14)));
 
   const bars = periods.map((period, index) => {
-    const height = Math.max(4, (period.gross / max) * 100);
-    const paletteIndex = index % 7;
-    const accent = paletteIndex === 2 || paletteIndex === 5 ? '#a98bff' : paletteIndex === 1 || paletteIndex === 4 ? '#62c5ff' : '#159cf5';
-    const soft = paletteIndex === 2 || paletteIndex === 5 ? '#e0d5ff' : '#c9ecff';
+    const height = Math.max(8, (period.gross / max) * 100);
+    const customers = Math.max(1, Math.round(period.sales * 0.82));
     const showLabel = count <= 14 || index === 0 || index === count - 1 || index % Math.max(1, Math.ceil(count / 8)) === 0;
     return `
-      <button class="neo-month-bar-wrap ${index === activeIndex ? 'active' : ''}" type="button"
-        style="--bar: ${height}%; --bar-accent: ${accent}; --bar-soft: ${soft}"
-        aria-label="${period.tooltipLabel}: ${formatCurrency(period.gross)}, ${formatNumber(period.sales)} sales">
-        <span class="neo-month-tooltip"><strong>${formatCurrency(period.gross)}</strong><small>${period.tooltipLabel} · ${formatNumber(period.sales)} sales</small></span>
-        <span class="neo-month-track"><span class="neo-month-bar"></span></span>
-        <small class="neo-period-label ${showLabel ? '' : 'visually-muted'}">${showLabel ? period.label : '·'}</small>
+      <button class="ops-bar-button ${index === activeIndex ? 'active' : ''}" type="button" data-ops-bar-index="${index}" data-ops-bar-height="${height}"
+        style="--bar-height: ${height}%" aria-label="${period.tooltipLabel}: ${formatCurrency(period.gross)}, ${formatNumber(customers)} customers">
+        <span class="ops-bar-tooltip">
+          <span class="ops-tooltip-date">${period.tooltipLabel}</span>
+          <small class="ops-tooltip-row"><b>Customers</b><strong>${formatNumber(customers)}</strong></small>
+          <small class="ops-tooltip-row"><b>Revenue</b><strong>${formatCurrency(period.gross)}</strong></small>
+        </span>
+        <span class="ops-bar-track"><span class="ops-bar-fill"></span><i class="ops-bar-dot"></i></span>
+        <small class="ops-bar-label ${showLabel ? '' : 'visually-muted'}">${showLabel ? period.label : '·'}</small>
       </button>
     `;
   }).join('');
 
   chart.innerHTML = `
-    <div class="neo-month-scale" aria-hidden="true">
+    <div class="ops-chart-scale" aria-hidden="true">
       ${scale.map((value) => `<span>${formatNeoAxis(value)}</span>`).join('')}
     </div>
-    <div class="neo-month-bars-shell" tabindex="0" aria-label="Scrollable revenue chart">
-      <div class="neo-month-bars" style="--bar-count: ${count}; --bar-width: ${barWidth}px; --bars-min-width: ${minWidth}px">${bars}</div>
+    <div class="ops-bars-shell" tabindex="0" aria-label="Scrollable sales chart">
+      <div class="ops-bars" style="--bar-count: ${count}; --bar-width: ${barWidth}px; --bars-min-width: ${minWidth}px; --guide-bottom: ${(activeIndex >= 0 ? Math.max(8, (periods[activeIndex].gross / max) * 100) : 0)}%">${bars}</div>
     </div>
   `;
+
+  chart.querySelectorAll('[data-ops-bar-index]').forEach((button) => {
+    const activate = () => {
+      const index = Number(button.dataset.opsBarIndex);
+      dashboardState.activeBarIndex = index;
+      chart.querySelectorAll('.ops-bar-button').forEach((bar) => bar.classList.toggle('active', bar === button));
+      chart.querySelector('.ops-bars')?.style.setProperty('--guide-bottom', `${button.dataset.opsBarHeight}%`);
+    };
+    button.addEventListener('click', activate);
+  });
 }
 
 function createNeoScale(max) {
@@ -1018,7 +1289,7 @@ function renderNeoTransactions(currentRows) {
   const tbody = document.querySelector('[data-neo-transactions]');
   if (!tbody) return;
 
-  const names = ['Paypal Withdraw', 'Stripe Checkout', 'Template Sale', 'Creator Pack', 'Customer Access', 'Corya Starter', 'Digital Download'];
+  const names = ['Stripe Checkout', 'Template Sale', 'Creator Pack', 'Course Access', 'Membership Renewal', 'Starter Kit', 'Digital Download'];
   const categories = ['Withdraw', 'Product', 'Template', 'Subscription', 'Access'];
   const rows = currentRows
     .slice()
@@ -1803,6 +2074,7 @@ document.querySelectorAll('[data-top-period]').forEach((button) => {
 document.querySelectorAll('[data-range]').forEach((button) => {
   button.addEventListener('click', () => {
     dashboardState.range = button.dataset.range;
+    dashboardState.activeBarIndex = null;
     if (dashboardState.range === 'custom') {
       const today = startOfDay(new Date());
       dashboardState.customStart = dashboardState.customStart || isoDay(addDays(today, -29));
@@ -1818,6 +2090,7 @@ document.querySelectorAll('[data-dashboard-start], [data-dashboard-end]').forEac
     dashboardState.customStart = document.querySelector('[data-dashboard-start]')?.value || '';
     dashboardState.customEnd = document.querySelector('[data-dashboard-end]')?.value || '';
     dashboardState.range = 'custom';
+    dashboardState.activeBarIndex = null;
     renderDashboard();
   });
 });
@@ -1825,6 +2098,7 @@ document.querySelectorAll('[data-dashboard-start], [data-dashboard-end]').forEac
 document.querySelectorAll('[data-interval]').forEach((button) => {
   button.addEventListener('click', () => {
     dashboardState.interval = button.dataset.interval;
+    dashboardState.activeBarIndex = null;
     closeFilterMenus();
     renderDashboard();
   });
@@ -1920,7 +2194,7 @@ document.querySelectorAll('[data-template-card]').forEach((button) => {
     }
 
     if (builderStatus) {
-      builderStatus.textContent = `${button.dataset.templateCard} selected. Describe what you want to launch.`;
+      builderStatus.textContent = `${button.dataset.templateCard} selected. Describe what you want to sell.`;
     }
   });
 });
@@ -1932,12 +2206,12 @@ document.querySelector('[data-launch-build]')?.addEventListener('click', () => {
   if (!builderStatus) return;
 
   if (!prompt) {
-    builderStatus.textContent = 'Write one sentence about the product you want Corya to build.';
+    builderStatus.textContent = 'Write one sentence about the product you want to sell.';
     builderPrompt?.focus();
     return;
   }
 
-  builderStatus.textContent = `${selectedTemplate} brief ready — builder workspace coming next.`;
+  builderStatus.textContent = `${selectedTemplate} product brief ready — your store setup is next.`;
 });
 
 document.addEventListener('click', () => {
@@ -2107,6 +2381,7 @@ setInterval(() => {
 const initialPage = getPageFromUrl();
 applyAuthSession();
 applyTheme(loadTheme());
+initCommandDashboard();
 renderDashboard();
 showPage(initialPage);
 writeUrl(initialPage, true);

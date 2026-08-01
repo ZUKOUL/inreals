@@ -18,7 +18,7 @@ const next = params.get('next') || '/workspace';
 let mode = params.get('mode') === 'signup' ? 'signup' : 'login';
 
 function getSupabaseClient() {
-  const config = window.CORYA_SUPABASE || {};
+  const config = window.SHOPWAY_SUPABASE || window.CORYA_SUPABASE || {};
   if (!config.url || !config.anonKey || !window.supabase) return null;
   return window.supabase.createClient(config.url, config.anonKey);
 }
@@ -28,7 +28,7 @@ function saveSession(session) {
     SESSION_KEY,
     JSON.stringify({
       email: session.email,
-      name: session.name || session.email?.split('@')[0] || 'Corya user',
+      name: session.name || session.email?.split('@')[0] || 'Shopway seller',
       provider: session.provider || 'demo',
       createdAt: new Date().toISOString()
     })
@@ -48,8 +48,8 @@ function updateMode(nextMode) {
   title.textContent = mode === 'signup' ? 'Create account' : 'Welcome back';
   subtitle.textContent =
     mode === 'signup'
-      ? 'Create your Corya account.'
-      : 'Sign in to continue to your Corya workspace.';
+      ? 'Create your Shopway account.'
+      : 'Sign in to continue to your Shopway store.';
   submit.innerHTML =
     mode === 'signup'
       ? '<span>Create account</span><span aria-hidden="true">→</span>'
@@ -59,7 +59,7 @@ function updateMode(nextMode) {
   modeCopy.innerHTML =
     mode === 'signup'
       ? 'Already have an account? <button type="button" data-auth-mode="login">Sign in</button>'
-      : 'New to corya? <button type="button" data-auth-mode="signup">Create an account</button>';
+      : 'New to shopway? <button type="button" data-auth-mode="signup">Create an account</button>';
   modeCopy.querySelector('[data-auth-mode]')?.addEventListener('click', (event) => {
     updateMode(event.currentTarget.dataset.authMode);
   });
@@ -86,7 +86,7 @@ providerButtons.forEach((button) => {
     }
 
     saveSession({
-      email: `${provider}@corya.local`,
+      email: `${provider}@shopway.local`,
       name: provider === 'google' ? 'Google user' : 'X user',
       provider
     });

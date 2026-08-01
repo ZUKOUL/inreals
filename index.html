@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Corya — dashboard financier pour apps, sites, logiciels et produits digitaux."
+      content="Shopway — crée, vends et développe ta boutique de produits digitaux."
     />
-    <title>Corya — Home</title>
+    <title>Shopway — Home</title>
     <script>
       (() => {
         try {
@@ -24,6 +24,7 @@
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23BC9BFF'/%3E%3Cpath d='M42.8 24.4c-2-2.2-5.1-3.6-9.2-3.6-7.7 0-13.1 5-13.1 11.8 0 6.9 5.4 11.7 13.2 11.7 4.1 0 7.4-1.4 9.5-3.8l-3.6-3.1c-1.4 1.4-3.2 2.2-5.5 2.2-4.4 0-7.2-2.8-7.2-7s2.8-7.1 7.2-7.1c2.3 0 4 .7 5.4 2.1l3.3-3.2Z' fill='%23242A3A'/%3E%3C/svg%3E"
     />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="workspace.css?v=20260801-5" />
   </head>
   <body>
     <svg class="icon-sprite" aria-hidden="true" focusable="false">
@@ -60,6 +61,24 @@
       <symbol id="icon-bar-chart" viewBox="0 0 24 24">
         <path d="M3 11v10m12-10v10M9 3v18M21 3v18" />
       </symbol>
+      <symbol id="icon-pie-chart" viewBox="0 0 24 24">
+        <path d="M21 12a9 9 0 1 1-9-9v9h9Z" />
+        <path d="M15 3.52A9 9 0 0 1 20.48 9H15V3.52Z" />
+      </symbol>
+      <symbol id="icon-piggy-bank" viewBox="0 0 24 24">
+        <path d="M5 10.5A7 7 0 0 1 12 5h3.5l2-2v4.05A6.5 6.5 0 0 1 21 13v1.5h-2.2A7 7 0 0 1 17 17l.5 3h-3l-.5-2H9.5L9 20H6l.8-3.2A7 7 0 0 1 5 14.5H3v-4h2Z" />
+        <path d="M12 8h3m2.5 3h.01" />
+      </symbol>
+      <symbol id="icon-coins" viewBox="0 0 24 24">
+        <ellipse cx="8" cy="6" rx="5" ry="2.5" />
+        <path d="M3 6v4c0 1.38 2.24 2.5 5 2.5s5-1.12 5-2.5V6M3 10v4c0 1.38 2.24 2.5 5 2.5 1.09 0 2.1-.18 2.92-.49" />
+        <ellipse cx="16" cy="15" rx="5" ry="2.5" />
+        <path d="M11 15v3c0 1.38 2.24 2.5 5 2.5s5-1.12 5-2.5v-3" />
+      </symbol>
+      <symbol id="icon-calendar" viewBox="0 0 24 24">
+        <path d="M7 2v4m10-4v4M3 9h18M6.5 4h11C19.43 4 21 5.57 21 7.5v11c0 1.93-1.57 3.5-3.5 3.5h-11A3.5 3.5 0 0 1 3 18.5v-11C3 5.57 4.57 4 6.5 4Z" />
+        <path d="M7 13h.01M12 13h.01M17 13h.01M7 17h.01M12 17h.01" />
+      </symbol>
       <symbol id="icon-code" viewBox="0 0 24 24">
         <path d="m16 18 6-6-6-6M8 6l-6 6 6 6" />
       </symbol>
@@ -78,8 +97,42 @@
       <symbol id="icon-search" viewBox="0 0 24 24">
         <path d="m21 21-3.5-3.5m2.5-6a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0Z" />
       </symbol>
+      <symbol id="icon-arrow-left" viewBox="0 0 24 24">
+        <path d="M19 12H5m7-7-7 7 7 7" />
+      </symbol>
+      <symbol id="icon-arrow-up-right" viewBox="0 0 24 24">
+        <path d="M7 17 17 7m-8 0h8v8" />
+      </symbol>
+      <symbol id="icon-chevron-left" viewBox="0 0 24 24">
+        <path d="m15 18-6-6 6-6" />
+      </symbol>
       <symbol id="icon-chevron-down" viewBox="0 0 24 24">
         <path d="m6 9 6 6 6-6" />
+      </symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+      <symbol id="icon-download" viewBox="0 0 24 24">
+        <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />
+      </symbol>
+      <symbol id="icon-folder" viewBox="0 0 24 24">
+        <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h4l2 2h7A2.5 2.5 0 0 1 21 9.5v8A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5v-10Z" />
+      </symbol>
+      <symbol id="icon-book" viewBox="0 0 24 24">
+        <path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H20v16H7.5A2.5 2.5 0 0 0 5 20.5v-16Z" />
+        <path d="M5 20.5A2.5 2.5 0 0 1 7.5 18H20M9 6h7m-7 4h5" />
+      </symbol>
+      <symbol id="icon-diamond" viewBox="0 0 24 24">
+        <path d="m4 8 3-5h10l3 5-8 12L4 8Zm0 0h16M7 3l5 5 5-5M7 8l5 12 5-12" />
+      </symbol>
+      <symbol id="icon-blank" viewBox="0 0 24 24">
+        <circle cx="5" cy="12" r="1" fill="currentColor" stroke="none" />
+      </symbol>
+      <symbol id="icon-more" viewBox="0 0 24 24">
+        <circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none" />
+        <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" />
+        <circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none" />
       </symbol>
       <symbol id="icon-moon" viewBox="0 0 24 24">
         <path d="M21.5 14.078A8.557 8.557 0 0 1 14.078 21.5c-4.735 0-8.578-3.843-8.578-8.578A8.557 8.557 0 0 1 12.922 4.5c-.464.804-.73 1.737-.73 2.733 0 3.03 2.455 5.485 5.485 5.485.996 0 1.929-.266 2.733-.73Z" />
@@ -89,11 +142,11 @@
       </symbol>
     </svg>
     <main class="app-shell">
-      <aside class="sidebar" aria-label="Navigation Corya">
+      <aside class="sidebar" aria-label="Navigation Shopway">
         <div class="sidebar-top">
-          <button class="brand" type="button" data-page="home" aria-label="Corya Home">
-            <span class="brand-icon">C</span>
-            <span>corya</span>
+          <button class="brand" type="button" data-page="home" aria-label="Shopway Home">
+            <span class="brand-icon">S</span>
+            <span>shopway</span>
           </button>
           <button class="mobile-menu" type="button" aria-expanded="false" aria-controls="side-nav">
             <span></span>
@@ -110,69 +163,56 @@
             <span class="nav-icon"><svg><use href="#icon-bar-chart"></use></svg></span>
             Dashboard
           </button>
-          <button type="button" data-page="templates">
-            <span class="nav-icon"><svg><use href="#icon-layout"></use></svg></span>
-            Templates
-          </button>
           <button type="button" data-page="storefront">
             <span class="nav-icon"><svg><use href="#icon-link-external"></use></svg></span>
-            Storefront
+            Store
           </button>
-          <button type="button" data-page="balances">
-            <span class="nav-icon"><svg><use href="#icon-wallet"></use></svg></span>
-            Balances
+          <button type="button" data-page="catalog">
+            <span class="nav-icon"><svg><use href="#icon-cube"></use></svg></span>
+            Products
           </button>
           <button type="button" data-page="transactions">
             <span class="nav-icon"><svg><use href="#icon-repeat"></use></svg></span>
-            Transactions
+            Orders
           </button>
           <button type="button" data-page="customers">
             <span class="nav-icon"><svg><use href="#icon-users"></use></svg></span>
             Customers
           </button>
-          <button type="button" data-page="catalog">
-            <span class="nav-icon"><svg><use href="#icon-cube"></use></svg></span>
-            Product catalog
-          </button>
         </nav>
 
         <div class="sidebar-section">
-          <p>Build</p>
-          <button type="button" data-page="apps">
-            <span class="nav-icon"><svg><use href="#icon-code-browser"></use></svg></span>
-            Apps
-            <small>later</small>
+          <p>Sell</p>
+          <button type="button" data-page="templates">
+            <span class="nav-icon"><svg><use href="#icon-layout"></use></svg></span>
+            Store templates
           </button>
-          <button type="button" data-page="catalog">
-            <span class="nav-icon"><svg><use href="#icon-cube"></use></svg></span>
-            All products
-            <small>soon</small>
+          <button type="button" data-page="balances">
+            <span class="nav-icon"><svg><use href="#icon-wallet"></use></svg></span>
+            Payouts
           </button>
         </div>
 
         <div class="sidebar-section">
-          <p>Products</p>
-          <button type="button" data-page="payments">
-            <span class="nav-icon"><svg><use href="#icon-credit-card"></use></svg></span>
-            Payments
-            <small>soon</small>
-          </button>
+          <p>Grow</p>
           <button type="button" data-page="billing">
             <span class="nav-icon"><svg><use href="#icon-receipt"></use></svg></span>
-            Billing
-            <small>soon</small>
+            Email
+          </button>
+          <button type="button" data-page="payments">
+            <span class="nav-icon"><svg><use href="#icon-credit-card"></use></svg></span>
+            Discounts
           </button>
           <button type="button" data-page="reporting">
             <span class="nav-icon"><svg><use href="#icon-bar-chart"></use></svg></span>
-            Reporting
-            <small>soon</small>
+            Affiliates
           </button>
         </div>
 
         <div class="sidebar-bottom">
           <div class="sidebar-simulator">
             <div>
-              <span>Simulation</span>
+              <span>Store activity</span>
               <small data-sidebar-simulation>€405/day · 15 sales</small>
             </div>
             <button type="button" data-page="settings">Edit</button>
@@ -186,10 +226,10 @@
             Settings
           </button>
           <div class="account-card">
-            <span class="account-avatar">n</span>
+            <span class="account-avatar">s</span>
             <div>
-              <span data-account-name>digital service</span>
-              <small data-account-email>Free workspace</small>
+              <span data-account-name>Shopway Store</span>
+              <small data-account-email>Free plan</small>
             </div>
           </div>
           <button class="logout-button" type="button" data-logout>
@@ -199,7 +239,7 @@
         </div>
       </aside>
 
-      <section class="dashboard" aria-label="Corya application">
+      <section class="dashboard" aria-label="Shopway application">
         <header class="topbar">
           <label class="search">
             <span><svg><use href="#icon-search"></use></svg></span>
@@ -217,7 +257,7 @@
           </div>
         </header>
 
-        <section class="page active home-page" data-page="home" aria-label="Corya Home">
+        <section class="page active home-page" data-page="home" aria-label="Shopway Home">
           <div class="home-hero">
             <div class="home-hero-bg" aria-hidden="true">
               <span class="cloud cloud-one"></span>
@@ -232,20 +272,20 @@
                 <span class="trust-icon"><svg><use href="#icon-cube"></use></svg></span>
                 <span class="trust-icon"><svg><use href="#icon-bar-chart"></use></svg></span>
               </span>
-              <span>One workspace for product, shop and sales</span>
+              <span>Your digital store, ready in minutes</span>
             </div>
 
             <div class="home-copy">
-              <h1>What are you building today?</h1>
-              <p>Start from a website, mobile app, storefront or software idea. Corya keeps the product, shop and dashboard in one clean workspace.</p>
+              <h1>What do you want to sell today?</h1>
+              <p>Turn a file, course, membership or service into a polished storefront with checkout, delivery and customer access already connected.</p>
             </div>
 
-            <section class="builder-composer" aria-label="Start a new Corya build">
-              <textarea data-builder-prompt placeholder="Build a landing page for my ecommerce skincare brand that drives sales"></textarea>
+            <section class="builder-composer" aria-label="Create a Shopway product">
+              <textarea data-builder-prompt placeholder="Describe your product, who it is for and what the buyer receives..."></textarea>
               <div class="composer-actions">
                 <button class="round-action" type="button" aria-label="Add context">+</button>
-                <button class="enhance-button" type="button">Enhance prompt</button>
-                <span data-prompt-template-label>Website template selected</span>
+                <button class="enhance-button" type="button">Add product details</button>
+                <span data-prompt-template-label>Digital download selected</span>
                 <div class="composer-tools">
                   <button class="round-action" type="button" aria-label="Choose visual style"><svg><use href="#icon-layout"></use></svg></button>
                   <button class="round-action" type="button" aria-label="Attach product context"><svg><use href="#icon-cube"></use></svg></button>
@@ -254,34 +294,196 @@
               </div>
             </section>
 
-            <div class="template-tray" aria-label="Choose what to build">
-              <button class="template-card active" type="button" data-template-card="Website" data-template-prompt="Build a conversion-focused landing page for a premium digital product">
+            <div class="template-tray" aria-label="Choose what to sell">
+              <button class="template-card active" type="button" data-template-card="Digital download" data-template-prompt="Sell a premium digital download with instant file delivery and a focused product page">
                 <span class="template-preview website-preview"></span>
-                <span>Website</span>
+                <span>Digital download</span>
               </button>
-              <button class="template-card" type="button" data-template-card="Mobile app" data-template-prompt="Build a mobile app for tracking customers, payments and product access">
+              <button class="template-card" type="button" data-template-card="Course" data-template-prompt="Sell an online course with lessons, modules, progress and buyer access">
                 <span class="template-preview mobile-preview"></span>
-                <span>Mobile app</span>
+                <span>Course</span>
               </button>
-              <button class="template-card" type="button" data-template-card="Storefront" data-template-prompt="Build a digital storefront for selling templates, files and software access">
+              <button class="template-card" type="button" data-template-card="Membership" data-template-prompt="Launch a recurring membership with exclusive content and subscriber access">
                 <span class="template-preview shop-preview"></span>
-                <span>Storefront</span>
+                <span>Membership</span>
               </button>
-              <button class="template-card" type="button" data-template-card="SaaS app" data-template-prompt="Build a SaaS dashboard with login, billing, analytics and customer management">
+              <button class="template-card" type="button" data-template-card="Booking" data-template-prompt="Sell coaching calls or appointments with scheduling and payment connected">
                 <span class="template-preview app-preview"></span>
-                <span>SaaS app</span>
+                <span>Booking</span>
               </button>
             </div>
 
             <div class="home-footer-actions">
-              <button type="button" data-page="templates">View all templates</button>
-              <small data-builder-status>Choose a template, write your idea, then start a build.</small>
+              <button type="button" data-page="templates">Browse store templates</button>
+              <small data-builder-status>Choose a product type, add the details, then publish your offer.</small>
             </div>
           </div>
         </section>
 
-        <section class="page" data-page="dashboard" aria-label="Financial dashboard">
-          <div class="dashboard-page-heading">
+      <section class="page" data-page="dashboard" aria-label="Acme financial dashboard">
+        <div class="shopway-command-dashboard acme-finance-dashboard" data-command-dashboard>
+          <aside class="acme-sidebar" aria-label="Acme navigation">
+            <a class="acme-brand" href="?page=dashboard" aria-label="Acme Inc. dashboard">
+              <span class="acme-brand-mark" aria-hidden="true"></span>
+              <strong>Acme Inc.</strong>
+            </a>
+
+            <label class="acme-search">
+              <svg class="acme-icon" aria-hidden="true"><use href="#icon-search"></use></svg>
+              <input type="search" placeholder="Search" aria-label="Search navigation" data-command-search />
+              <kbd>⌘P</kbd>
+            </label>
+
+            <nav class="acme-navigation" aria-label="Dashboard sections">
+              <section class="acme-nav-group" data-command-nav-group>
+                <button class="acme-group-heading" type="button" aria-expanded="true" data-command-nav-toggle>
+                  <span>Main Menu</span><svg class="acme-chevron" aria-hidden="true"><use href="#icon-chevron-down"></use></svg>
+                </button>
+                <div class="acme-nav-list">
+                  <button class="is-active" type="button" data-page="dashboard"><svg class="acme-icon"><use href="#icon-home"></use></svg><span>Dashboard</span></button>
+                  <button type="button" data-page="balances"><svg class="acme-icon"><use href="#icon-wallet"></use></svg><span>Wallet</span></button>
+                  <button type="button" data-page="payments"><svg class="acme-icon"><use href="#icon-credit-card"></use></svg><span>Cards</span></button>
+                  <button type="button" data-page="transactions"><svg class="acme-icon"><use href="#icon-receipt"></use></svg><span>Transactions</span><b class="acme-count">6</b></button>
+                  <button type="button" data-page="billing"><svg class="acme-icon"><use href="#icon-piggy-bank"></use></svg><span>Budget</span></button>
+                  <button type="button" data-page="reporting"><svg class="acme-icon"><use href="#icon-bar-chart"></use></svg><span>Goals</span></button>
+                </div>
+              </section>
+
+              <section class="acme-nav-group" data-command-nav-group>
+                <button class="acme-group-heading" type="button" aria-expanded="true" data-command-nav-toggle>
+                  <span>Analytics</span><svg class="acme-chevron" aria-hidden="true"><use href="#icon-chevron-down"></use></svg>
+                </button>
+                <div class="acme-nav-list">
+                  <button type="button" data-page="reporting"><svg class="acme-icon"><use href="#icon-pie-chart"></use></svg><span>Analytics</span></button>
+                  <button type="button" data-page="balances"><svg class="acme-icon"><use href="#icon-coins"></use></svg><span>Cash Flow</span><b class="acme-count">2</b></button>
+                  <button type="button" data-page="reporting"><svg class="acme-icon"><use href="#icon-bar-chart"></use></svg><span>Investments</span></button>
+                </div>
+              </section>
+
+              <section class="acme-nav-group" data-command-nav-group>
+                <button class="acme-group-heading" type="button" aria-expanded="true" data-command-nav-toggle>
+                  <span>Others</span><svg class="acme-chevron" aria-hidden="true"><use href="#icon-chevron-down"></use></svg>
+                </button>
+                <div class="acme-nav-list">
+                  <button type="button" data-page="home"><svg class="acme-icon"><use href="#icon-help"></use></svg><span>Help Center</span></button>
+                  <button type="button" data-page="settings"><svg class="acme-icon"><use href="#icon-settings"></use></svg><span>Settings</span></button>
+                </div>
+              </section>
+            </nav>
+
+            <section class="acme-upgrade-card" aria-label="Upgrade plan">
+              <span class="acme-upgrade-mark" aria-hidden="true">✦</span>
+              <h2>Upgrade Now</h2>
+              <p>You have 100 credits left.<br />Upgrade now to continue</p>
+              <button type="button" data-page="billing">Upgrade now</button>
+            </section>
+          </aside>
+
+          <main class="acme-main">
+            <header class="acme-header">
+              <div class="acme-page-title">
+                <svg class="acme-icon" aria-hidden="true"><use href="#icon-layout"></use></svg>
+                <h1>Dashboard</h1>
+              </div>
+              <button class="acme-theme-toggle" type="button" data-command-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+                <svg class="acme-icon"><use data-command-theme-icon href="#icon-moon"></use></svg>
+              </button>
+            </header>
+
+            <div class="acme-content">
+              <section class="acme-metric-grid" aria-label="Account overview">
+                <article class="acme-metric-card" style="--meter-accent:#05a8f3">
+                  <div class="acme-metric-label"><svg class="acme-icon"><use href="#icon-credit-card"></use></svg><h2>Total Balance</h2></div>
+                  <div class="acme-metric-inner">
+                    <strong>$8,800</strong>
+                    <p><b class="is-positive">+3.1%</b><span>vs last month</span></p>
+                    <div class="acme-segment-meter" data-command-meter="18" aria-label="Total balance progress"></div>
+                  </div>
+                </article>
+
+                <article class="acme-metric-card" style="--meter-accent:#655cff">
+                  <div class="acme-metric-label"><span class="acme-trend-icon" aria-hidden="true">↙</span><h2>Income</h2></div>
+                  <div class="acme-metric-inner">
+                    <strong>$12,600</strong>
+                    <p><b class="is-positive">+2.1%</b><span>vs last month</span></p>
+                    <div class="acme-segment-meter" data-command-meter="17" aria-label="Income progress"></div>
+                  </div>
+                </article>
+
+                <article class="acme-metric-card" style="--meter-accent:#ff6a00">
+                  <div class="acme-metric-label"><span class="acme-trend-icon" aria-hidden="true">↗</span><h2>Expense</h2></div>
+                  <div class="acme-metric-inner">
+                    <strong>$12,600</strong>
+                    <p><b class="is-negative">-3.2%</b><span>vs last month</span></p>
+                    <div class="acme-segment-meter" data-command-meter="21" aria-label="Expense progress"></div>
+                  </div>
+                </article>
+              </section>
+
+              <section class="acme-usage-card" aria-labelledby="acme-usage-title">
+                <div class="acme-card-heading">
+                  <div>
+                    <div class="acme-section-title"><svg class="acme-icon"><use href="#icon-pie-chart"></use></svg><h2 id="acme-usage-title">Usage Category</h2></div>
+                    <p class="acme-total"><strong>$15,200</strong><span>total transactions</span></p>
+                  </div>
+                  <button class="acme-more-button" type="button" aria-label="Usage options">•••</button>
+                </div>
+
+                <div class="acme-chart" aria-label="Monthly transaction amounts" data-command-chart>
+                  <div class="acme-chart-axis" aria-hidden="true"><span>30k</span><span>25k</span><span>20k</span><span>15k</span><span>10k</span><span>5k</span><span>0k</span></div>
+                  <div class="acme-bars" role="list">
+                    <button class="acme-bar" type="button" style="--bar-height:40%" data-amount="$11,820" aria-label="January, $11,820"><span class="acme-bar-visual"><i></i><output>$11,820</output></span><span>Jan</span></button>
+                    <button class="acme-bar" type="button" style="--bar-height:53%" data-amount="$15,440" aria-label="February, $15,440"><span class="acme-bar-visual"><i></i><output>$15,440</output></span><span>Feb</span></button>
+                    <button class="acme-bar" type="button" style="--bar-height:65%" data-amount="$18,960" aria-label="March, $18,960"><span class="acme-bar-visual"><i></i><output>$18,960</output></span><span>Mar</span></button>
+                    <button class="acme-bar" type="button" style="--bar-height:81%" data-amount="$24,120" aria-label="April, $24,120"><span class="acme-bar-visual"><i></i><output>$24,120</output></span><span>Apr</span></button>
+                    <button class="acme-bar" type="button" style="--bar-height:57%" data-amount="$16,710" aria-label="May, $16,710"><span class="acme-bar-visual"><i></i><output>$16,710</output></span><span>May</span></button>
+                    <button class="acme-bar is-active" type="button" style="--bar-height:100%" data-amount="$28,712" aria-label="June, $28,712" aria-pressed="true"><span class="acme-bar-visual"><i></i><output>$28,712</output></span><span>Jun</span></button>
+                    <button class="acme-bar" type="button" style="--bar-height:71%" data-amount="$20,820" aria-label="July, $20,820"><span class="acme-bar-visual"><i></i><output>$20,820</output></span><span>Jul</span></button>
+                    <button class="acme-bar" type="button" style="--bar-height:77%" data-amount="$22,940" aria-label="August, $22,940"><span class="acme-bar-visual"><i></i><output>$22,940</output></span><span>Aug</span></button>
+                    <button class="acme-bar" type="button" style="--bar-height:88%" data-amount="$25,760" aria-label="September, $25,760"><span class="acme-bar-visual"><i></i><output>$25,760</output></span><span>Sep</span></button>
+                    <button class="acme-bar" type="button" style="--bar-height:96%" data-amount="$27,930" aria-label="October, $27,930"><span class="acme-bar-visual"><i></i><output>$27,930</output></span><span>Oct</span></button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="acme-transactions-card" aria-labelledby="acme-transactions-title">
+                <div class="acme-transaction-heading">
+                  <div class="acme-section-title"><svg class="acme-icon"><use href="#icon-users"></use></svg><h2 id="acme-transactions-title">Latest Customers</h2></div>
+                  <button class="acme-date-control" type="button"><svg class="acme-icon"><use href="#icon-calendar"></use></svg><span>Jul 1 2026 – Jul 21 2026</span><svg class="acme-chevron"><use href="#icon-chevron-down"></use></svg></button>
+                </div>
+                <div class="acme-table-wrap">
+                  <table>
+                    <thead><tr><th><input type="checkbox" aria-label="Select all customers" /></th><th>Customer</th><th>Product</th><th>Purchase date</th><th>Amount</th></tr></thead>
+                    <tbody>
+                      <tr>
+                        <td><input type="checkbox" aria-label="Select Léa Martin" /></td>
+                        <td><span class="acme-customer"><span class="acme-customer-avatar tone-blue" aria-hidden="true">LM</span><span class="acme-customer-copy"><strong>Léa Martin</strong><small>lea.martin@atelier-nova.example</small></span></span></td>
+                        <td><span class="acme-product-name">Creator Starter Kit</span></td>
+                        <td>Jul 21, 2026</td>
+                        <td><strong>89,00&nbsp;€</strong></td>
+                      </tr>
+                      <tr>
+                        <td><input type="checkbox" aria-label="Select Hugo Bernard" /></td>
+                        <td><span class="acme-customer"><span class="acme-customer-avatar tone-violet" aria-hidden="true">HB</span><span class="acme-customer-copy"><strong>Hugo Bernard</strong><small>hugo.bernard@studio-hb.example</small></span></span></td>
+                        <td><span class="acme-product-name">Notion Business OS</span></td>
+                        <td>Jul 20, 2026</td>
+                        <td><strong>59,00&nbsp;€</strong></td>
+                      </tr>
+                      <tr>
+                        <td><input type="checkbox" aria-label="Select Inès Diallo" /></td>
+                        <td><span class="acme-customer"><span class="acme-customer-avatar tone-amber" aria-hidden="true">ID</span><span class="acme-customer-copy"><strong>Inès Diallo</strong><small>ines.diallo@north-creative.example</small></span></span></td>
+                        <td><span class="acme-product-name">Social Media Pack</span></td>
+                        <td>Jul 19, 2026</td>
+                        <td><strong>39,00&nbsp;€</strong></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+          </main>
+        </div>
+        <div class="dashboard-page-heading">
             <div>
               <h1>Dashboard</h1>
             </div>
@@ -292,14 +494,117 @@
           </div>
 
           <div class="dashboard-panel active" data-dashboard-panel="overview">
-            <section class="neo-dashboard" aria-label="Main Corya dashboard">
-              <div class="neo-toolbar">
-                <div>
-                  <p>Acme Inc.</p>
-                  <h2>Financial dashboard</h2>
+            <section class="viral-dashboard" aria-label="Shopway analytics overview">
+              <header class="viral-topbar">
+                <div class="viral-breadcrumb">
+                  <span>Analytics</span><b>›</b><strong>Overview</strong>
+                  <svg aria-hidden="true"><use href="#icon-link-external"></use></svg>
                 </div>
+                <button class="viral-icon-button" type="button" aria-label="Notifications"><svg><use href="#icon-bell"></use></svg></button>
+              </header>
 
-                <div class="filters neo-filters">
+              <div class="viral-filter-row">
+                <button class="viral-account-select" type="button"><span>@</span>Select accounts</button>
+                <button class="viral-account-chip" type="button"><i>S</i><strong>Shopway Store</strong><span>×</span></button>
+                <div class="viral-channel-group" aria-label="Sales channels">
+                  <button class="active" type="button" aria-label="Storefront"><svg><use href="#icon-layout"></use></svg></button>
+                  <button type="button" aria-label="Digital products"><svg><use href="#icon-cube"></use></svg></button>
+                  <button type="button" aria-label="Payment links"><svg><use href="#icon-link-external"></use></svg></button>
+                </div>
+                <div class="filter-control viral-range-control">
+                  <button class="filter-button viral-range-button" type="button" data-filter-button="range" aria-expanded="false">
+                    <svg><use href="#icon-receipt"></use></svg><span data-range-label>Last 7 days</span><svg><use href="#icon-chevron-down"></use></svg>
+                  </button>
+                  <div class="filter-menu" data-filter-menu="range" role="menu">
+                    <button type="button" data-range="7">Last 7 days</button>
+                    <button type="button" data-range="30">Last 30 days</button>
+                    <button type="button" data-range="365">Last 365 days</button>
+                    <button type="button" data-range="month">This month</button>
+                    <button type="button" data-range="custom">Custom range</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="viral-secondary-filters">
+                <div class="filter-control">
+                  <button class="viral-small-filter" type="button" data-filter-button="interval" aria-expanded="false"><span data-interval-label>Daily</span><svg><use href="#icon-chevron-down"></use></svg></button>
+                  <div class="filter-menu" data-filter-menu="interval" role="menu">
+                    <button type="button" data-interval="day">Daily</button>
+                    <button type="button" data-interval="week">Weekly</button>
+                    <button type="button" data-interval="month">Monthly</button>
+                  </div>
+                </div>
+                <div class="filter-control">
+                  <button class="viral-small-filter" type="button" data-filter-button="compare" aria-expanded="false">Compare: <span data-compare-label>Previous period</span><svg><use href="#icon-chevron-down"></use></svg></button>
+                  <div class="filter-menu" data-filter-menu="compare" role="menu">
+                    <button type="button" data-compare="previous">Previous period</button>
+                    <button type="button" data-compare="none">No compare</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="viral-custom-range" data-neo-custom-range hidden>
+                <label><span>Start</span><input type="date" data-dashboard-start /></label>
+                <span>to</span>
+                <label><span>End</span><input type="date" data-dashboard-end /></label>
+              </div>
+
+              <div class="viral-kpis" aria-label="Digital product metrics">
+                <article class="viral-kpi tone-warm"><span class="viral-kpi-icon"><svg><use href="#icon-wallet"></use></svg></span><div><small>Revenue</small><strong data-ops-revenue>€0.00</strong><em data-ops-revenue-delta>+0.0%</em></div><button type="button">More ›</button></article>
+                <article class="viral-kpi tone-warm"><span class="viral-kpi-icon"><svg><use href="#icon-receipt"></use></svg></span><div><small>Orders</small><strong data-ops-orders>0</strong><em data-ops-orders-delta>+0.0%</em></div><button type="button">More ›</button></article>
+                <article class="viral-kpi tone-green"><span class="viral-kpi-icon"><svg><use href="#icon-users"></use></svg></span><div><small>Customers</small><strong data-ops-customers>0</strong><em data-ops-customers-delta>+0.0%</em></div></article>
+                <article class="viral-kpi tone-warm"><span class="viral-kpi-icon"><svg><use href="#icon-cube"></use></svg></span><div><small>Products sold</small><strong data-ops-products>0</strong><em data-ops-products-delta>+0.0%</em></div></article>
+                <article class="viral-kpi tone-green"><span class="viral-kpi-icon"><svg><use href="#icon-bar-chart"></use></svg></span><div><small>Net revenue</small><strong data-ops-net>€0.00</strong><em data-ops-net-delta>+0.0%</em></div></article>
+                <article class="viral-kpi tone-warm"><span class="viral-kpi-icon"><svg><use href="#icon-repeat"></use></svg></span><div><small>Conversion</small><strong data-ops-conversion>0%</strong><em data-ops-conversion-delta>+0.0%</em></div></article>
+                <article class="viral-kpi tone-green"><span class="viral-kpi-icon"><svg><use href="#icon-credit-card"></use></svg></span><div><small>Average order</small><strong data-ops-aov>€0.00</strong><em data-ops-aov-delta>+0.0%</em></div></article>
+                <article class="viral-kpi tone-warm"><span class="viral-kpi-icon"><svg><use href="#icon-receipt"></use></svg></span><div><small>Refunds</small><strong data-ops-refunds>€0.00</strong><em data-ops-refunds-delta>+0.0%</em></div></article>
+              </div>
+
+              <div class="viral-chart-grid">
+                <article class="viral-chart-card">
+                  <header><div><h3>Revenue metrics</h3><span class="viral-info">i</span></div><div class="viral-chart-selects"><button type="button"><i></i>Revenue <svg><use href="#icon-chevron-down"></use></svg></button><button type="button">Add secondary <svg><use href="#icon-chevron-down"></use></svg></button></div></header>
+                  <div class="viral-bar-chart" data-neo-month-chart></div>
+                </article>
+                <article class="viral-chart-card">
+                  <header><div><h3>Conversion</h3><span class="viral-info">i</span></div></header>
+                  <div class="viral-line-chart" data-viral-line-chart></div>
+                </article>
+              </div>
+
+              <article class="viral-activity-card">
+                <header><div><h3>Sales activity</h3><span class="viral-info">i</span></div><span data-viral-streak>Active every day this week</span></header>
+                <div class="viral-heatmap" data-viral-heatmap></div>
+                <footer><span>Fewer sales</span><i></i><i></i><i></i><i></i><i></i><span>More sales</span></footer>
+              </article>
+            </section>
+            <section class="ops-dashboard legacy-ops-dashboard" aria-hidden="true" hidden>
+              <header class="ops-appbar">
+                <div class="ops-brand"><span class="ops-brand-mark">S</span><strong>shopway</strong></div>
+                <button class="ops-workspace" type="button"><span class="ops-workspace-icon">D</span> Digital studio <svg><use href="#icon-chevron-down"></use></svg></button>
+                <button class="ops-add-workspace" type="button"><svg><use href="#icon-plus"></use></svg> Add workspace</button>
+                <div class="ops-user-tools">
+                  <button type="button" aria-label="Search"><svg><use href="#icon-search"></use></svg></button>
+                  <button type="button" aria-label="Notifications" class="ops-notification"><svg><use href="#icon-bell"></use></svg><span>4</span></button>
+                  <button type="button" class="ops-profile"><span class="ops-avatar">n</span><span><strong>digital service</strong><small>Owner</small></span><svg><use href="#icon-chevron-down"></use></svg></button>
+                </div>
+              </header>
+
+              <nav class="ops-nav" aria-label="Dashboard navigation">
+                <button class="active" type="button"><svg><use href="#icon-dashboard"></use></svg>Dashboard</button>
+                <button type="button"><svg><use href="#icon-cube"></use></svg>Products</button>
+                <button type="button"><svg><use href="#icon-transactions"></use></svg>Orders</button>
+                <button type="button"><svg><use href="#icon-customers"></use></svg>Customers</button>
+                <button type="button"><svg><use href="#icon-storefront"></use></svg>Storefront</button>
+                <button type="button"><svg><use href="#icon-bar-chart"></use></svg>Analytics</button>
+                <button class="ops-create" type="button"><svg><use href="#icon-plus"></use></svg>Create offer</button>
+              </nav>
+
+              <div class="ops-heading">
+                <div>
+                  <h2>Sales dashboard</h2>
+                  <p>Products, customers and revenue in one clear view.</p>
+                </div>
+                <div class="filters ops-filters">
                   <div class="filter-control">
                     <button class="filter-button" type="button" data-filter-button="range" aria-expanded="false">
                       Date range <span data-range-label>Last 7 days</span> <span class="inline-icon"><svg><use href="#icon-chevron-down"></use></svg></span>
@@ -333,10 +638,11 @@
                       <button type="button" data-compare="none">No compare</button>
                     </div>
                   </div>
+                  <button class="ops-settings" type="button" aria-label="Dashboard settings"><svg><use href="#icon-settings"></use></svg></button>
                 </div>
               </div>
 
-              <div class="neo-custom-range" data-neo-custom-range hidden>
+              <div class="ops-custom-range" data-neo-custom-range hidden>
                 <label>
                   <span>Start</span>
                   <input type="date" data-dashboard-start />
@@ -348,88 +654,41 @@
                 </label>
               </div>
 
-              <div class="neo-stat-row" aria-label="Financial summary">
-                <article class="neo-stat-card">
-                  <div class="neo-card-label"><svg><use href="#icon-wallet"></use></svg><span>Total Balance</span></div>
-                  <strong data-neo-balance>€0.00</strong>
-                  <small data-neo-balance-delta>+0.0% vs last month</small>
-                  <div class="neo-meter" data-neo-meter="balance"></div>
+              <div class="ops-kpis" aria-label="Sales summary">
+                <article><span>Revenue</span><strong data-ops-revenue>€0.00</strong><small><span data-ops-revenue-previous>€0.00 last period</span><b data-ops-revenue-delta>↗ +0.0%</b></small></article>
+                <article><span>Net revenue</span><strong data-ops-net>€0.00</strong><small><span data-ops-net-previous>€0.00 last period</span><b data-ops-net-delta>↗ +0.0%</b></small></article>
+                <article><span>Customers</span><strong data-ops-customers>0</strong><small><span data-ops-customers-previous>0 last period</span><b data-ops-customers-delta>↗ +0.0%</b></small></article>
+                <article><span>Average order</span><strong data-ops-aov>€0.00</strong><small><span data-ops-aov-previous>€0.00 last period</span><b data-ops-aov-delta>↗ +0.0%</b></small></article>
+                <article><span>Conversion</span><strong data-ops-conversion>0%</strong><small><span data-ops-conversion-previous>0% last period</span><b data-ops-conversion-delta>↗ +0.0%</b></small></article>
+              </div>
+
+              <div class="ops-main-grid">
+                <article class="ops-panel ops-chart-panel">
+                  <div class="ops-panel-head"><h3>Sales activity</h3><button type="button" aria-label="Expand chart"><svg><use href="#icon-external"></use></svg></button></div>
+                  <div class="ops-sales-chart" data-neo-month-chart></div>
                 </article>
-                <article class="neo-stat-card">
-                  <div class="neo-card-label"><svg><use href="#icon-bar-chart"></use></svg><span>Income</span></div>
-                  <strong data-neo-income>€0.00</strong>
-                  <small data-neo-income-delta>+0.0% vs last month</small>
-                  <div class="neo-meter" data-neo-meter="income"></div>
-                </article>
-                <article class="neo-stat-card">
-                  <div class="neo-card-label"><svg><use href="#icon-credit-card"></use></svg><span>Expense</span></div>
-                  <strong data-neo-expense>€0.00</strong>
-                  <small data-neo-expense-delta>0.0% vs last month</small>
-                  <div class="neo-meter" data-neo-meter="expense"></div>
+
+                <article class="ops-panel ops-products-panel">
+                  <div class="ops-panel-head"><h3>Product performance</h3><div><button type="button" aria-label="Previous products">‹</button><button type="button" aria-label="Next products">›</button><button type="button">View all</button></div></div>
+                  <div class="ops-product-cards" data-ops-product-cards></div>
+                  <div class="ops-insight"><span>◆</span><p><strong data-ops-insight-value>€0 this period</strong><small data-ops-insight-meta>0% of total revenue</small></p><button type="button">View full analytics →</button></div>
                 </article>
               </div>
 
-              <article class="neo-chart-card">
-                <div class="neo-chart-head">
-                  <div>
-                    <div class="neo-card-label"><svg><use href="#icon-bar-chart"></use></svg><span>Usage Category</span></div>
-                    <div class="neo-total"><strong data-neo-usage-total>€0.00</strong><span>total transactions</span></div>
+              <div class="ops-bottom-grid">
+                <article class="ops-panel ops-sources-panel">
+                  <div class="ops-panel-head"><h3>Revenue source distribution</h3><button type="button" aria-label="Expand"><svg><use href="#icon-external"></use></svg></button></div>
+                  <div class="ops-sources" data-ops-sources></div>
+                </article>
+                <article class="ops-panel ops-performance-panel">
+                  <div class="ops-panel-head"><h3>Products performance</h3><div><button type="button">‹</button><button type="button">›</button><button type="button">View all</button></div></div>
+                  <div class="ops-performance-card">
+                    <div class="ops-performance-title"><span class="ops-product-glyph">◆</span><strong data-ops-best-product>Creator Starter Kit</strong><div><span>Earned <b data-ops-best-earned>€0</b></span><span>Share <b data-ops-best-share>0%</b></span></div></div>
+                    <div class="ops-segment-meter" data-ops-segment-meter></div>
+                    <div class="ops-meter-scale"><span>0</span><span>50</span><strong data-ops-meter-value>0%</strong><span>100</span></div>
                   </div>
-                  <button type="button" class="neo-date-button" data-neo-month-range>Last 7 days</button>
-                </div>
-                <div class="neo-month-chart" data-neo-month-chart></div>
-              </article>
-
-              <article class="neo-line-card">
-                <div class="neo-chart-head">
-                  <div>
-                    <div class="neo-card-label"><svg><use href="#icon-bar-chart"></use></svg><span>Cash Flow</span></div>
-                    <div class="neo-total"><strong data-neo-cashflow-total>€0.00</strong><span data-neo-cashflow-meta>selected range</span></div>
-                  </div>
-                  <div class="neo-growth-pills">
-                    <span data-neo-growth-one>+0.0%</span>
-                    <span data-neo-growth-two>+0.0%</span>
-                    <span data-neo-growth-three>+0.0%</span>
-                  </div>
-                </div>
-                <div class="neo-line-chart" data-neo-line-chart aria-label="Revenue trend">
-                  <svg viewBox="0 0 980 260" preserveAspectRatio="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="neo-blue-area" x1="0" x2="0" y1="0" y2="1">
-                        <stop offset="0%" stop-color="#15A7FF" stop-opacity="0.20" />
-                        <stop offset="100%" stop-color="#15A7FF" stop-opacity="0" />
-                      </linearGradient>
-                    </defs>
-                    <line x1="24" y1="54" x2="956" y2="54" class="neo-grid-line" />
-                    <line x1="24" y1="112" x2="956" y2="112" class="neo-grid-line" />
-                    <line x1="24" y1="170" x2="956" y2="170" class="neo-grid-line" />
-                    <line x1="24" y1="228" x2="956" y2="228" class="neo-grid-line" />
-                    <path data-neo-area d="" class="neo-line-area"></path>
-                    <path data-neo-line d="" class="neo-line-path"></path>
-                  </svg>
-                </div>
-              </article>
-
-              <article class="neo-table-card">
-                <div class="neo-chart-head">
-                  <div class="neo-card-label"><svg><use href="#icon-transactions"></use></svg><span>Transaction History</span></div>
-                  <button type="button" class="neo-date-button" data-neo-transactions-label>Latest sales</button>
-                </div>
-                <div class="neo-table-wrap">
-                  <table class="neo-table">
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>Category</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody data-neo-transactions></tbody>
-                  </table>
-                </div>
-              </article>
+                </article>
+              </div>
             </section>
           </div>
 
@@ -577,54 +836,57 @@
           </section>
         </section>
 
-        <section class="page placeholder-page" data-page="balances" aria-label="Balances">
-          <h1>Balances</h1>
-          <p>This page will be added later. Home stays focused on the financial dashboard for now.</p>
+        <section class="page shop-page" data-page="balances" aria-label="Payouts">
+          <header class="shop-page-header"><div><span>Finance</span><h1>Payouts</h1><p>Track available funds and every transfer to your bank.</p></div><button class="shop-primary" type="button">Set payout account</button></header>
+          <div class="shop-stat-grid"><article><span>Available balance</span><strong>€3,842.60</strong><small>Ready to pay out</small></article><article><span>Next payout</span><strong>€1,920.00</strong><small>Expected Friday</small></article><article><span>Paid this month</span><strong>€8,476.20</strong><small>4 transfers</small></article></div>
+          <section class="shop-surface"><div class="shop-section-title"><div><h2>Payout history</h2><p>All completed and scheduled transfers.</p></div><button type="button">Export</button></div><div class="shop-table"><div class="shop-table-row shop-table-head"><span>Date</span><span>Bank account</span><span>Status</span><span>Amount</span></div><div class="shop-table-row"><span>Jul 12, 2026</span><span>•••• 4832</span><span><i class="status-live">Paid</i></span><strong>€2,184.00</strong></div><div class="shop-table-row"><span>Jul 05, 2026</span><span>•••• 4832</span><span><i class="status-live">Paid</i></span><strong>€1,956.40</strong></div><div class="shop-table-row"><span>Jun 28, 2026</span><span>•••• 4832</span><span><i>Processing</i></span><strong>€2,026.80</strong></div></div></section>
         </section>
 
-        <section class="page placeholder-page" data-page="transactions" aria-label="Transactions">
-          <h1>Transactions</h1>
-          <p>This page will be added later. It will list sales, refunds, fees and payouts.</p>
+        <section class="page shop-page" data-page="transactions" aria-label="Orders">
+          <header class="shop-page-header"><div><span>Commerce</span><h1>Orders</h1><p>Every sale, refund and product delivery in one place.</p></div><button class="shop-primary" type="button">Export orders</button></header>
+          <div class="shop-toolbar"><label><svg><use href="#icon-search"></use></svg><input type="search" placeholder="Search an order or customer"></label><button type="button">All products</button><button type="button">All statuses</button></div>
+          <section class="shop-surface"><div class="shop-table"><div class="shop-table-row shop-table-head"><span>Customer</span><span>Product</span><span>Delivery</span><span>Amount</span></div><div class="shop-table-row"><span><b>Lina Morel</b><small>lina@studio.fr · Today, 14:32</small></span><span>Creator Starter Kit</span><span><i class="status-live">Delivered</i></span><strong>€39.00</strong></div><div class="shop-table-row"><span><b>Adam Benali</b><small>adam@motion.co · Today, 11:08</small></span><span>Notion Business OS</span><span><i class="status-live">Access granted</i></span><strong>€59.00</strong></div><div class="shop-table-row"><span><b>Chloé Martin</b><small>chloe@design.fr · Yesterday</small></span><span>Brand Workshop</span><span><i>Booked</i></span><strong>€120.00</strong></div></div></section>
         </section>
 
-        <section class="page placeholder-page" data-page="customers" aria-label="Customers">
-          <h1>Customers</h1>
-          <p>This page will be added later. It will contain buyers and product access.</p>
+        <section class="page shop-page" data-page="customers" aria-label="Customers">
+          <header class="shop-page-header"><div><span>Audience</span><h1>Customers</h1><p>Know who buys, what they own and how much they are worth.</p></div><button class="shop-primary" type="button">Import customers</button></header>
+          <div class="shop-stat-grid"><article><span>Total customers</span><strong>1,284</strong><small>+86 this month</small></article><article><span>Repeat buyers</span><strong>18.6%</strong><small>+2.4% vs last month</small></article><article><span>Average lifetime value</span><strong>€94.20</strong><small>Across all products</small></article></div>
+          <section class="shop-surface"><div class="shop-table"><div class="shop-table-row shop-table-head"><span>Customer</span><span>Products owned</span><span>Last order</span><span>Lifetime value</span></div><div class="shop-table-row"><span><b>Sarah Chen</b><small>sarah@acme.co</small></span><span>4 products</span><span>Today</span><strong>€248.00</strong></div><div class="shop-table-row"><span><b>Marcus Johnson</b><small>marcus@vertex.io</small></span><span>2 products</span><span>Yesterday</span><strong>€138.00</strong></div><div class="shop-table-row"><span><b>Priya Shah</b><small>priya@innovate.dev</small></span><span>3 products</span><span>Jul 11</span><strong>€197.00</strong></div></div></section>
         </section>
 
-        <section class="page placeholder-page" data-page="catalog" aria-label="Product catalog">
-          <h1>Product catalog</h1>
-          <p>This page will be added later. It will contain apps, templates and digital products.</p>
+        <section class="page shop-page" data-page="catalog" aria-label="Products">
+          <header class="shop-page-header"><div><span>Catalog</span><h1>Products</h1><p>Create downloads, courses, memberships and bookings.</p></div><button class="shop-primary" type="button" data-page="home">+ Add product</button></header>
+          <div class="shop-filter-tabs"><button class="active" type="button">All products</button><button type="button">Published</button><button type="button">Drafts</button></div>
+          <div class="shop-product-grid"><article><div class="product-cover cover-purple"><span>CK</span></div><div><small>Digital download</small><h2>Creator Starter Kit</h2><p>€39 · 184 sales</p></div><i class="status-live">Live</i></article><article><div class="product-cover cover-blue"><span>NO</span></div><div><small>Template</small><h2>Notion Business OS</h2><p>€59 · 96 sales</p></div><i class="status-live">Live</i></article><article><div class="product-cover cover-rose"><span>BW</span></div><div><small>Booking</small><h2>Brand Workshop</h2><p>€120 · 31 bookings</p></div><i>Draft</i></article></div>
         </section>
 
-        <section class="page placeholder-page" data-page="apps" aria-label="Apps">
-          <h1>Apps</h1>
-          <p>This page will be added later. It will become the core builder area.</p>
+        <section class="page shop-page" data-page="apps" aria-label="Apps"><header class="shop-page-header"><div><span>Shopway</span><h1>Integrations</h1><p>Connect the tools that already run your business.</p></div></header></section>
+
+        <section class="page shop-page" data-page="templates" aria-label="Store templates">
+          <header class="shop-page-header"><div><span>Design</span><h1>Store templates</h1><p>Launch with a polished storefront built for digital products.</p></div><button class="shop-primary" type="button">Preview your store</button></header>
+          <div class="shop-template-grid"><article><div class="store-theme theme-minimal"><span>Minimal</span></div><h2>Studio</h2><p>Editorial, simple, product-first.</p><button type="button">Use template</button></article><article><div class="store-theme theme-creator"><span>Creator</span></div><h2>Profile</h2><p>Link-in-bio meets storefront.</p><button type="button">Use template</button></article><article><div class="store-theme theme-course"><span>Course</span></div><h2>Academy</h2><p>Structured for lessons and cohorts.</p><button type="button">Use template</button></article></div>
         </section>
 
-        <section class="page placeholder-page" data-page="templates" aria-label="Templates">
-          <h1>Templates</h1>
-          <p>This page will be added later. It will contain the premium template library.</p>
+        <section class="page shop-page" data-page="storefront" aria-label="Store">
+          <header class="shop-page-header"><div><span>Online store</span><h1>Your store</h1><p>Customize the page customers see before they buy.</p></div><div><button type="button">Preview</button><button class="shop-primary" type="button">Publish changes</button></div></header>
+          <div class="store-editor"><aside><h2>Store settings</h2><button class="active" type="button">Header</button><button type="button">Products</button><button type="button">Theme & type</button><button type="button">Domain</button><button type="button">SEO & sharing</button></aside><div class="store-preview"><div class="preview-browser"><span></span><span></span><span></span><small>shopway.store/nathan</small></div><section><div class="preview-avatar">S</div><h2>Nathan's digital studio</h2><p>Tools and systems for modern creators.</p><div class="preview-product"><div class="product-cover cover-purple"><span>CK</span></div><div><strong>Creator Starter Kit</strong><small>Templates, guides and workflows</small></div><b>€39</b></div><div class="preview-product"><div class="product-cover cover-blue"><span>NO</span></div><div><strong>Notion Business OS</strong><small>Your complete business workspace</small></div><b>€59</b></div></section></div></div>
         </section>
 
-        <section class="page placeholder-page" data-page="storefront" aria-label="Storefront">
-          <h1>Storefront</h1>
-          <p>This page will be added later. It will manage the simple digital shop.</p>
+        <section class="page shop-page" data-page="payments" aria-label="Discounts">
+          <header class="shop-page-header"><div><span>Marketing</span><h1>Discounts</h1><p>Create launch offers, coupons and limited promotions.</p></div><button class="shop-primary" type="button">+ New discount</button></header>
+          <section class="shop-surface"><div class="shop-table"><div class="shop-table-row shop-table-head"><span>Code</span><span>Offer</span><span>Redemptions</span><span>Status</span></div><div class="shop-table-row"><span><b>LAUNCH20</b></span><span>20% off every product</span><span>48 / 100</span><span><i class="status-live">Active</i></span></div><div class="shop-table-row"><span><b>WELCOME10</b></span><span>€10 off first order</span><span>126</span><span><i class="status-live">Active</i></span></div></div></section>
         </section>
 
-        <section class="page placeholder-page" data-page="payments" aria-label="Payments">
-          <h1>Payments</h1>
-          <p>This page will be added later. It will connect checkout, payouts and invoices.</p>
+        <section class="page shop-page" data-page="billing" aria-label="Email">
+          <header class="shop-page-header"><div><span>Marketing</span><h1>Email</h1><p>Turn buyers into repeat customers with broadcasts and automations.</p></div><button class="shop-primary" type="button">Create email</button></header>
+          <div class="shop-stat-grid"><article><span>Subscribers</span><strong>1,842</strong><small>+112 this month</small></article><article><span>Open rate</span><strong>48.2%</strong><small>Last 30 days</small></article><article><span>Email revenue</span><strong>€2,364</strong><small>Attributed this month</small></article></div>
+          <section class="shop-surface"><div class="shop-section-title"><div><h2>Automations</h2><p>Messages triggered by customer actions.</p></div><button type="button">+ Automation</button></div><div class="automation-list"><article><span>01</span><div><h3>Welcome new customer</h3><p>Immediately after a first purchase</p></div><i class="status-live">On</i></article><article><span>02</span><div><h3>Recover abandoned checkout</h3><p>2 hours after checkout is left behind</p></div><i class="status-live">On</i></article><article><span>03</span><div><h3>Ask for a review</h3><p>7 days after product delivery</p></div><i>Draft</i></article></div></section>
         </section>
 
-        <section class="page placeholder-page" data-page="billing" aria-label="Billing">
-          <h1>Billing</h1>
-          <p>This page will be added later. It will manage subscriptions and plans.</p>
-        </section>
-
-        <section class="page placeholder-page" data-page="reporting" aria-label="Reporting">
-          <h1>Reporting</h1>
-          <p>This page will be added later. It will group revenue, costs and conversion reports.</p>
+        <section class="page shop-page" data-page="reporting" aria-label="Affiliates">
+          <header class="shop-page-header"><div><span>Growth</span><h1>Affiliates</h1><p>Let partners promote your products and reward every sale.</p></div><button class="shop-primary" type="button">Invite affiliate</button></header>
+          <div class="shop-stat-grid"><article><span>Affiliate revenue</span><strong>€3,428</strong><small>Last 30 days</small></article><article><span>Active affiliates</span><strong>24</strong><small>8 drove a sale</small></article><article><span>Commission owed</span><strong>€684.20</strong><small>Next payout Jul 30</small></article></div>
+          <section class="shop-surface"><div class="shop-table"><div class="shop-table-row shop-table-head"><span>Affiliate</span><span>Clicks</span><span>Sales</span><span>Revenue</span></div><div class="shop-table-row"><span><b>Emma Création</b><small>@emmacreates</small></span><span>1,284</span><span>42</span><strong>€1,638</strong></div><div class="shop-table-row"><span><b>Studio Flow</b><small>@studioflow</small></span><span>864</span><span>31</span><strong>€1,209</strong></div></div></section>
         </section>
 
         <section class="page placeholder-page" data-page="developers" aria-label="Developers">
@@ -710,6 +972,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260626-top-period"></script>
+    <script src="workspace.js?v=20260801-5"></script>
   </body>
 </html>

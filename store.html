@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Découvrez des produits digitaux utiles et téléchargez-les instantanément." />
+    <meta name="theme-color" content="#f6f3ed" />
+    <title>Boutique · Shopway</title>
+    <link rel="stylesheet" href="store.css" />
+    <script src="store.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#products">Aller aux produits</a>
+
+    <div class="store-shell" data-store-shell aria-busy="true">
+      <header class="site-header">
+        <a class="store-brand" href="#top" aria-label="Retour en haut de la boutique">
+          <span class="brand-avatar" data-brand-avatar aria-hidden="true">S</span>
+          <span data-store-name>Studio Shopway</span>
+        </a>
+
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="store-navigation" data-menu-toggle>
+          <span aria-hidden="true">☰</span>
+          <span>Menu</span>
+        </button>
+
+        <nav class="store-navigation" id="store-navigation" aria-label="Navigation principale" data-navigation>
+          <a href="#products">Produits</a>
+          <a href="#about">À propos</a>
+          <a href="#faq">FAQ</a>
+          <button class="nav-share" type="button" data-share-store>
+            <span aria-hidden="true">↗</span>
+            Partager
+          </button>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="hero" aria-labelledby="store-title">
+          <div class="hero-decoration decoration-one" aria-hidden="true"></div>
+          <div class="hero-decoration decoration-two" aria-hidden="true"></div>
+          <div class="creator-lockup">
+            <div class="creator-avatar" data-creator-avatar aria-hidden="true">S</div>
+            <span class="verified-pill"><span aria-hidden="true">✓</span> Boutique officielle</span>
+          </div>
+          <p class="hero-eyebrow" data-store-kicker>Ressources pour créateurs</p>
+          <h1 id="store-title" data-store-title>Des outils simples pour aller plus vite.</h1>
+          <p class="hero-copy" data-store-description>Templates, méthodes et ressources digitales conçus pour transformer vos idées en projets concrets.</p>
+          <div class="hero-actions">
+            <a class="primary-action" href="#products">Découvrir les produits <span aria-hidden="true">↓</span></a>
+            <button class="secondary-action" type="button" data-copy-store>Copier le lien</button>
+          </div>
+          <ul class="trust-list" aria-label="Avantages de la boutique">
+            <li><span aria-hidden="true">⚡</span> Accès instantané</li>
+            <li><span aria-hidden="true">♢</span> Paiement sécurisé</li>
+            <li><span aria-hidden="true">↻</span> Mises à jour incluses</li>
+          </ul>
+        </section>
+
+        <section class="catalog-section" id="products" aria-labelledby="products-title">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">La collection</p>
+              <h2 id="products-title">Choisissez ce qui vous fera avancer</h2>
+            </div>
+            <p data-product-count>Chargement des produits…</p>
+          </div>
+
+          <div class="store-state store-loading" data-loading-state role="status">
+            <span class="loading-orb" aria-hidden="true"></span>
+            <div>
+              <strong>La boutique se prépare</strong>
+              <span>Nous récupérons les dernières offres disponibles.</span>
+            </div>
+          </div>
+
+          <div class="store-state store-error" data-error-state hidden>
+            <span class="state-icon" aria-hidden="true">!</span>
+            <div>
+              <strong>Impossible d’afficher la boutique</strong>
+              <p data-error-message>Une erreur est survenue pendant le chargement.</p>
+              <button type="button" data-retry-store>Réessayer</button>
+            </div>
+          </div>
+
+          <div class="store-state store-empty" data-empty-state hidden>
+            <span class="state-icon" aria-hidden="true">◇</span>
+            <div>
+              <strong>Les prochaines ressources arrivent bientôt</strong>
+              <p>Inscrivez-vous plus bas pour être prévenu de leur publication.</p>
+              <a href="#newsletter">Me tenir informé</a>
+            </div>
+          </div>
+
+          <div class="product-grid" data-product-grid hidden></div>
+        </section>
+
+        <section class="about-section" id="about" aria-labelledby="about-title">
+          <div class="about-card">
+            <p class="section-kicker">Derrière la boutique</p>
+            <h2 id="about-title" data-about-title>Créé avec soin, pensé pour être utilisé.</h2>
+            <p data-about-copy>Chaque ressource part d’un besoin réel : gagner du temps, clarifier ses idées et construire une activité qui vous ressemble.</p>
+            <div class="about-signature">
+              <span class="mini-avatar" data-about-avatar aria-hidden="true">S</span>
+              <div>
+                <strong data-about-name>Studio Shopway</strong>
+                <span data-about-role>Créateur indépendant</span>
+              </div>
+            </div>
+          </div>
+          <div class="promise-grid" aria-label="Nos engagements">
+            <article>
+              <span>01</span>
+              <h3>Prêt à utiliser</h3>
+              <p>Des ressources claires que vous pouvez appliquer dès le premier jour.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Conçu avec intention</h3>
+              <p>Pas de remplissage : chaque page et chaque détail a une utilité.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Amélioré dans le temps</h3>
+              <p>Les évolutions importantes sont ajoutées sans complexifier votre travail.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="faq-section" id="faq" aria-labelledby="faq-title">
+          <div class="faq-intro">
+            <p class="section-kicker">Questions fréquentes</p>
+            <h2 id="faq-title">Tout ce qu’il faut savoir avant de commencer.</h2>
+            <p>Vous ne trouvez pas la réponse ? Utilisez l’adresse de contact indiquée dans les mentions de la boutique.</p>
+          </div>
+          <div class="faq-list" data-faq-list>
+            <details>
+              <summary>Comment vais-je recevoir mon achat ? <span aria-hidden="true">+</span></summary>
+              <p>Après validation de la commande, votre lien de téléchargement s’affiche immédiatement et reste associé à votre numéro de commande.</p>
+            </details>
+            <details>
+              <summary>Puis-je utiliser ces ressources plusieurs fois ? <span aria-hidden="true">+</span></summary>
+              <p>La licence précise dépend du produit. Les informations affichées sur sa fiche s’appliquent à votre achat.</p>
+            </details>
+            <details>
+              <summary>Que faire si mon téléchargement ne fonctionne pas ? <span aria-hidden="true">+</span></summary>
+              <p>Conservez votre numéro de commande et contactez la boutique : il permettra de retrouver rapidement votre achat.</p>
+            </details>
+          </div>
+        </section>
+
+        <section class="newsletter-section" id="newsletter" aria-labelledby="newsletter-title">
+          <div>
+            <p class="section-kicker">Nouveautés & ressources</p>
+            <h2 id="newsletter-title">Le prochain bon outil, directement dans votre boîte mail.</h2>
+            <p>Recevez les nouvelles sorties et quelques conseils utiles. Pas de bruit inutile.</p>
+          </div>
+          <form class="newsletter-form" data-newsletter-form novalidate>
+            <label for="lead-email">Votre adresse e-mail</label>
+            <div>
+              <input id="lead-email" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr" required />
+              <button type="submit">Je m’inscris</button>
+            </div>
+            <p class="form-feedback" data-newsletter-feedback aria-live="polite"></p>
+          </form>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="footer-brand">
+          <span class="brand-avatar" data-footer-avatar aria-hidden="true">S</span>
+          <div>
+            <strong data-footer-name>Studio Shopway</strong>
+            <span>Propulsé par Shopway</span>
+          </div>
+        </div>
+        <div class="footer-links" aria-label="Informations légales">
+          <button type="button" data-legal="terms">Conditions de vente</button>
+          <button type="button" data-legal="privacy">Confidentialité</button>
+          <button type="button" data-legal="refunds">Remboursements</button>
+        </div>
+        <p>© <span data-current-year></span> <span data-copyright-name>Studio Shopway</span>. Tous droits réservés.</p>
+      </footer>
+    </div>
+
+    <dialog class="checkout-dialog" data-checkout-dialog aria-labelledby="checkout-title">
+      <button class="dialog-close" type="button" aria-label="Fermer" data-close-checkout>×</button>
+      <div class="checkout-layout">
+        <div class="checkout-product">
+          <div class="modal-cover cover-neutral" data-modal-cover>
+            <span data-modal-initials>SW</span>
+          </div>
+          <div class="product-type" data-modal-type>Produit digital</div>
+          <h2 id="checkout-title" data-modal-title>Produit</h2>
+          <p data-modal-description></p>
+          <div class="delivery-note"><span aria-hidden="true">⚡</span><div><strong>Accès immédiat</strong><span>Le lien apparaît après votre commande.</span></div></div>
+        </div>
+        <div class="checkout-panel">
+          <div data-checkout-form-view>
+            <div class="checkout-price-row">
+              <span>Total</span>
+              <strong data-modal-price>0,00 €</strong>
+            </div>
+            <form class="checkout-form" data-checkout-form novalidate>
+              <label>
+                <span>Nom complet</span>
+                <input name="name" type="text" autocomplete="name" minlength="2" placeholder="Marie Dupont" required />
+              </label>
+              <label>
+                <span>Adresse e-mail</span>
+                <input name="email" type="email" autocomplete="email" placeholder="marie@exemple.fr" required />
+              </label>
+              <label>
+                <span>Code de réduction <em>optionnel</em></span>
+                <input name="discountCode" type="text" autocomplete="off" maxlength="40" placeholder="WELCOME10" />
+              </label>
+              <p class="form-feedback checkout-feedback" data-checkout-feedback aria-live="polite"></p>
+              <button class="checkout-submit" type="submit">
+                <span data-checkout-button-label>Obtenir ce produit</span>
+                <span aria-hidden="true">→</span>
+              </button>
+              <p class="checkout-legal">En commandant, vous acceptez les <button type="button" data-legal="terms">conditions de vente</button> de cette boutique.</p>
+            </form>
+          </div>
+
+          <section class="checkout-success" data-checkout-success hidden aria-labelledby="success-title">
+            <span class="success-mark" aria-hidden="true">✓</span>
+            <p class="section-kicker">Commande confirmée</p>
+            <h2 id="success-title">Votre ressource est prête.</h2>
+            <p>Une confirmation a été enregistrée pour <strong data-success-email></strong>.</p>
+            <dl>
+              <div><dt>Commande</dt><dd data-order-number>—</dd></div>
+              <div><dt>Produit</dt><dd data-success-product>—</dd></div>
+            </dl>
+            <a class="download-action" href="#" target="_blank" rel="noopener" data-download-url>Télécharger maintenant <span aria-hidden="true">↓</span></a>
+            <button class="success-close" type="button" data-close-checkout>Continuer mes achats</button>
+          </section>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="legal-dialog" data-legal-dialog aria-labelledby="legal-title">
+      <button class="dialog-close" type="button" aria-label="Fermer" data-close-legal>×</button>
+      <p class="section-kicker">Informations de la boutique</p>
+      <h2 id="legal-title" data-legal-title>Conditions de vente</h2>
+      <div class="legal-content" data-legal-content></div>
+      <button class="legal-done" type="button" data-close-legal>J’ai compris</button>
+    </dialog>
+
+    <div class="toast" data-toast role="status" aria-live="polite" hidden></div>
+  </body>
+</html>
