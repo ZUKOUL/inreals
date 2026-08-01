@@ -7,7 +7,9 @@ import { randomBytes, randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 
 const ROOT_DIR = dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = join(ROOT_DIR, 'data');
+// Vercel functions run from a read-only deployment bundle. Keep their demo
+// database in /tmp while retaining the project-local database for local work.
+const DATA_DIR = process.env.VERCEL ? join('/tmp', 'shopway-data') : join(ROOT_DIR, 'data');
 const UPLOAD_DIR = join(DATA_DIR, 'uploads');
 const DB_PATH = join(DATA_DIR, 'shopway.db');
 const HOST = '127.0.0.1';
@@ -2690,7 +2692,7 @@ async function serveStatic(req, res, url) {
   else createReadStream(filePath).pipe(res);
 }
 
-const server = http.createServer(async (req, res) => {
+export async function handleRequest(req, res) {
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Referrer-Policy', 'same-origin');
   try {
@@ -2701,24 +2703,28 @@ const server = http.createServer(async (req, res) => {
     if (!res.headersSent) sendError(res, error);
     else res.destroy();
   }
-});
-
-server.requestTimeout = 30_000;
-server.headersTimeout = 15_000;
-server.keepAliveTimeout = 5_000;
-server.maxHeadersCount = 100;
-
-server.listen(PORT, HOST, () => {
-  console.log(`Shopway is running at http://${HOST}:${PORT}`);
-});
-
-function shutdown() {
-  server.close(() => {
-    db.close();
-    process.exit(0);
-  });
-  setTimeout(() => process.exit(1), 5_000).unref();
 }
 
-process.on('SIGINT', shutdown);
-process.on('SIGTERM', shutdown);
+const isMain = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isMain) {
+  const server = http.createServer(handleRequest);
+  server.requestTimeout = 30_000;
+  server.headersTimeout = 15_000;
+  server.keepAliveTimeout = 5_000;
+  server.maxHeadersCount = 100;
+
+  server.listen(PORT, HOST, () => {
+    console.log(`Shopway is running at http://${HOST}:${PORT}`);
+  });
+
+  function shutdown() {
+    server.close(() => {
+      db.close();
+      process.exit(0);
+    });
+    setTimeout(() => process.exit(1), 5_000).unref();
+  }
+
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
+}
