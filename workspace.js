@@ -524,15 +524,36 @@
     </article>`;
   }
 
-  function usageBarChart(series) {
+  function revenueAxisStep(maxValue) {
+    const max = Math.max(1, num(maxValue));
+    const targetStep = max / 6;
+    const roundedSteps = [25, 50, 100, 150, 200, 250, 500, 1000, 2000, 5000, 10000];
+    const matchingStep = roundedSteps.find((step) => step >= targetStep);
+    if (matchingStep) return matchingStep;
+    const magnitude = 10 ** Math.floor(Math.log10(targetStep));
+    const normalized = targetStep / magnitude;
+    const niceNormalized = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10;
+    return Math.max(25, niceNormalized * magnitude);
+  }
+
+  function axisMoney(value, currency = 'EUR') {
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(Math.max(0, Math.round(num(value))));
+  }
+
+  function usageBarChart(series, currency = 'EUR') {
     const max = Math.max(...series.map((point) => point.value), 1);
-    const axisMax = Math.max(100, Math.ceil(max / 5) * 5);
-    const axisStep = axisMax / 6;
-    const yLabels = Array.from({ length: 7 }, (_, index) => compactFinancial(Math.max(0, axisMax - (index * axisStep))).replace(/,0\s/g, ' '));
+    const axisStep = revenueAxisStep(max);
+    const axisMax = axisStep * 6;
+    const yLabels = Array.from({ length: 7 }, (_, index) => axisMoney(axisMax - (index * axisStep), currency));
     const bars = series.map((point, index) => {
-      const detail = `${point.dateLabel} · ${money(point.value)} revenue`;
-      return `<button type="button" class="ws-chart-bar ws-usage-bar ws-chart-interactive" data-chart-key="usage-bar-${index}" style="--bar-height:${Math.max(5, Math.min(100, point.value / max * 100))}%" aria-label="${esc(detail)}">
-        <output><b>${esc(point.dateLabel)}</b><span><em>Revenue</em><strong>${money(point.value)}</strong></span></output><i></i>
+      const detail = `${point.dateLabel} · ${money(point.value, currency)} revenue`;
+      return `<button type="button" class="ws-chart-bar ws-usage-bar ws-chart-interactive" data-chart-key="usage-bar-${index}" style="--bar-height:${Math.max(5, Math.min(100, point.value / axisMax * 100))}%" aria-label="${esc(detail)}">
+        <output><b>${esc(point.dateLabel)}</b><span><em>Revenue</em><strong>${money(point.value, currency)}</strong></span></output><i></i>
       </button>`;
     }).join('');
     return `<div class="ws-usage-chart" data-chart style="--usage-count:${series.length}" aria-label="Daily revenue chart">
@@ -541,22 +562,22 @@
     </div>`;
   }
 
-  function usageAltChart(series, type) {
+  function usageAltChart(series, type, currency = 'EUR') {
     const max = Math.max(...series.map((point) => point.value), 1);
     if (type === 'line') {
       const width = Math.max(920, series.length * 42);
       const points = series.map((point, index) => ({ ...point, x: 32 + index * ((width - 64) / Math.max(1, series.length - 1)), y: 230 - ((point.value / max) * 185) }));
       const line = smoothPath(points);
-      return `<div class="ws-usage-alt-chart ws-usage-line-wrap" data-chart><svg viewBox="0 0 ${width} 270" style="width:${width}px" role="img" aria-label="Smooth daily revenue chart"><path class="ws-usage-line-grid" d="M20 45H${width - 20}M20 92H${width - 20}M20 139H${width - 20}M20 186H${width - 20}M20 233H${width - 20}"></path><path class="ws-usage-line-area" d="${line} L ${points.at(-1).x} 233 L ${points[0].x} 233 Z"></path><path class="ws-usage-line" d="${line}"></path>${points.map((point, index) => `<g class="ws-chart-point ws-chart-interactive" data-chart-key="usage-point-${index}" tabindex="0" aria-label="${esc(`${point.dateLabel} · ${money(point.value)} revenue`)}"><circle cx="${point.x}" cy="${point.y}" r="12" class="ws-usage-line-hit"></circle><circle cx="${point.x}" cy="${point.y}" r="4" class="ws-usage-line-dot"></circle></g>`).join('')}</svg></div>`;
+      return `<div class="ws-usage-alt-chart ws-usage-line-wrap" data-chart><svg viewBox="0 0 ${width} 270" style="width:${width}px" role="img" aria-label="Smooth daily revenue chart"><path class="ws-usage-line-grid" d="M20 45H${width - 20}M20 92H${width - 20}M20 139H${width - 20}M20 186H${width - 20}M20 233H${width - 20}"></path><path class="ws-usage-line-area" d="${line} L ${points.at(-1).x} 233 L ${points[0].x} 233 Z"></path><path class="ws-usage-line" d="${line}"></path>${points.map((point, index) => `<g class="ws-chart-point ws-chart-interactive" data-chart-key="usage-point-${index}" tabindex="0" aria-label="${esc(`${point.dateLabel} · ${money(point.value, currency)} revenue`)}"><circle cx="${point.x}" cy="${point.y}" r="12" class="ws-usage-line-hit"></circle><circle cx="${point.x}" cy="${point.y}" r="4" class="ws-usage-line-dot"></circle></g>`).join('')}</svg></div>`;
     }
     const total = series.reduce((sum, point) => sum + point.value, 0) || 1;
     let offset = 0;
     const segments = series.slice(0, 8).map((point, index) => { const share = point.value / total * 100; const segment = `${['#bd72ee', '#c689f2', '#d5a5f6', '#e0bef8', '#ae62e8', '#ca8df1', '#e8cffb', '#b76be9'][index]} ${offset}% ${offset + share}%`; offset += share; return segment; }).join(', ');
-    return `<div class="ws-usage-alt-chart ws-usage-donut-wrap" data-chart><div class="ws-usage-donut" style="background:conic-gradient(${segments})"><div><b>${compactFinancial(total)}</b><span>revenue</span></div></div><div class="ws-usage-donut-legend">${series.slice(0, 6).map((point, index) => `<button class="ws-chart-interactive" data-chart-key="usage-donut-${index}" type="button"><i style="--legend-color:${['#bd72ee', '#c689f2', '#d5a5f6', '#e0bef8', '#ae62e8', '#ca8df1'][index]}"></i><span>Day ${point.label}</span><b>${compactFinancial(point.value)}</b></button>`).join('')}</div></div>`;
+    return `<div class="ws-usage-alt-chart ws-usage-donut-wrap" data-chart><div class="ws-usage-donut" style="background:conic-gradient(${segments})"><div><b>${compactFinancial(total, currency)}</b><span>revenue</span></div></div><div class="ws-usage-donut-legend">${series.slice(0, 6).map((point, index) => `<button class="ws-chart-interactive" data-chart-key="usage-donut-${index}" type="button"><i style="--legend-color:${['#bd72ee', '#c689f2', '#d5a5f6', '#e0bef8', '#ae62e8', '#ca8df1'][index]}"></i><span>Day ${point.label}</span><b>${compactFinancial(point.value, currency)}</b></button>`).join('')}</div></div>`;
   }
 
-  function usageChart(series) {
-    return app.dashboardChartType === 'bars' ? usageBarChart(series) : usageAltChart(series, app.dashboardChartType);
+  function usageChart(series, currency = 'EUR') {
+    return app.dashboardChartType === 'bars' ? usageBarChart(series, currency) : usageAltChart(series, app.dashboardChartType, currency);
   }
 
   function usageChartTypeSwitcher(activeType) {
@@ -641,7 +662,7 @@
       const monthOptions = usageMonthOptions(data);
       setContent(pageTitle('Dashboard', 'Track revenue, orders and customers.', dashboardHeadingActions()) + `<div class="ws-usage-dashboard">
         <section class="ws-usage-metrics">${usageMetricCard('Total revenue', compactFinancial(revenue, currency), 'Revenue', `${num(valueOf(metrics.revenue, ['change'], changes.revenue)) >= 0 ? '+' : ''}${percent(valueOf(metrics.revenue, ['change'], changes.revenue))}`, 'purple', Math.min(92, Math.max(22, revenue ? 58 : 12)))}${usageMetricCard('Orders', integer(orders), 'Sales', `${num(valueOf(metrics.orders, ['change'], changes.orders)) >= 0 ? '+' : ''}${percent(valueOf(metrics.orders, ['change'], changes.orders))}`, 'orange', Math.min(92, Math.max(22, orders ? 55 : 12)))}${usageMetricCard('Customers', integer(customers), 'Buyers', `${num(valueOf(metrics.customers, ['change'], changes.customers)) >= 0 ? '+' : ''}${percent(valueOf(metrics.customers, ['change'], changes.customers))}`, 'green', Math.min(92, Math.max(22, customers ? 84 : 12)))}</section>
-        <section class="ws-usage-chart-panel"><header><div><h2>Daily revenue</h2><p>Revenue generated by your digital products</p></div><div class="ws-usage-chart-actions"><div class="ws-usage-chart-type-wrap">${usageChartTypeSwitcher(app.dashboardChartType)}</div><div class="ws-usage-month-wrap"><button type="button" class="ws-usage-month" data-action="usage-month-menu" aria-haspopup="menu" aria-expanded="false">${icon('calendar')}<span data-usage-month-label>${esc(monthLabel)}</span>${icon('chevron-down')}</button><div class="ws-usage-month-menu" data-usage-month-menu hidden role="menu">${monthOptions.map((option) => `<button type="button" data-action="usage-month-select" data-start="${esc(option.start)}" data-end="${esc(option.end)}" role="menuitem">${esc(option.label)}</button>`).join('')}<button type="button" data-action="usage-month-custom" role="menuitem">Custom range</button></div></div></div></header>${usageChart(series)}</section>
+        <section class="ws-usage-chart-panel"><header><div><h2>Daily revenue</h2><p>Revenue generated by your digital products</p></div><div class="ws-usage-chart-actions"><div class="ws-usage-chart-type-wrap">${usageChartTypeSwitcher(app.dashboardChartType)}</div><div class="ws-usage-month-wrap"><button type="button" class="ws-usage-month" data-action="usage-month-menu" aria-haspopup="menu" aria-expanded="false">${icon('calendar')}<span data-usage-month-label>${esc(monthLabel)}</span>${icon('chevron-down')}</button><div class="ws-usage-month-menu" data-usage-month-menu hidden role="menu">${monthOptions.map((option) => `<button type="button" data-action="usage-month-select" data-start="${esc(option.start)}" data-end="${esc(option.end)}" role="menuitem">${esc(option.label)}</button>`).join('')}<button type="button" data-action="usage-month-custom" role="menuitem">Custom range</button></div></div></div></header>${usageChart(series, currency)}</section>
         ${usageTable(sortedRows)}
       </div>`);
       attachCharts();
