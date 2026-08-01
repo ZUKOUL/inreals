@@ -4129,6 +4129,381 @@ body:has(.ws-app--usage) {
   }
 }
 
+/* Dark theme: keep every workspace surface on one deliberate tonal scale. */
+:root[data-theme='dark'] {
+  --ws-bg: #101214;
+  --ws-surface: #171a1e;
+  --ws-subtle: #8f99a3;
+  --ws-default: #b7c0c9;
+  --ws-strong: #f2f5f7;
+  --ws-selected: #232930;
+  --ws-border: #2b323a;
+  --ws-border-strong: #3b4550;
+  --ws-blue: #42a7ff;
+  --ws-blue-soft: #15334d;
+  --ws-green: #3bd58d;
+  --ws-red: #ff6d83;
+  --ws-amber: #ffc264;
+  --ws-donut-1: #42a7ff;
+  --ws-donut-2: #9e7bff;
+  --ws-donut-3: #30d0bd;
+  --ws-donut-4: #ffb454;
+  --ws-donut-5: #f579b1;
+  --ws-donut-6: #8b9aab;
+  --ws-input: #14171a;
+  --ws-backdrop: rgba(0, 0, 0, .78);
+  color-scheme: dark;
+}
+
+html[data-theme='dark'] body:has(.ws-app) {
+  background: var(--ws-bg);
+}
+
+[data-theme='dark'] .ws-sidebar,
+[data-theme='dark'] .ws-workspace,
+[data-theme='dark'] .ws-topbar {
+  background: var(--ws-bg);
+  border-color: var(--ws-border);
+}
+
+[data-theme='dark'] .ws-topbar {
+  background: rgba(16, 18, 20, .92);
+}
+
+[data-theme='dark'] .ws-sidebar {
+  background: var(--ws-surface);
+}
+
+[data-theme='dark'] .ws-side-search,
+[data-theme='dark'] .ws-global-search,
+[data-theme='dark'] .ws-filterbar,
+[data-theme='dark'] .ws-filterbar label,
+[data-theme='dark'] .ws-range,
+[data-theme='dark'] .ws-chart-switcher {
+  border-color: var(--ws-border);
+  background: var(--ws-input);
+}
+
+[data-theme='dark'] .ws-icon-button,
+[data-theme='dark'] .ws-button,
+[data-theme='dark'] .ws-global-search kbd {
+  border-color: var(--ws-border-strong);
+  background: var(--ws-surface);
+  color: var(--ws-default);
+}
+
+[data-theme='dark'] .ws-icon-button:hover,
+[data-theme='dark'] .ws-button:hover,
+[data-theme='dark'] .ws-nav-item:hover,
+[data-theme='dark'] .ws-account:hover,
+[data-theme='dark'] .ws-range button:hover,
+[data-theme='dark'] .ws-range button.is-active {
+  background: var(--ws-selected);
+  color: var(--ws-strong);
+}
+
+[data-theme='dark'] .ws-button--primary {
+  border-color: #edf1f4;
+  background: #edf1f4;
+  color: #111416;
+}
+
+[data-theme='dark'] .ws-button--primary:hover {
+  background: #ffffff;
+}
+
+[data-theme='dark'] .ws-plan {
+  border-color: var(--ws-border);
+  background: linear-gradient(135deg, #20262d, #172b40);
+}
+
+[data-theme='dark'] .ws-create-menu,
+[data-theme='dark'] .ws-search-results,
+[data-theme='dark'] .ws-modal-card {
+  border-color: var(--ws-border-strong);
+  background: var(--ws-surface);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, .35);
+}
+
+[data-theme='dark'] .ws-create-menu button:hover,
+[data-theme='dark'] .ws-search-results button:hover {
+  background: var(--ws-selected);
+}
+
+[data-theme='dark'] .ws-metric-card,
+[data-theme='dark'] .ws-panel,
+[data-theme='dark'] .ws-balance-card,
+[data-theme='dark'] .ws-integration-card,
+[data-theme='dark'] .ws-loading {
+  border-color: var(--ws-border);
+  background: var(--ws-surface);
+}
+
+[data-theme='dark'] .ws-table th {
+  border-color: var(--ws-border);
+  background: var(--ws-input);
+}
+
+[data-theme='dark'] .ws-table td,
+[data-theme='dark'] .ws-stack-list article,
+[data-theme='dark'] .ws-source-list > div,
+[data-theme='dark'] .ws-funnel-list article,
+[data-theme='dark'] .ws-top-product-list article,
+[data-theme='dark'] .ws-notification-list article,
+[data-theme='dark'] .ws-settings-form > section,
+[data-theme='dark'] .ws-modal-card > header {
+  border-color: var(--ws-border);
+}
+
+[data-theme='dark'] .ws-field input,
+[data-theme='dark'] .ws-field select,
+[data-theme='dark'] .ws-field textarea,
+[data-theme='dark'] .ws-filterbar select {
+  border-color: var(--ws-border-strong);
+  background: var(--ws-input);
+  color: var(--ws-strong);
+}
+
+[data-theme='dark'] .ws-notice,
+[data-theme='dark'] .ws-code,
+[data-theme='dark'] .ws-source-list > div > i,
+[data-theme='dark'] .ws-funnel-list article > i,
+[data-theme='dark'] .ws-product-thumb,
+[data-theme='dark'] .ws-integration-logo {
+  border-color: var(--ws-border);
+  background: var(--ws-selected);
+}
+
+/* Storefront preview and template art should remain legible in dark mode. */
+[data-theme='dark'] .ws-store-preview {
+  border-color: var(--ws-border-strong);
+  background: #15181b;
+  color: var(--ws-strong);
+}
+
+[data-theme='dark'] .ws-preview-nav {
+  border-color: var(--ws-border);
+}
+
+[data-theme='dark'] .ws-preview-hero > span {
+  color: var(--ws-subtle);
+}
+
+[data-theme='dark'] .ws-preview-hero p {
+  color: var(--ws-default);
+}
+
+[data-theme='dark'] .ws-template-card {
+  border-color: var(--ws-border);
+}
+
+[data-theme='dark'] .ws-template-art {
+  background: #20252b;
+}
+
+[data-theme='dark'] .ws-template-art::before,
+[data-theme='dark'] .ws-template-art span {
+  background: #3a424b;
+}
+
+[data-theme='dark'] .ws-template-art i {
+  background: linear-gradient(145deg, #2c3742, #1e2832);
+}
+
+[data-theme='dark'] .ws-template-art b {
+  background: #edf1f4;
+}
+
+/* Dashboard cards, controls, chart grid and customer table. */
+[data-theme='dark'] .ws-app:not(.ws-app--usage) .ws-usage-metric,
+[data-theme='dark'] .ws-app:not(.ws-app--usage) .ws-usage-chart-panel,
+[data-theme='dark'] .ws-app:not(.ws-app--usage) .ws-usage-table-panel,
+[data-theme='dark'] .ws-usage-metric,
+[data-theme='dark'] .ws-usage-chart-panel,
+[data-theme='dark'] .ws-usage-table-panel {
+  border-color: var(--ws-border);
+  background: linear-gradient(180deg, #1a1e22 0%, #171a1e 100%);
+  color: var(--ws-strong);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .22), 0 12px 28px rgba(0, 0, 0, .12);
+}
+
+[data-theme='dark'] .ws-usage-metric > header,
+[data-theme='dark'] .ws-usage-chart-panel h2,
+[data-theme='dark'] .ws-usage-table-panel h2,
+[data-theme='dark'] .ws-usage-table th,
+[data-theme='dark'] .ws-usage-metric-value strong,
+[data-theme='dark'] .ws-usage-person b {
+  color: var(--ws-strong);
+}
+
+[data-theme='dark'] .ws-usage-metric-value span,
+[data-theme='dark'] .ws-usage-chart-panel p,
+[data-theme='dark'] .ws-usage-metric-meta span,
+[data-theme='dark'] .ws-usage-table th,
+[data-theme='dark'] .ws-usage-person small,
+[data-theme='dark'] .ws-usage-table td,
+[data-theme='dark'] .ws-usage-x-axis,
+[data-theme='dark'] .ws-usage-y-axis {
+  color: var(--ws-subtle);
+}
+
+[data-theme='dark'] .ws-usage-metric-meta b.ws-usage-change--up {
+  color: var(--ws-green);
+}
+
+[data-theme='dark'] .ws-usage-metric-meta b.ws-usage-change--down {
+  color: var(--ws-red);
+}
+
+[data-theme='dark'] .ws-usage-metric-meta b.ws-usage-change--flat {
+  color: var(--ws-subtle);
+}
+
+[data-theme='dark'] .ws-usage-progress {
+  border-color: #3b4249;
+  background: #262c32;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .3);
+}
+
+[data-theme='dark'] .ws-usage-metric--purple .ws-usage-progress {
+  background: #30263b;
+}
+
+[data-theme='dark'] .ws-usage-metric--purple .ws-usage-progress i {
+  border-color: #ad64e6;
+  background: linear-gradient(180deg, #bd79ee, #8845c4);
+}
+
+[data-theme='dark'] .ws-usage-metric--orange .ws-usage-progress {
+  background: #3b2d20;
+}
+
+[data-theme='dark'] .ws-usage-metric--orange .ws-usage-progress i {
+  border-color: #f2a34b;
+  background: linear-gradient(180deg, #ffc16e, #e58c32);
+}
+
+[data-theme='dark'] .ws-usage-metric--green .ws-usage-progress {
+  background: #21392b;
+}
+
+[data-theme='dark'] .ws-usage-metric--green .ws-usage-progress i {
+  border-color: #3ecb7c;
+  background: linear-gradient(180deg, #54df91, #27aa62);
+}
+
+[data-theme='dark'] .ws-usage-chart-panel > header,
+[data-theme='dark'] .ws-usage-table-panel > header,
+[data-theme='dark'] .ws-usage-table th,
+[data-theme='dark'] .ws-usage-table td {
+  border-color: var(--ws-border);
+}
+
+[data-theme='dark'] .ws-usage-chart-switcher,
+[data-theme='dark'] .ws-usage-month,
+[data-theme='dark'] .ws-usage-table-search,
+[data-theme='dark'] .ws-usage-more {
+  border-color: var(--ws-border-strong);
+  background: var(--ws-input);
+  color: var(--ws-default);
+}
+
+[data-theme='dark'] .ws-usage-chart-switcher button.is-active {
+  background: var(--ws-selected);
+  color: var(--ws-strong);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+}
+
+[data-theme='dark'] .ws-usage-chart-switcher button:hover,
+[data-theme='dark'] .ws-usage-month:hover,
+[data-theme='dark'] .ws-usage-more:hover {
+  color: var(--ws-strong);
+  background: #2a3139;
+}
+
+[data-theme='dark'] .ws-usage-range-menu,
+[data-theme='dark'] .ws-usage-view-menu,
+[data-theme='dark'] .ws-usage-month-menu {
+  border-color: var(--ws-border-strong);
+  background: #1b2025;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, .42);
+}
+
+[data-theme='dark'] .ws-usage-range-menu button,
+[data-theme='dark'] .ws-usage-view-menu button,
+[data-theme='dark'] .ws-usage-month-menu button {
+  color: var(--ws-default);
+}
+
+[data-theme='dark'] .ws-usage-range-menu button:hover,
+[data-theme='dark'] .ws-usage-view-menu button:hover,
+[data-theme='dark'] .ws-usage-month-menu button:hover {
+  background: var(--ws-selected);
+  color: var(--ws-strong);
+}
+
+[data-theme='dark'] .ws-usage-grid i {
+  border-color: #303840;
+}
+
+:root[data-theme='dark'] .ws-usage-bar i {
+  border-color: #5b426b;
+  background: linear-gradient(180deg, #6a4c80, #452f5b);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12);
+}
+
+:root[data-theme='dark'] .ws-usage-bar:hover i,
+:root[data-theme='dark'] .ws-usage-bar.is-active i {
+  border-color: #c17bee;
+  background: linear-gradient(180deg, #bd79ee, #8541c2);
+}
+
+[data-theme='dark'] .ws-usage-line-grid {
+  stroke: #303840;
+}
+
+[data-theme='dark'] .ws-usage-line-area {
+  fill: rgba(171, 102, 230, .18);
+}
+
+[data-theme='dark'] .ws-usage-line {
+  stroke: #c07bef;
+}
+
+[data-theme='dark'] .ws-usage-line-dot {
+  fill: var(--ws-surface);
+  stroke: #c07bef;
+}
+
+[data-theme='dark'] .ws-usage-donut > div {
+  background: var(--ws-surface);
+}
+
+[data-theme='dark'] .ws-usage-donut-legend button:hover,
+[data-theme='dark'] .ws-usage-donut-legend button.is-active {
+  background: #2b2334;
+}
+
+[data-theme='dark'] .ws-usage-donut-legend b {
+  color: var(--ws-strong);
+}
+
+[data-theme='dark'] .ws-usage-row-action button {
+  border-color: var(--ws-border-strong);
+  background: var(--ws-surface);
+  color: var(--ws-subtle);
+}
+
+[data-theme='dark'] .ws-usage-row-action button:hover {
+  background: var(--ws-selected);
+  color: var(--ws-strong);
+}
+
+[data-theme='dark'] .ws-usage-loading span {
+  border-color: var(--ws-border);
+  background: linear-gradient(110deg, #191d21 8%, #252b32 18%, #191d21 33%);
+}
+
 /* Dashboard uses the same Shopway shell as every other workspace page. */
 .ws-dashboard-updated {
   display: inline-flex;
