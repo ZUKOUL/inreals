@@ -462,10 +462,11 @@
       const parsed = rawDate ? new Date(`${rawDate}T12:00:00Z`) : null;
       const day = parsed && !Number.isNaN(parsed.getTime()) ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', timeZone: 'UTC' }).format(parsed) : String(index + 1);
       const formatted = parsed && !Number.isNaN(parsed.getTime()) ? new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(parsed) : `Period ${index + 1}`;
+      const grouped = point.granularity && point.granularity !== 'day';
       return {
         value: num(valueOf(point, ['value', 'revenue', 'amount', 'total'])),
-        label: day,
-        dateLabel: formatted,
+        label: grouped ? (point.label || formatted) : day,
+        dateLabel: grouped ? (point.label || formatted) : formatted,
         orders: num(valueOf(point, ['orders', 'sales', 'orderCount']))
       };
     });
@@ -568,12 +569,21 @@
       const width = Math.max(920, series.length * 42);
       const points = series.map((point, index) => ({ ...point, x: 32 + index * ((width - 64) / Math.max(1, series.length - 1)), y: 230 - ((point.value / max) * 185) }));
       const line = smoothPath(points);
-      return `<div class="ws-usage-alt-chart ws-usage-line-wrap" data-chart><svg viewBox="0 0 ${width} 270" style="width:${width}px" role="img" aria-label="Smooth daily revenue chart"><path class="ws-usage-line-grid" d="M20 45H${width - 20}M20 92H${width - 20}M20 139H${width - 20}M20 186H${width - 20}M20 233H${width - 20}"></path><path class="ws-usage-line-area" d="${line} L ${points.at(-1).x} 233 L ${points[0].x} 233 Z"></path><path class="ws-usage-line" d="${line}"></path>${points.map((point, index) => `<g class="ws-chart-point ws-chart-interactive" data-chart-key="usage-point-${index}" tabindex="0" aria-label="${esc(`${point.dateLabel} · ${money(point.value, currency)} revenue`)}"><circle cx="${point.x}" cy="${point.y}" r="12" class="ws-usage-line-hit"></circle><circle cx="${point.x}" cy="${point.y}" r="4" class="ws-usage-line-dot"></circle></g>`).join('')}</svg></div>`;
+      const tooltipWidth = 178;
+      const labels = points.map((point, index) => {
+        const detail = `${point.dateLabel} · ${money(point.value, currency)} revenue`;
+        const tooltipX = Math.min(Math.max(point.x - (tooltipWidth / 2), 4), width - tooltipWidth - 4);
+        const tooltipY = point.y < 72 ? point.y + 14 : point.y - 50;
+        return `<g class="ws-chart-point ws-chart-interactive" data-chart-key="usage-point-${index}" tabindex="0" aria-label="${esc(detail)}"><circle cx="${point.x}" cy="${point.y}" r="12" class="ws-usage-line-hit"></circle><circle cx="${point.x}" cy="${point.y}" r="4" class="ws-usage-line-dot"></circle><foreignObject class="ws-usage-line-tooltip" x="${tooltipX}" y="${tooltipY}" width="${tooltipWidth}" height="38"><div xmlns="http://www.w3.org/1999/xhtml">${esc(detail)}</div></foreignObject></g><text class="ws-usage-line-label" x="${point.x}" y="260" text-anchor="middle">${esc(point.label)}</text>`;
+      }).join('');
+      return `<div class="ws-usage-alt-chart ws-usage-line-wrap" data-chart><svg viewBox="0 0 ${width} 270" style="width:${width}px" role="img" aria-label="Smooth daily revenue chart"><path class="ws-usage-line-grid" d="M20 45H${width - 20}M20 92H${width - 20}M20 139H${width - 20}M20 186H${width - 20}M20 233H${width - 20}"></path><path class="ws-usage-line-area" d="${line} L ${points.at(-1).x} 233 L ${points[0].x} 233 Z"></path><path class="ws-usage-line" d="${line}"></path>${labels}</svg></div>`;
     }
-    const total = series.reduce((sum, point) => sum + point.value, 0) || 1;
+    const buckets = groupedRevenueSeries(series.map((point) => ({ ...point, label: point.dateLabel })));
+    const total = buckets.reduce((sum, bucket) => sum + bucket.value, 0) || 1;
     let offset = 0;
-    const segments = series.slice(0, 8).map((point, index) => { const share = point.value / total * 100; const segment = `${['#bd72ee', '#c689f2', '#d5a5f6', '#e0bef8', '#ae62e8', '#ca8df1', '#e8cffb', '#b76be9'][index]} ${offset}% ${offset + share}%`; offset += share; return segment; }).join(', ');
-    return `<div class="ws-usage-alt-chart ws-usage-donut-wrap" data-chart><div class="ws-usage-donut" style="background:conic-gradient(${segments})"><div><b>${compactFinancial(total, currency)}</b><span>revenue</span></div></div><div class="ws-usage-donut-legend">${series.slice(0, 6).map((point, index) => `<button class="ws-chart-interactive" data-chart-key="usage-donut-${index}" type="button"><i style="--legend-color:${['#bd72ee', '#c689f2', '#d5a5f6', '#e0bef8', '#ae62e8', '#ca8df1'][index]}"></i><span>Day ${point.label}</span><b>${compactFinancial(point.value, currency)}</b></button>`).join('')}</div></div>`;
+    const donutColors = ['#bd72ee', '#c689f2', '#d5a5f6', '#e0bef8', '#ae62e8', '#ca8df1'];
+    const segments = buckets.map((bucket, index) => { const share = bucket.value / total * 100; const segment = `${donutColors[index % donutColors.length]} ${offset}% ${offset + share}%`; offset += share; return segment; }).join(', ');
+    return `<div class="ws-usage-alt-chart ws-usage-donut-wrap" data-chart><div class="ws-usage-donut" style="background:conic-gradient(${segments})"><div><b>${compactFinancial(total, currency)}</b><span>revenue</span></div></div><div class="ws-usage-donut-legend">${buckets.map((bucket, index) => `<button class="ws-chart-interactive" data-chart-key="usage-donut-${index}" type="button"><i style="--legend-color:${donutColors[index % donutColors.length]}"></i><span><b>${esc(bucket.label)}</b><small>Revenue period</small></span><output>${compactFinancial(bucket.value, currency)}</output></button>`).join('')}</div></div>`;
   }
 
   function usageChart(series, currency = 'EUR') {

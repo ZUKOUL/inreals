@@ -3655,6 +3655,37 @@ body:has(.ws-app--usage) {
   stroke-width: 2;
 }
 
+.ws-usage-line-label {
+  fill: var(--ws-subtle);
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.ws-usage-line-tooltip {
+  display: none;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ws-chart-point.is-active .ws-usage-line-tooltip {
+  display: block;
+}
+
+.ws-usage-line-tooltip div {
+  display: flex;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 9px;
+  border: 1px solid var(--ws-border-strong);
+  border-radius: 7px;
+  background: var(--ws-strong);
+  color: var(--ws-bg);
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 500;
+}
+
 .ws-usage-donut-wrap {
   display: grid;
   grid-template-columns: 260px minmax(240px, 1fr);
@@ -3707,6 +3738,16 @@ body:has(.ws-app--usage) {
   color: #666;
   cursor: pointer;
   text-align: left;
+}
+
+.ws-usage-donut-legend button span {
+  display: grid;
+  gap: 2px;
+}
+
+.ws-usage-donut-legend button span small {
+  color: var(--ws-subtle);
+  font-size: 11px;
 }
 
 .ws-usage-donut-legend button:hover,
