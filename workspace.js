@@ -18,7 +18,11 @@
   const PAGE_META = Object.fromEntries(PAGES.map(([id, label, icon]) => [id, { label, icon }]));
   const THEME_KEY = 'corya:theme:v1';
   const DASHBOARD_CHART_KEY = 'corya:dashboard-chart:v1';
+  const DASHBOARD_DESIGN_KEY = 'corya:dashboard-design:v1';
+  const REWARDS_SETTINGS_KEY = 'corya:rewards-settings:v1';
   const DASHBOARD_CHART_TYPES = new Set(['bars', 'line', 'donut']);
+  const DASHBOARD_DESIGNS = new Set(['clean', 'rewards']);
+  const REWARDS_ACCENTS = new Set(['violet', 'mint', 'gold']);
   const app = {
     page: 'dashboard',
     routeToken: 0,
@@ -26,6 +30,13 @@
     dashboardStart: '',
     dashboardEnd: '',
     dashboardChartType: 'bars',
+    dashboardDesign: 'clean',
+    rewardsCampaign: 'all',
+    rewardsMetric: 'views',
+    rewardsChannel: 'all',
+    rewardsLiveOffset: 0,
+    rewardsLiveTimer: null,
+    rewardsSettings: { campaignLabel: 'All Campaigns', accent: 'violet', live: true, cadence: 8 },
     analyticsRange: '30',
     analyticsStart: '',
     analyticsEnd: '',
@@ -193,6 +204,7 @@
 
   function shell(variant = 'shopway') {
     if (variant === 'usage') return usageShell();
+    if (variant === 'rewards') return rewardsShell();
     const nav = PAGES.map(([id, label, iconName]) => `<button type="button" class="ws-nav-item" data-nav="${id}">
       ${icon(iconName)}<span>${label}</span>
     </button>`).join('');
@@ -231,6 +243,23 @@
       </section>
       <div class="ws-toast-region" aria-live="polite" aria-atomic="true"></div>
       <dialog class="ws-modal" data-modal><div class="ws-modal-card"><header><div><p data-modal-kicker>Shopway</p><h2 data-modal-title>Modal</h2></div><button class="ws-icon-button" type="button" data-action="close-modal" aria-label="Close">${icon('plus')}</button></header><div class="ws-modal-body" data-modal-body></div></div></dialog>
+    </main>`;
+  }
+
+  function rewardsShell() {
+    const navItem = (page, label, iconName) => `<button type="button" class="ws-rewards-nav-item" data-nav="${esc(page)}">${icon(iconName)}<span>${esc(label)}</span></button>`;
+    return `<main class="ws-app ws-app--rewards" data-shell="rewards">
+      <section class="ws-rewards-frame">
+        <header class="ws-rewards-appbar">
+          <button type="button" class="ws-rewards-brand" data-nav="dashboard" aria-label="Open Content Rewards dashboard"><span class="ws-rewards-brand-mark">✣</span><span>Content Rewards</span></button>
+          <div class="ws-rewards-appbar-actions"><button type="button" class="ws-rewards-icon-button" data-action="rewards-link" aria-label="Copy dashboard link">${icon('link-external')}</button><button type="button" class="ws-rewards-icon-button" data-action="notifications" aria-label="Notifications">${icon('bell')}</button><button type="button" class="ws-rewards-design-trigger" data-action="dashboard-design-menu" aria-haspopup="menu" aria-expanded="false"><span data-dashboard-design-label>Content Rewards</span>${icon('chevron-down')}</button></div>
+          <div class="ws-dashboard-design-menu ws-rewards-design-menu" data-dashboard-design-menu hidden role="menu">${dashboardDesignMenuMarkup()}</div>
+        </header>
+        <nav class="ws-rewards-nav" aria-label="Content Rewards navigation">${navItem('dashboard', 'Home', 'home')}${navItem('analytics', 'Analytics', 'pie-chart')}${navItem('customers', 'Users', 'users')}${navItem('finance', 'Payouts', 'wallet')}</nav>
+        <section class="ws-content" id="ws-content" tabindex="-1"></section>
+      </section>
+      <div class="ws-toast-region" aria-live="polite" aria-atomic="true"></div>
+      <dialog class="ws-modal" data-modal><div class="ws-modal-card"><header><div><p data-modal-kicker>Content Rewards</p><h2 data-modal-title>Modal</h2></div><button class="ws-icon-button" type="button" data-action="close-modal" aria-label="Close">${icon('plus')}</button></header><div class="ws-modal-body" data-modal-body></div></div></dialog>
     </main>`;
   }
 
@@ -286,7 +315,9 @@
 
   function updateActiveNavigation() {
     $$('[data-nav]').forEach((item) => {
-      const active = item.dataset.nav === app.page;
+      const rewardsNav = item.closest('.ws-rewards-nav');
+      const activePage = rewardsNav && app.dashboardDesign === 'rewards' ? 'analytics' : app.page;
+      const active = item.dataset.nav === activePage;
       item.classList.toggle('is-active', active);
       if (active) item.setAttribute('aria-current', 'page');
       else item.removeAttribute('aria-current');
@@ -300,8 +331,9 @@
     url.searchParams.set('page', safe);
     history[replace ? 'replaceState' : 'pushState']({ page: safe }, '', url);
     const existingShell = $('.ws-app');
-    if (existingShell?.dataset.shell !== 'shopway') {
-      if (existingShell) existingShell.outerHTML = shell('shopway');
+    const desiredShell = safe === 'dashboard' && app.dashboardDesign === 'rewards' ? 'rewards' : 'shopway';
+    if (existingShell?.dataset.shell !== desiredShell) {
+      if (existingShell) existingShell.outerHTML = shell(desiredShell);
     }
     app.page = safe;
     closeDrawer();
@@ -510,8 +542,17 @@
     return `<div class="ws-dashboard-period-wrap"><button class="ws-button ws-button--secondary ws-dashboard-period" type="button" data-action="usage-range-menu" aria-haspopup="menu" aria-expanded="false">${icon('calendar')}<span data-usage-range-label>${esc(usagePeriodLabel(app.dashboardRange))}</span>${icon('chevron-down')}</button><div class="ws-usage-range-menu ws-dashboard-range-menu" data-usage-range-menu hidden role="menu">${options.map((range) => `<button type="button" data-action="dashboard-range" data-range="${range}" role="menuitem">${range === '24h' ? 'Last 24 hours' : range === 'custom' ? 'Custom range' : `Last ${range} days`}</button>`).join('')}</div></div>`;
   }
 
+  function dashboardDesignMenuMarkup() {
+    return `<span>Dashboard design</span><button type="button" data-action="dashboard-design-select" data-design="clean" role="menuitem"><b>Shopway clean</b><small>Light commerce workspace</small></button><button type="button" data-action="dashboard-design-select" data-design="rewards" role="menuitem"><b>Content Rewards</b><small>Dark creator analytics</small></button>`;
+  }
+
+  function dashboardDesignControl() {
+    const label = app.dashboardDesign === 'rewards' ? 'Content Rewards' : 'Shopway clean';
+    return `<div class="ws-dashboard-design-wrap"><button class="ws-button ws-button--secondary ws-dashboard-design" type="button" data-action="dashboard-design-menu" aria-haspopup="menu" aria-expanded="false">${icon('layout')}<span data-dashboard-design-label>${esc(label)}</span>${icon('chevron-down')}</button><div class="ws-dashboard-design-menu" data-dashboard-design-menu hidden role="menu">${dashboardDesignMenuMarkup()}</div></div>`;
+  }
+
   function dashboardHeadingActions() {
-    return `<span class="ws-dashboard-updated">${icon('clock')}<span>Last updated 2m ago</span></span>${dashboardPeriodControl()}`;
+    return `${dashboardDesignControl()}<span class="ws-dashboard-updated">${icon('clock')}<span>Last updated 2m ago</span></span>${dashboardPeriodControl()}`;
   }
 
   function usageMetricCard(label, value, unit, change, tone, fill) {
@@ -624,9 +665,180 @@
     body.innerHTML = usageRowsMarkup(rows);
   }
 
+  function compactCount(value) {
+    return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(Math.max(0, Math.round(num(value))));
+  }
+
+  function rewardsChannelFactor() {
+    return ({ all: 1, tiktok: 0.52, youtube: 0.34, x: 0.18, facebook: 0.26 })[app.rewardsChannel] || 1;
+  }
+
+  function rewardsCampaignLabel() {
+    const options = { all: app.rewardsSettings.campaignLabel || 'All Campaigns', product: 'Product launches', creator: 'Creator partnerships' };
+    return options[app.rewardsCampaign] || options.all;
+  }
+
+  function rewardsMetricSeries(data) {
+    const source = list(data?.series || data?.chart || [], 'series');
+    const channelFactor = rewardsChannelFactor();
+    return source.map((point, index) => {
+      const visitors = Math.max(0, num(point.visitors, num(point.value) * 12));
+      const parsed = point.date ? new Date(`${point.date}T12:00:00Z`) : null;
+      const fallbackLabel = parsed && !Number.isNaN(parsed.getTime())
+        ? new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', timeZone: 'UTC' }).format(parsed)
+        : `Day ${index + 1}`;
+      return {
+        label: point.label || fallbackLabel,
+        views: Math.round(visitors * 750 * channelFactor),
+        likes: Math.round(visitors * 54 * channelFactor),
+        comments: Math.round(visitors * 8 * channelFactor),
+        shares: Math.round(visitors * 4 * channelFactor)
+      };
+    });
+  }
+
+  function rewardsMetricValues(data, series = rewardsMetricSeries(data)) {
+    const metrics = data?.kpis || data?.metrics || data?.summary || data || {};
+    const channelFactor = rewardsChannelFactor();
+    const revenue = num(metricValue(metrics, 'revenue', valueOf(metrics, ['totalRevenue', 'grossSales']))) * channelFactor;
+    const orders = num(metricValue(metrics, 'orders', valueOf(metrics, ['totalOrders', 'sales']))) * channelFactor;
+    const refunds = num(metricValue(metrics, 'refunds', valueOf(metrics, ['refundedOrders']))) * channelFactor;
+    const baseViews = series.reduce((sum, point) => sum + point.views, 0);
+    const submissions = Math.max(0, Math.round(orders));
+    const payout = revenue * 0.72;
+    const liveViews = baseViews + app.rewardsLiveOffset * 42_500;
+    return {
+      views: liveViews,
+      payout: payout + app.rewardsLiveOffset * 8.4,
+      cpm: liveViews ? (payout + app.rewardsLiveOffset * 8.4) / liveViews * 1000 : 0,
+      submissions: submissions + app.rewardsLiveOffset * 2,
+      approved: Math.max(0, Math.round((submissions + app.rewardsLiveOffset * 2) * 0.484)),
+      refunds
+    };
+  }
+
+  function rewardsRangeControl() {
+    const options = ['24h', '7', '30', '90', '365', 'custom'];
+    const label = usagePeriodLabel(app.dashboardRange);
+    return `<div class="ws-rewards-control-wrap"><button class="ws-rewards-control" type="button" data-action="usage-range-menu" aria-haspopup="menu" aria-expanded="false">${icon('calendar')}<span data-usage-range-label>${esc(label)}</span>${icon('chevron-down')}</button><div class="ws-rewards-menu" data-usage-range-menu hidden role="menu">${options.map((range) => `<button type="button" data-action="dashboard-range" data-range="${range}" role="menuitem">${range === '24h' ? 'Last 24 hours' : range === 'custom' ? 'Custom range' : `Last ${range} days`}</button>`).join('')}</div></div>`;
+  }
+
+  function rewardsCampaignControl() {
+    const options = [['all', 'All Campaigns'], ['product', 'Product launches'], ['creator', 'Creator partnerships']];
+    const current = rewardsCampaignLabel();
+    return `<div class="ws-rewards-control-wrap"><button class="ws-rewards-control" type="button" data-action="rewards-campaign-menu" aria-haspopup="menu" aria-expanded="false"><span data-rewards-campaign-label>${esc(current)}</span>${icon('chevron-down')}</button><div class="ws-rewards-menu" data-rewards-campaign-menu hidden role="menu">${options.map(([key, label]) => `<button type="button" data-action="rewards-campaign-select" data-campaign="${key}" role="menuitem">${esc(label)}</button>`).join('')}</div></div>`;
+  }
+
+  function rewardsMetricTabs() {
+    const tabs = [['views', 'Views'], ['likes', 'Likes'], ['comments', 'Comments'], ['shares', 'Shares']];
+    return `<div class="ws-rewards-tabs" role="tablist" aria-label="Campaign metric">${tabs.map(([key, label]) => `<button type="button" role="tab" aria-selected="${app.rewardsMetric === key}" class="${app.rewardsMetric === key ? 'is-active' : ''}" data-action="rewards-metric" data-metric="${key}">${label}</button>`).join('')}</div>`;
+  }
+
+  function rewardsChannelButtons() {
+    const channels = [['all', '◉'], ['tiktok', '♪'], ['youtube', '▶'], ['x', '𝕏'], ['facebook', 'f']];
+    return `<div class="ws-rewards-channels" aria-label="Campaign channels">${channels.map(([key, glyph]) => `<button type="button" class="${app.rewardsChannel === key ? 'is-active' : ''}" data-action="rewards-channel" data-channel="${key}" aria-label="${key === 'all' ? 'All channels' : key}">${glyph}</button>`).join('')}</div>`;
+  }
+
+  function rewardsAreaChart(series, metric) {
+    const values = series.map((point) => num(point[metric]));
+    if (!values.length) return emptyState('No campaign activity', 'Results will appear after your first launch.');
+    const max = Math.max(...values, 1);
+    const width = Math.max(720, series.length * 44);
+    const chartTop = 28;
+    const chartBase = 222;
+    const points = series.map((point, index) => ({
+      ...point,
+      x: 36 + index * ((width - 72) / Math.max(1, series.length - 1)),
+      y: chartBase - (num(point[metric]) / max) * (chartBase - chartTop)
+    }));
+    const line = smoothPath(points);
+    const area = `${line} L ${points.at(-1).x} ${chartBase} L ${points[0].x} ${chartBase} Z`;
+    const total = values.reduce((sum, value) => sum + value, 0);
+    const labels = points.map((point, index) => `<text class="ws-rewards-chart-label" x="${point.x}" y="252" text-anchor="middle">${esc(point.label)}</text><g class="ws-chart-interactive ws-rewards-chart-point" data-chart-key="rewards-point-${index}" tabindex="0" role="button" aria-label="${esc(`${point.label} · ${integer(point[metric])} ${metric}`)}"><circle cx="${point.x}" cy="${point.y}" r="12" class="ws-rewards-chart-hit"></circle><circle cx="${point.x}" cy="${point.y}" r="4" class="ws-rewards-chart-dot"></circle></g>`).join('');
+    return `<div class="ws-rewards-chart-scroll" data-chart><svg class="ws-rewards-chart" viewBox="0 0 ${width} 270" style="width:${width}px" role="img" aria-label="${esc(`${metric} over time`)}"><defs><linearGradient id="rewards-area-gradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--rewards-purple)" stop-opacity=".75"></stop><stop offset="100%" stop-color="var(--rewards-purple)" stop-opacity=".05"></stop></linearGradient></defs><g class="ws-rewards-chart-grid"><line x1="22" y1="38" x2="${width - 22}" y2="38"></line><line x1="22" y1="86" x2="${width - 22}" y2="86"></line><line x1="22" y1="134" x2="${width - 22}" y2="134"></line><line x1="22" y1="182" x2="${width - 22}" y2="182"></line><line x1="22" y1="230" x2="${width - 22}" y2="230"></line></g><path class="ws-rewards-chart-area" d="${area}"></path><path class="ws-rewards-chart-line" d="${line}"></path>${labels}</svg><span class="ws-rewards-chart-total" data-rewards-live-value="chartTotal">${compactCount(total)}</span></div>`;
+  }
+
+  function rewardsPerformers(data, totalViews) {
+    const customers = list(data?.recentCustomers || data?.customers || [], 'customers').slice(0, 5);
+    const faces = ['🧑🏽‍🎨', '👩🏻‍💻', '👩🏽‍🔬', '🧔🏻‍♂️', '👩🏾‍💼'];
+    if (!customers.length) return emptyState('No performers yet', 'Top performers will appear after the first purchases.');
+    return customers.map((customer, index) => {
+      const amount = num(valueOf(customer, ['amount', 'price', 'total']));
+      const name = customer.name || customer.customer?.name || 'Creator';
+      const handle = customer.gamerTag || customer.handle || `@${name.toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 12) || 'creator'}`;
+      const views = Math.max(1000, Math.round(totalViews * (0.44 / (index + 1))));
+      const payout = amount * 0.72;
+      return `<article class="ws-rewards-performer"><header><div class="ws-rewards-person"><span class="ws-rewards-avatar ws-rewards-avatar--${index % 5}">${faces[index % faces.length]}</span><span><b>${esc(name)}</b><small>${esc(handle)}</small></span></div><span class="ws-rewards-rank">${index + 1}</span></header><h3>${esc(customer.product || customer.productName || ['Launch Kit', 'Creator Sprint', 'Digital Drop', 'Growth Playbook', 'Community Pack'][index % 5])}</h3><div class="ws-rewards-performer-stats"><span><small>Views</small><b>${compactCount(views)}</b></span><span><small>Est. payout</small><b>${money(payout)}</b></span></div><div class="ws-rewards-video"><span>▶</span></div></article>`;
+    }).join('');
+  }
+
+  function rewardsSettingsModal() {
+    const settings = app.rewardsSettings;
+    showModal('Dashboard settings', `<form class="ws-form" data-form="rewards-settings">${formField('Campaign label', 'campaignLabel', { value: settings.campaignLabel })}<div class="ws-form-row">${formField('Accent', 'accent', { type: 'select', value: settings.accent, options: [['violet', 'Violet glow'], ['mint', 'Mint glow'], ['gold', 'Gold glow']] })}${formField('Live cadence (seconds)', 'cadence', { type: 'number', min: 5, max: 60, step: '1', value: settings.cadence })}</div><label class="ws-check"><input type="checkbox" name="live" value="true"${settings.live ? ' checked' : ''}><span>Animate live figures automatically</span></label>${modalSubmit('Save dashboard')}</form>`, 'Content Rewards');
+  }
+
+  function rewardsLiveValues(data) {
+    return rewardsMetricValues(data, rewardsMetricSeries(data));
+  }
+
+  function stopRewardsLiveTicker() {
+    if (app.rewardsLiveTimer) window.clearInterval(app.rewardsLiveTimer);
+    app.rewardsLiveTimer = null;
+  }
+
+  function updateRewardsLiveValues() {
+    if (app.dashboardDesign !== 'rewards' || !app.cache.dashboard) return;
+    const values = rewardsLiveValues(app.cache.dashboard);
+    const updates = {
+      views: compactCount(values.views),
+      payout: money(values.payout),
+      cpm: money(values.cpm),
+      submissions: integer(values.submissions),
+      approved: integer(values.approved),
+      chartTotal: compactCount((() => {
+        const series = rewardsMetricSeries(app.cache.dashboard);
+        return series.reduce((sum, point) => sum + num(point[app.rewardsMetric]), 0) + (app.rewardsMetric === 'views' ? app.rewardsLiveOffset * 42_500 : 0);
+      })())
+    };
+    Object.entries(updates).forEach(([key, value]) => $$(`[data-rewards-live-value="${key}"]`).forEach((node) => { node.textContent = value; }));
+    const copy = $('[data-rewards-live-copy]');
+    if (copy) copy.textContent = `Posted ${integer(values.submissions)} clips today. ${compactCount(values.views)} views.`;
+  }
+
+  function startRewardsLiveTicker() {
+    stopRewardsLiveTicker();
+    if (app.dashboardDesign !== 'rewards' || !app.rewardsSettings.live) return;
+    app.rewardsLiveTimer = window.setInterval(() => { app.rewardsLiveOffset += 1; updateRewardsLiveValues(); }, Math.max(5, num(app.rewardsSettings.cadence, 8)) * 1000);
+  }
+
+  function renderRewardsDashboard(data, token) {
+    if (token !== app.routeToken) return;
+    app.rewardsLiveOffset = 0;
+    const series = rewardsMetricSeries(data);
+    const values = rewardsMetricValues(data, series);
+    const metrics = data?.kpis || data?.metrics || data?.summary || data || {};
+    const rawViews = series.reduce((sum, point) => sum + point.views, 0);
+    const changes = data?.changes || {};
+    const period = data?.range?.start && data?.range?.end ? `${dateText(data.range.start, { month: 'short', day: 'numeric', year: 'numeric' })} – ${dateText(data.range.end, { month: 'short', day: 'numeric', year: 'numeric' })}` : usagePeriodLabel(app.dashboardRange);
+    const metricTotal = series.reduce((sum, point) => sum + num(point[app.rewardsMetric]), 0);
+    const total = Math.max(1, metricTotal);
+    const metricChange = num(valueOf(metrics.visitors, ['change'], changes.visitors));
+    setContent(`<div class="ws-rewards-dashboard" data-rewards-accent="${esc(app.rewardsSettings.accent)}">
+      <header class="ws-rewards-heading"><div><h1>Analytics</h1><p>${esc(period)}</p></div><div class="ws-rewards-heading-meta"><span>${icon('clock')} Live workspace</span><span class="ws-rewards-live-dot"></span></div></header>
+      <div class="ws-rewards-toolbar">${rewardsChannelButtons()}${rewardsRangeControl()}${rewardsCampaignControl()}<button class="ws-rewards-control" type="button" data-action="share-dashboard">${icon('link-external')}<span>Share</span>${icon('chevron-down')}</button><button class="ws-rewards-settings" type="button" data-action="rewards-settings" aria-label="Dashboard settings">${icon('settings')}</button></div>
+      <section class="ws-rewards-metrics"><article class="ws-rewards-stat ws-rewards-stat--purple"><header>${icon('search')}<span>Views</span><b>${metricChange >= 0 ? '+' : ''}${percent(metricChange)} vs previous period</b></header><strong data-rewards-live-value="views">${compactCount(values.views)}</strong><small>Campaign impressions</small></article><article class="ws-rewards-stat ws-rewards-stat--mint"><header>${icon('wallet')}<span>Total Payouts (Gross)</span><b>${num(valueOf(metrics.revenue, ['change'], changes.revenue)) >= 0 ? '+' : ''}${percent(valueOf(metrics.revenue, ['change'], changes.revenue))}</b></header><strong data-rewards-live-value="payout">${money(values.payout)}</strong><small>Estimated creator payouts</small></article><article class="ws-rewards-stat ws-rewards-stat--teal"><header>${icon('search')}<span>CPM</span><b>Running efficiently</b></header><div class="ws-rewards-split-stat"><strong data-rewards-live-value="cpm">${money(values.cpm)}</strong><span><small>Effective CPM</small><b>${money(values.cpm * 1.42)}</b><small>Original CPM</small></span></div></article><article class="ws-rewards-stat ws-rewards-stat--gold"><header>${icon('cube')}<span>Submissions</span><b>48%</b></header><div class="ws-rewards-split-stat"><strong data-rewards-live-value="submissions">${integer(values.submissions)}</strong><span><small>Total</small><b data-rewards-live-value="approved">${integer(values.approved)}</b><small>Approved</small></span></div></article></section>
+      <section class="ws-rewards-chart-card"><header><div><span class="ws-rewards-eyebrow">${esc(rewardsCampaignLabel())}</span><h2 data-rewards-live-copy>Posted ${integer(values.submissions)} clips today. ${compactCount(values.views)} views.</h2></div>${rewardsMetricTabs()}</header><div class="ws-rewards-chart-wrap">${rewardsAreaChart(series, app.rewardsMetric)}</div><footer><span>${esc(data?.range?.start || '—')}</span><span>${esc(data?.range?.end || '—')}</span></footer></section>
+      <section class="ws-rewards-performers-section"><header><h2>Top Performers</h2><div class="ws-rewards-carousel-actions"><button type="button" data-action="rewards-performers-prev" aria-label="Previous performers">${icon('chevron-left')}</button><button type="button" data-action="rewards-performers-next" aria-label="Next performers">${icon('chevron-right')}</button></div></header><div class="ws-rewards-performers">${rewardsPerformers(data, rawViews)}</div></section>
+      <p class="ws-rewards-footnote">Figures stay connected to your Shopway revenue, order and traffic data. Live figures update every ${num(app.rewardsSettings.cadence, 8)} seconds.</p>
+    </div>`);
+    attachCharts();
+    startRewardsLiveTicker();
+  }
+
   async function renderDashboard() {
     const token = ++app.routeToken;
-    setContent(pageTitle('Dashboard', 'Track revenue, orders and customers.', dashboardHeadingActions()) + '<div class="ws-usage-loading"><span></span><span></span><span></span></div>');
+    stopRewardsLiveTicker();
+    setContent(app.dashboardDesign === 'rewards' ? '<div class="ws-rewards-loading"><span></span><span></span><span></span></div>' : pageTitle('Dashboard', 'Track revenue, orders and customers.', dashboardHeadingActions()) + '<div class="ws-usage-loading"><span></span><span></span><span></span></div>');
     try {
       const path = queryWith('/api/dashboard', {
         range: app.dashboardRange,
@@ -636,6 +848,7 @@
       const data = await request(path);
       if (token !== app.routeToken) return;
       app.cache.dashboard = data;
+      if (app.dashboardDesign === 'rewards') return renderRewardsDashboard(data, token);
       const metrics = data?.kpis || data?.metrics || data?.summary || data || {};
       const revenue = num(metricValue(metrics, 'revenue', valueOf(metrics, ['totalRevenue', 'grossSales'])));
       const orders = num(metricValue(metrics, 'orders', valueOf(metrics, ['totalOrders', 'sales'])));
@@ -1105,6 +1318,7 @@
   };
 
   function renderPage() {
+    stopRewardsLiveTicker();
     if (app.chartCleanup) { app.chartCleanup(); app.chartCleanup = null; }
     renderers[app.page]?.();
     $('#ws-content')?.focus({ preventScroll: true });
@@ -1204,9 +1418,64 @@
       $('[data-usage-month-menu]')?.setAttribute('hidden', '');
       return customRangeModal('dashboard');
     }
+    if (action === 'dashboard-design-menu') {
+      const menu = $('[data-dashboard-design-menu]');
+      if (!menu) return;
+      menu.hidden = !menu.hidden;
+      buttonNode.setAttribute('aria-expanded', String(!menu.hidden));
+      return;
+    }
+    if (action === 'dashboard-design-select') {
+      const design = buttonNode.dataset.design;
+      if (!DASHBOARD_DESIGNS.has(design)) return;
+      app.dashboardDesign = design;
+      localStorage.setItem(DASHBOARD_DESIGN_KEY, design);
+      $('[data-dashboard-design-menu]')?.setAttribute('hidden', '');
+      $('[data-action="dashboard-design-menu"]')?.setAttribute('aria-expanded', 'false');
+      return navigate('dashboard', true);
+    }
     if (action === 'usage-chart-menu') {
       const menu = $('[data-usage-chart-menu]');
       if (menu) menu.hidden = !menu.hidden;
+      return;
+    }
+    if (action === 'rewards-campaign-menu') {
+      const menu = $('[data-rewards-campaign-menu]');
+      if (!menu) return;
+      menu.hidden = !menu.hidden;
+      buttonNode.setAttribute('aria-expanded', String(!menu.hidden));
+      return;
+    }
+    if (action === 'rewards-campaign-select') {
+      app.rewardsCampaign = buttonNode.dataset.campaign || 'all';
+      $('[data-rewards-campaign-menu]')?.setAttribute('hidden', '');
+      if (app.cache.dashboard && app.dashboardDesign === 'rewards') return renderRewardsDashboard(app.cache.dashboard, app.routeToken);
+      return;
+    }
+    if (action === 'rewards-metric') {
+      if (!['views', 'likes', 'comments', 'shares'].includes(buttonNode.dataset.metric)) return;
+      app.rewardsMetric = buttonNode.dataset.metric;
+      if (app.cache.dashboard && app.dashboardDesign === 'rewards') return renderRewardsDashboard(app.cache.dashboard, app.routeToken);
+      return;
+    }
+    if (action === 'rewards-channel') {
+      app.rewardsChannel = buttonNode.dataset.channel || 'all';
+      if (app.cache.dashboard && app.dashboardDesign === 'rewards') return renderRewardsDashboard(app.cache.dashboard, app.routeToken);
+      toast(`${buttonNode.dataset.channel === 'all' ? 'All channels' : buttonNode.dataset.channel} selected`);
+      return;
+    }
+    if (action === 'rewards-settings') return rewardsSettingsModal();
+    if (action === 'share-dashboard') {
+      try { await navigator.clipboard.writeText(location.href); toast('Dashboard link copied'); } catch { toast('Copy is unavailable in this browser', 'error'); }
+      return;
+    }
+    if (action === 'rewards-link') {
+      try { await navigator.clipboard.writeText(location.href); toast('Dashboard link copied'); } catch { toast('Copy is unavailable in this browser', 'error'); }
+      return;
+    }
+    if (action === 'rewards-performers-prev' || action === 'rewards-performers-next') {
+      const scroller = $('.ws-rewards-performers');
+      scroller?.scrollBy({ left: action === 'rewards-performers-next' ? 320 : -320, behavior: 'smooth' });
       return;
     }
     if (action === 'usage-sort') {
@@ -1346,6 +1615,21 @@
         app.dashboardRange = 'custom'; app.dashboardStart = data.start; app.dashboardEnd = data.end;
         return renderDashboard();
       }
+      if (type === 'rewards-settings') {
+        const campaignLabel = String(data.campaignLabel || 'All Campaigns').trim().slice(0, 60) || 'All Campaigns';
+        const accent = REWARDS_ACCENTS.has(data.accent) ? data.accent : 'violet';
+        const settings = {
+          campaignLabel,
+          accent,
+          live: form.elements.live?.checked !== false,
+          cadence: Math.min(60, Math.max(5, Math.round(num(data.cadence, 8))) || 8)
+        };
+        app.rewardsSettings = settings;
+        localStorage.setItem(REWARDS_SETTINGS_KEY, JSON.stringify(settings));
+        closeModal();
+        toast('Dashboard settings saved');
+        return renderDashboard();
+      }
       if (type === 'store') {
         const payload = { name: data.name, tagline: data.tagline, description: data.description, slug: data.slug, logoUrl: data.logoUrl || null, theme: { ...(app.cache.store?.theme || {}), accent: data.accent, heroImage: data.heroImage } };
         const saved = await request('/api/store', { method: 'PATCH', body: payload });
@@ -1456,6 +1740,14 @@
         $('[data-action="usage-month-menu"]')?.setAttribute('aria-expanded', 'false');
       }
       if (!event.target.closest('[data-usage-chart-menu], [data-action="usage-chart-menu"]')) $('[data-usage-chart-menu]')?.setAttribute('hidden', '');
+      if (!event.target.closest('[data-dashboard-design-menu], [data-action="dashboard-design-menu"]')) {
+        $('[data-dashboard-design-menu]')?.setAttribute('hidden', '');
+        $('[data-action="dashboard-design-menu"]')?.setAttribute('aria-expanded', 'false');
+      }
+      if (!event.target.closest('[data-rewards-campaign-menu], [data-action="rewards-campaign-menu"]')) {
+        $('[data-rewards-campaign-menu]')?.setAttribute('hidden', '');
+        $('[data-action="rewards-campaign-menu"]')?.setAttribute('aria-expanded', 'false');
+      }
     });
     document.addEventListener('submit', (event) => {
       const form = event.target.closest('[data-form]');
@@ -1491,7 +1783,15 @@
     const existing = $('main.app-shell') || $('main');
     if (!existing || $('.ws-app')) return;
     app.page = currentPage();
-    existing.outerHTML = shell('shopway');
+    const savedDesign = localStorage.getItem(DASHBOARD_DESIGN_KEY);
+    app.dashboardDesign = DASHBOARD_DESIGNS.has(savedDesign) ? savedDesign : 'clean';
+    try {
+      const savedSettings = JSON.parse(localStorage.getItem(REWARDS_SETTINGS_KEY) || '{}');
+      app.rewardsSettings = { ...app.rewardsSettings, ...savedSettings, accent: REWARDS_ACCENTS.has(savedSettings.accent) ? savedSettings.accent : app.rewardsSettings.accent };
+    } catch {
+      app.rewardsSettings = { ...app.rewardsSettings };
+    }
+    existing.outerHTML = shell(app.page === 'dashboard' && app.dashboardDesign === 'rewards' ? 'rewards' : 'shopway');
     document.documentElement.dataset.theme = localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light';
     const savedChartType = localStorage.getItem(DASHBOARD_CHART_KEY);
     app.dashboardChartType = DASHBOARD_CHART_TYPES.has(savedChartType) ? savedChartType : 'bars';
