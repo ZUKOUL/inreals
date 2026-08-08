@@ -4737,6 +4737,11 @@ body:has(.ws-app--rewards) {
 .ws-rewards-chart-point {
   cursor: pointer;
   color: var(--rewards-purple-soft);
+  outline: none;
+}
+
+.ws-rewards-chart-point:focus {
+  outline: none;
 }
 
 .ws-rewards-chart-hit {
@@ -4750,9 +4755,33 @@ body:has(.ws-app--rewards) {
   stroke-width: 2;
 }
 
-.ws-rewards-chart-point.is-active .ws-rewards-chart-dot {
-  fill: currentColor;
-  r: 5px;
+.ws-rewards-point-tooltip {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .14s ease;
+}
+
+.ws-rewards-chart-point:hover .ws-rewards-point-tooltip,
+.ws-rewards-chart-point:focus-visible .ws-rewards-point-tooltip {
+  opacity: 1;
+}
+
+.ws-rewards-point-tooltip rect {
+  fill: #111217;
+  stroke: rgba(255, 255, 255, .24);
+  stroke-width: 1;
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, .3));
+}
+
+.ws-rewards-point-tooltip-label {
+  fill: var(--rewards-muted);
+  font-size: 10px;
+}
+
+.ws-rewards-point-tooltip-value {
+  fill: var(--rewards-text);
+  font-size: 11px;
+  font-weight: 650;
 }
 
 .ws-rewards-chart-total {

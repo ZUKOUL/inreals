@@ -783,7 +783,13 @@
     });
     const gridLines = ticks.map((tick) => `<line x1="56" y1="${tick.y}" x2="${chartRight}" y2="${tick.y}"></line>`).join('');
     const axisLabels = ticks.map((tick) => `<text class="ws-rewards-chart-y-label" x="49" y="${tick.y + 4}" text-anchor="end">${rewardsAxisLabel(tick.value)}</text>`).join('');
-    const labels = points.map((point, index) => `<text class="ws-rewards-chart-label" x="${point.x}" y="252" text-anchor="middle">${esc(point.label)}</text><g class="ws-chart-interactive ws-rewards-chart-point" data-chart-key="rewards-point-${index}" tabindex="0" role="button" aria-label="${esc(`${point.label} · ${integer(point[metric])} ${metric}`)}"><circle cx="${point.x}" cy="${point.y}" r="12" class="ws-rewards-chart-hit"></circle><circle cx="${point.x}" cy="${point.y}" r="4" class="ws-rewards-chart-dot"></circle></g>`).join('');
+    const tooltipWidth = 152;
+    const labels = points.map((point, index) => {
+      const tooltipX = Math.min(Math.max(point.x - tooltipWidth / 2, 56), width - tooltipWidth - 8);
+      const tooltipY = point.y < 68 ? point.y + 16 : point.y - 52;
+      const detail = `${integer(point[metric])} ${metric}`;
+      return `<text class="ws-rewards-chart-label" x="${point.x}" y="252" text-anchor="middle">${esc(point.label)}</text><g class="ws-rewards-chart-point" data-chart-key="rewards-point-${index}" tabindex="0" role="button" aria-label="${esc(`${point.label} · ${detail}`)}"><circle cx="${point.x}" cy="${point.y}" r="12" class="ws-rewards-chart-hit"></circle><circle cx="${point.x}" cy="${point.y}" r="4" class="ws-rewards-chart-dot"></circle><g class="ws-rewards-point-tooltip" transform="translate(${tooltipX} ${tooltipY})"><rect width="${tooltipWidth}" height="38" rx="8"></rect><text x="10" y="15" class="ws-rewards-point-tooltip-label">${esc(point.label)}</text><text x="10" y="30" class="ws-rewards-point-tooltip-value">${esc(detail)}</text></g></g>`;
+    }).join('');
     return `<div class="ws-rewards-chart-scroll" data-chart><svg class="ws-rewards-chart" viewBox="0 0 ${width} 270" style="width:${width}px" role="img" aria-label="${esc(`${metric} over time`)}"><defs><linearGradient id="rewards-area-gradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--rewards-purple)" stop-opacity=".75"></stop><stop offset="100%" stop-color="var(--rewards-purple)" stop-opacity=".05"></stop></linearGradient></defs><g class="ws-rewards-chart-grid">${gridLines}</g><g class="ws-rewards-chart-y-labels">${axisLabels}</g><path class="ws-rewards-chart-area" d="${area}"></path><path class="ws-rewards-chart-line" d="${line}"></path>${labels}</svg><span class="ws-rewards-chart-total" data-rewards-live-value="chartTotal">${compactCount(total)}</span></div>`;
   }
 
