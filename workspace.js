@@ -739,23 +739,52 @@
     return `<div class="ws-rewards-channels" aria-label="Campaign channels">${channels.map(([key, glyph]) => `<button type="button" class="${app.rewardsChannel === key ? 'is-active' : ''}" data-action="rewards-channel" data-channel="${key}" aria-label="${key === 'all' ? 'All channels' : key}">${glyph}</button>`).join('')}</div>`;
   }
 
+  function rewardsAxisStep(maxValue) {
+    const rawStep = Math.max(1, maxValue) / 4;
+    const magnitude = 10 ** Math.floor(Math.log10(rawStep));
+    const normalized = rawStep / magnitude;
+    const nice = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 2.5 ? 2.5 : normalized <= 5 ? 5 : 10;
+    return nice * magnitude;
+  }
+
+  function rewardsAxisLabel(value) {
+    const rounded = Math.round(value);
+    if (rounded >= 1_000_000) {
+      const millions = rounded / 1_000_000;
+      return `${Number.isInteger(millions) ? millions : millions.toFixed(1)}M`;
+    }
+    if (rounded >= 1_000) return `${Math.round(rounded / 1_000)}K`;
+    return String(rounded);
+  }
+
   function rewardsAreaChart(series, metric) {
     const values = series.map((point) => num(point[metric]));
     if (!values.length) return emptyState('No campaign activity', 'Results will appear after your first launch.');
     const max = Math.max(...values, 1);
+    const axisStep = rewardsAxisStep(max);
+    const axisMax = Math.max(axisStep, Math.ceil(max / axisStep) * axisStep);
     const width = Math.max(720, series.length * 44);
     const chartTop = 28;
     const chartBase = 222;
+    const chartLeft = 72;
+    const chartRight = width - 22;
     const points = series.map((point, index) => ({
       ...point,
-      x: 36 + index * ((width - 72) / Math.max(1, series.length - 1)),
-      y: chartBase - (num(point[metric]) / max) * (chartBase - chartTop)
+      x: chartLeft + index * ((chartRight - chartLeft) / Math.max(1, series.length - 1)),
+      y: chartBase - (num(point[metric]) / axisMax) * (chartBase - chartTop)
     }));
     const line = smoothPath(points);
     const area = `${line} L ${points.at(-1).x} ${chartBase} L ${points[0].x} ${chartBase} Z`;
     const total = values.reduce((sum, value) => sum + value, 0);
+    const tickCount = Math.max(1, Math.round(axisMax / axisStep));
+    const ticks = Array.from({ length: tickCount + 1 }, (_, index) => {
+      const ratio = index / tickCount;
+      return { value: axisMax - index * axisStep, y: chartTop + ratio * (chartBase - chartTop) };
+    });
+    const gridLines = ticks.map((tick) => `<line x1="56" y1="${tick.y}" x2="${chartRight}" y2="${tick.y}"></line>`).join('');
+    const axisLabels = ticks.map((tick) => `<text class="ws-rewards-chart-y-label" x="49" y="${tick.y + 4}" text-anchor="end">${rewardsAxisLabel(tick.value)}</text>`).join('');
     const labels = points.map((point, index) => `<text class="ws-rewards-chart-label" x="${point.x}" y="252" text-anchor="middle">${esc(point.label)}</text><g class="ws-chart-interactive ws-rewards-chart-point" data-chart-key="rewards-point-${index}" tabindex="0" role="button" aria-label="${esc(`${point.label} · ${integer(point[metric])} ${metric}`)}"><circle cx="${point.x}" cy="${point.y}" r="12" class="ws-rewards-chart-hit"></circle><circle cx="${point.x}" cy="${point.y}" r="4" class="ws-rewards-chart-dot"></circle></g>`).join('');
-    return `<div class="ws-rewards-chart-scroll" data-chart><svg class="ws-rewards-chart" viewBox="0 0 ${width} 270" style="width:${width}px" role="img" aria-label="${esc(`${metric} over time`)}"><defs><linearGradient id="rewards-area-gradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--rewards-purple)" stop-opacity=".75"></stop><stop offset="100%" stop-color="var(--rewards-purple)" stop-opacity=".05"></stop></linearGradient></defs><g class="ws-rewards-chart-grid"><line x1="22" y1="38" x2="${width - 22}" y2="38"></line><line x1="22" y1="86" x2="${width - 22}" y2="86"></line><line x1="22" y1="134" x2="${width - 22}" y2="134"></line><line x1="22" y1="182" x2="${width - 22}" y2="182"></line><line x1="22" y1="230" x2="${width - 22}" y2="230"></line></g><path class="ws-rewards-chart-area" d="${area}"></path><path class="ws-rewards-chart-line" d="${line}"></path>${labels}</svg><span class="ws-rewards-chart-total" data-rewards-live-value="chartTotal">${compactCount(total)}</span></div>`;
+    return `<div class="ws-rewards-chart-scroll" data-chart><svg class="ws-rewards-chart" viewBox="0 0 ${width} 270" style="width:${width}px" role="img" aria-label="${esc(`${metric} over time`)}"><defs><linearGradient id="rewards-area-gradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--rewards-purple)" stop-opacity=".75"></stop><stop offset="100%" stop-color="var(--rewards-purple)" stop-opacity=".05"></stop></linearGradient></defs><g class="ws-rewards-chart-grid">${gridLines}</g><g class="ws-rewards-chart-y-labels">${axisLabels}</g><path class="ws-rewards-chart-area" d="${area}"></path><path class="ws-rewards-chart-line" d="${line}"></path>${labels}</svg><span class="ws-rewards-chart-total" data-rewards-live-value="chartTotal">${compactCount(total)}</span></div>`;
   }
 
   function rewardsPerformers(data, totalViews) {

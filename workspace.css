@@ -4711,6 +4711,12 @@ body:has(.ws-app--rewards) {
   stroke-width: 1;
 }
 
+.ws-rewards-chart-y-labels {
+  fill: var(--rewards-muted);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
 .ws-rewards-chart-area {
   fill: url("#rewards-area-gradient");
 }
