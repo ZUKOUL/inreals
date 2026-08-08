@@ -801,8 +801,6 @@
       })())
     };
     Object.entries(updates).forEach(([key, value]) => $$(`[data-rewards-live-value="${key}"]`).forEach((node) => { node.textContent = value; }));
-    const copy = $('[data-rewards-live-copy]');
-    if (copy) copy.textContent = `Posted ${integer(values.submissions)} clips today. ${compactCount(values.views)} views.`;
   }
 
   function startRewardsLiveTicker() {
@@ -820,14 +818,12 @@
     const rawViews = series.reduce((sum, point) => sum + point.views, 0);
     const changes = data?.changes || {};
     const period = data?.range?.start && data?.range?.end ? `${dateText(data.range.start, { month: 'short', day: 'numeric', year: 'numeric' })} – ${dateText(data.range.end, { month: 'short', day: 'numeric', year: 'numeric' })}` : usagePeriodLabel(app.dashboardRange);
-    const metricTotal = series.reduce((sum, point) => sum + num(point[app.rewardsMetric]), 0);
-    const total = Math.max(1, metricTotal);
     const metricChange = num(valueOf(metrics.visitors, ['change'], changes.visitors));
     setContent(`<div class="ws-rewards-dashboard" data-rewards-accent="${esc(app.rewardsSettings.accent)}">
       <header class="ws-rewards-heading"><div><h1>Analytics</h1><p>${esc(period)}</p></div><div class="ws-rewards-heading-meta"><span>${icon('clock')} Live workspace</span><span class="ws-rewards-live-dot"></span></div></header>
       <div class="ws-rewards-toolbar">${rewardsChannelButtons()}${rewardsRangeControl()}${rewardsCampaignControl()}<button class="ws-rewards-control" type="button" data-action="share-dashboard">${icon('link-external')}<span>Share</span>${icon('chevron-down')}</button><button class="ws-rewards-settings" type="button" data-action="rewards-settings" aria-label="Dashboard settings">${icon('settings')}</button></div>
       <section class="ws-rewards-metrics"><article class="ws-rewards-stat ws-rewards-stat--purple"><header>${icon('search')}<span>Views</span><b>${metricChange >= 0 ? '+' : ''}${percent(metricChange)} vs previous period</b></header><strong data-rewards-live-value="views">${compactCount(values.views)}</strong><small>Campaign impressions</small></article><article class="ws-rewards-stat ws-rewards-stat--mint"><header>${icon('wallet')}<span>Total Payouts (Gross)</span><b>${num(valueOf(metrics.revenue, ['change'], changes.revenue)) >= 0 ? '+' : ''}${percent(valueOf(metrics.revenue, ['change'], changes.revenue))}</b></header><strong data-rewards-live-value="payout">${money(values.payout)}</strong><small>Estimated creator payouts</small></article><article class="ws-rewards-stat ws-rewards-stat--teal"><header>${icon('search')}<span>CPM</span><b>Running efficiently</b></header><div class="ws-rewards-split-stat"><strong data-rewards-live-value="cpm">${money(values.cpm)}</strong><span><small>Effective CPM</small><b>${money(values.cpm * 1.42)}</b><small>Original CPM</small></span></div></article><article class="ws-rewards-stat ws-rewards-stat--gold"><header>${icon('cube')}<span>Submissions</span><b>48%</b></header><div class="ws-rewards-split-stat"><strong data-rewards-live-value="submissions">${integer(values.submissions)}</strong><span><small>Total</small><b data-rewards-live-value="approved">${integer(values.approved)}</b><small>Approved</small></span></div></article></section>
-      <section class="ws-rewards-chart-card"><header><div><span class="ws-rewards-eyebrow">${esc(rewardsCampaignLabel())}</span><h2 data-rewards-live-copy>Posted ${integer(values.submissions)} clips today. ${compactCount(values.views)} views.</h2></div>${rewardsMetricTabs()}</header><div class="ws-rewards-chart-wrap">${rewardsAreaChart(series, app.rewardsMetric)}</div><footer><span>${esc(data?.range?.start || '—')}</span><span>${esc(data?.range?.end || '—')}</span></footer></section>
+      <section class="ws-rewards-chart-card"><header><div><span class="ws-rewards-eyebrow">${esc(rewardsCampaignLabel())}</span></div>${rewardsMetricTabs()}</header><div class="ws-rewards-chart-wrap">${rewardsAreaChart(series, app.rewardsMetric)}</div><footer><span>${esc(data?.range?.start || '—')}</span><span>${esc(data?.range?.end || '—')}</span></footer></section>
       <section class="ws-rewards-performers-section"><header><h2>Top Performers</h2><div class="ws-rewards-carousel-actions"><button type="button" data-action="rewards-performers-prev" aria-label="Previous performers">${icon('chevron-left')}</button><button type="button" data-action="rewards-performers-next" aria-label="Next performers">${icon('chevron-right')}</button></div></header><div class="ws-rewards-performers">${rewardsPerformers(data, rawViews)}</div></section>
       <p class="ws-rewards-footnote">Figures stay connected to your Shopway revenue, order and traffic data. Live figures update every ${num(app.rewardsSettings.cadence, 8)} seconds.</p>
     </div>`);
